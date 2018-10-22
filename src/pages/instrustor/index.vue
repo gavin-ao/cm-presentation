@@ -4,46 +4,7 @@
       <span class="activeRule" @click="activeRules">活动规则</span>
       <img :src="goLink" alt="" style="">
     </div>
-    <!--<div class="record">-->
-      <!--<div class="invitation" v-if="headPic.length>0">-->
-        <!--<p class="pRecord"><span>邀请记录</span>-->
-        <!--</p>-->
-        <!--<hr style=""/>-->
-        <!--<p>累计邀请{{headPic.length}}位好友,为您助力{{headPic.length*10}}元代金券</p>-->
-        <!--<div>-->
-          <!--<p v-for="(item,index) in headPic" :key="index">-->
-            <!--<img class="headImg" :src="item.img" alt="">-->
-            <!--<span>{{item.name}} 为TA助力，增加10元</span>-->
-          <!--</p>-->
-
-          <!--<p v-if="headPic.length<5">-->
-            <!--还差{{5 - headPic.length}}位-->
-          <!--</p>-->
-        <!--</div>-->
-
-      <!--</div>-->
-    <!--</div>-->
-    <!--<button  v-if="headPic.length==0" open-type="getUserInfo"  @getuserinfo="bindGetUserInfo">邀请好友助力领取民宿优惠券</button>-->
     <button class="btn"  open-type="getUserInfo"  @getuserinfo="bindGetUserInfo">邀请好友助力领取民宿优惠券</button>
-    <!--<button  v-if="headPic.length==0"  @click="touristLink">邀请好友助力领取民宿优惠券</button>-->
-    <!--<button v-else-if="headPic.length<5"   @click="continueHelp">继续邀请</button>-->
-    <!--&lt;!&ndash;<button v-else-if="headPic.length<5"  @click="touristLink">继续邀请</button>&ndash;&gt;-->
-    <!--<button v-else @click="receiveAreward">领取奖励</button>-->
-
-    <!--<div class="mask" :class="{menuStyle:checked == true}">-->
-      <!--<div class="modelTask">-->
-        <!--<div >-->
-          <!--<p class="modelTitle">领取成功</p>-->
-          <!--<p class="modelContent">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;复制下列兑换码，打开途家APP，前往 我的→红包→添加红包，选择“兑换码兑换”-->
-          <!--</p>-->
-          <!--<p class="codes">-->
-            <!--“EDFREO1236”-->
-          <!--</p>-->
-          <!--<p>长按复制</p>-->
-          <!--<span class="closeMask" @click="closeMash">关闭</span>-->
-        <!--</div>-->
-      <!--</div>-->
-    <!--</div>-->
     <div class="maskRule" :class="{menuStyle:checkedRule == true}">
       <div class="modelTask">
         <div style="">
