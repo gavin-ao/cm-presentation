@@ -10,19 +10,19 @@
 
       <img class="conImg" :src="getGoLink" alt="">
       <div class="qrcodes" style="">
-        <img class="codeImg" :src="qrcodeUrl" alt=""
-             style="">
+        <img class="codeImg" :src="qrcodeUrl" alt="" style="">
       </div>
-      <img class="backText" src="/static/img/shareBack1.png" alt="">
+      <!--<img class="backText" src="/static/img/shareBack1.png" alt="">-->
     </div>
     <div class="menu" style="">
-      <p v-html="actShareCopywriting"></p>
-      <!--<p style=" font-size: 14px;text-align: center;color: #4A4A4A;padding: 0 20px; margin-bottom: 5px;">-->
-        <!--这是你的专属海报，发送给好友，<br/>得到10次助力即可获得<span style="color: #F05522;font-size: 16px;">30 </span>元商品券。-->
-      <!--</p>-->
+      <p style="" v-html="actShareCopywriting">
+        <!--这是你的专属海报，发送给好友<br/>-->
+        <!--3人助力免费赢得原价<span>288 </span>元试听课机会一次-->
+      </p>
       <button class="shares" open-type="share">
         {{btnText.bxt_share}}
       </button>
+
       <button class="posters" @click="preview">
         {{btnText.bxt_saveImg}}
       </button>
@@ -42,7 +42,6 @@
         backImg: require('../../../static/img/shareBack.png')
       }
     },
-
     onLoad() {
 
     },
@@ -80,43 +79,44 @@
         let that = this;
         console.log(new Date().getTime())
         const ctx = wx.createCanvasContext('shareCanvas')
-        ctx.setFillStyle('#fff')
+//        ctx.setFillStyle('#000')
         ctx.fillRect(0, 0, this.getWindowWidth, that.ctxHeight);
         ctx.draw(true)
-
         var heights = that.ctxHeight - 70
-        ctx.drawImage(that.$store.state.board.drawPoster, 13, 33, (that.getWindowWidth - 26), heights - 60)
+        ctx.drawImage(that.drawPoster, 13, 53, (that.getWindowWidth - 26), heights-50)
         ctx.draw(true)
-        ctx.drawImage('/static/img/shareBack1.png', 13, 33, (that.getWindowWidth - 26), heights)
-        ctx.draw(true)
-        if (that.$store.state.board.drawAvatarUrl) {
+//        ctx.drawImage('/static/img/shareBack1.png', 13, 33, (that.getWindowWidth - 26), heights)
+//        ctx.draw(true)
+        if(that.drawAvatarUrl) {
           ctx.save()
           ctx.beginPath()
-          ctx.arc(48, 65, 20, 0, Math.PI * 2, false);
+          ctx.arc(48, 85, 20, 0, Math.PI * 2, false);
           ctx.clip()
-          ctx.drawImage(that.$store.state.board.drawAvatarUrl, 28, 45, 40, 40)
+          ctx.drawImage(that.drawAvatarUrl, 28, 65, 40, 40)
           ctx.restore()
           ctx.draw(true)
         }
 
         var qrcodeUrl = that.$store.state.board.qrcodeUrl
         //画二维码
+        console.log('444444   ' + qrcodeUrl)
         wx.getImageInfo({
           src: qrcodeUrl,
           success: (res) => {
             ctx.save()
             ctx.beginPath()
-            ctx.arc((that.getWindowWidth - 76), heights - 30, 50, 0, Math.PI * 2, false);
+            ctx.arc((that.getWindowWidth - 76), heights - 60, 50, 0, Math.PI * 2, false);
             ctx.setFillStyle('rgba(255, 255, 255, 0.7)')
             ctx.fill()
             ctx.clip()
-            ctx.drawImage(res.path, (that.getWindowWidth - 126), heights - 80, 100, 100)
+            ctx.drawImage(res.path, (that.getWindowWidth - 126), heights - 110, 100, 100)
             ctx.restore()
             ctx.draw(true)
             console.log(new Date().getTime())
             wx.hideLoading()
           }
         })
+
 
       },
       preview() {
@@ -129,12 +129,15 @@
                 wx.showToast({
                   title: '已保存到相册',
                   success: (res) => {
+
                   }
                 })
               },
               fail: (res) => {
               }
             })
+
+
           }
         })
       },
@@ -143,12 +146,14 @@
         wx.hideLoading()
       },
       saveImg() {
+
       }
     },
     async onPullDownRefresh() {
       // 停止下拉刷新
       wx.stopPullDownRefresh();
     },
+
     created() {
     },
     computed: {
@@ -171,10 +176,16 @@
       avatarUrl() {
         return this.$store.state.board.avatarUrl;
       },
-      btnText(){
-        return this.$store.state.board.btnText;
+      drawAvatarUrl() {
+        return this.$store.state.board.drawAvatarUrl;
       },
-      actShareCopywriting(){
+      drawPoster() {
+        return this.$store.state.board.drawPoster;
+      },
+      btnText() {
+        return this.$store.state.board.btnText
+      },
+      actShareCopywriting() {
         return this.$store.state.board.actShareCopywriting
       }
     },
@@ -197,12 +208,11 @@
       } else {
         this.$store.state.board.isabled = true;
       }
-
       var sessionID = that.$store.state.board.sessionID
       var myHelpId = that.$store.state.board.myHelpId
       var actId = that.$store.state.board.actId
-
-      var that = this;
+      that.$store.state.board.qrcodeUrl = ''
+      that.qrcodeUrl = ''
       // 二维码获取
       var sysUrls = that.$store.state.board.urlHttp + '/wechatapi/qrcode/createWXQrcodeA';
       wx.request({
@@ -233,19 +243,23 @@
     width: 100%;
     height: 100%;
     .containers {
+      /*border: 1px solid #CAA363;*/
       width: calc(100% - 75px);
+      /*padding: 5px;*/
       height: 79%;
       margin: 0 auto;
       margin-top: 12px;
       position: relative;
       border-radius: 10px;
       .nickname {
+        /*margin-top: 10px;*/
         z-index: 100;
         img {
           width: 40px;
           height: 40px;
           border-radius: 20px;
           float: left;
+          /*border: 1px solid #CAA363;*/
           position: absolute;
           top: 12px;
           left: 15px;
@@ -271,6 +285,7 @@
     }
     .conImg {
       width: 100%;
+      /*margin-top: 5px;*/
       height: calc(100% - 5px);
       border-radius: 8px;
       position: relative;

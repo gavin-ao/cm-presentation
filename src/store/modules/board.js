@@ -23,6 +23,20 @@ const state = {
   partakeNums: 0,
   drawPoster:'',
   btnText:{},
+  mainInfos:{
+    actRule: '',  //活动规则
+    exchangeRule: '', //兑换流程
+    arrImage: [],
+    rulesOfActivity: '',
+    exithelpId: '',
+    contactsCondition: '',
+    commandText: '',
+    contentTitle: '', //领取奖励标题
+    contentHead: '', //领取奖励头部
+    contentMid: '', //领取奖励中部
+    contentFoot: '', //领取奖励脚部
+    contentBtn: '' //领取奖励按钮
+  },
   actShareCopywriting:'',
   appid:'wx7ce4b9ce272d1817',
   secret:'d946a8de0df55661af48b97fa6de4d9b',

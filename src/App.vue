@@ -6,6 +6,12 @@
     },
     onShow(option) {
       console.log(option)
+      var that = this
+
+      that.$store.state.board.otherHelpId = ''
+      that.$store.state.board.myHelpId = ''
+      that.$store.state.board.actId = ''
+      that.$store.state.board.sessionID = ''
       if(option.path&&option.path == 'pages/showPages/main'){
         var otherHelpId = this.$store.state.board.otherHelpId
         wx.redirectTo({

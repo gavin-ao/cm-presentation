@@ -1,41 +1,42 @@
 <template>
   <div class="vist-userInfo">
-
+    <!--<movable-area class="containes">-->
+    <!--<movable-view class="activeRule rulesCondition" @click="activeRules" :x="x" :y="y" direction="all" @change="changeDir">活动规则</movable-view>-->
+    <!--<img :src="goLink" alt="">-->
+    <!--</movable-area>-->
     <div class="containes">
-      <span class="activeRule" @click="activeRules" :class="{rulesCondition:rulesOfActivity===false}">活动规则</span>
+      <movable-area style="">
+        <movable-view direction="vertical" class="activeRule rulesCondition" @click="activeRules">活动规则</movable-view>
+        <!--<img :src="goLink" alt="">-->
+      </movable-area>
+      <!--<span class="activeRule rulesCondition" @click="activeRules">活动规则</span>-->
       <img :src="goLink" alt="">
     </div>
     <div class="record" :class="{rewardCondition:rulesOfActivity===true}">
-      <div class="recordTitle">
-        <p>
-          <span @click="activeRules">活动规则</span>
-          <span class="verLine">  </span>
-          <span @click="exchangeProcess">兑换流程</span>
-        </p>
-      </div>
-
+      <p class="modelTitle" v-if="headPic.length==partakeNums">助力完成</p>
       <div class="invitation">
         <div class="helpZero" v-if="headPic.length==0">
           <img class="noneImg" src="/static/img/none.png" alt="">
           <p>还没有人助力</p>
+
         </div>
-        <div class="helpPeo" v-else-if="headPic.length<=partakeNum">
-        <!--<div class="helpPeo">-->
+        <div class="helpPeo" v-else-if="headPic.length<=partakeNums">
+          <!--<div class="helpPeo">-->
           <p><span class="helpNum"> {{headPic.length}}</span><br/>邀请记录</p>
+          <!--<span class="helpText">邀请记录</span>-->
           <scroll-view scroll-y>
             <p class="helpUserImg">
               <img :src="item.img" v-for="(item,index) in headPic" :key="index" alt="">
             </p>
           </scroll-view>
-          <p class="helpLackNum" v-if="headPic.length< partakeNum">还差（{{partakeNum - headPic.length}}）位</p>
-          <p class="helpLackNum" v-else>助力完成</p>
+          <p class="helpLackNum" v-if="headPic.length<partakeNums">还差（{{partakeNums - headPic.length}}）位</p>
+          <p v-else v-html="actReply"></p>
         </div>
       </div>
     </div>
     <!--<div class="menu" >-->
     <div class="menu">
-      <button class="menuss" open-type="getUserInfo" @getuserinfo="getUserInfoInvite"
-              :class="{rewardCondition:getInfoInvite=='getInfoInvite'}" hover-class="hoverNone" hover-stay-time="800">
+      <button class="menuss" open-type="getUserInfo" @getuserinfo="getUserInfoInvite" :class="{rewardCondition:getInfoInvite=='getInfoInvite'}" hover-class="hoverNone" hover-stay-time="800">
         {{btnText.bxt_invite}}
       </button>
       <div class="menus" @click="existDoHelps" :class="{rewardCondition:manIsFull=='manIsFull'}" hover-class="hoverNone"
@@ -51,12 +52,27 @@
       </div>
       <div class="menus" @click="continueHelp" :class="{rewardCondition:continueToInvite=='continueToInvite'}"
            hover-class="hoverNone" hover-stay-time="800">
-        <span v-if="headPic.length==0"> {{btnText.bxt_continue}}</span>
-        <span v-else>  {{btnText.bxt_continue1}}</span>
-
+        <span v-if="headPic.length==0">{{btnText.bxt_continue}}</span>
+        <span v-else>{{btnText.bxt_continue1}}</span>
       </div>
-      <div class="menus" @click="receiveAreward" :class="{rewardCondition:receiveReward=='receiveReward'}"
-           hover-class="hoverNone" hover-stay-time="800"> {{btnText.bxt_reward}}
+      <button class="menus" :class="{rewardCondition:receiveReward=='receiveReward'}" open-type="contact"
+              hover-class="hoverNone" hover-stay-time="800" @click="getRewardAct" type="default"  :session-from=sessionFrom>{{btnText.bxt_reward}}
+      </button>
+    </div>
+    <div class="maskRules" :class="{menuStyle:checkedRules == true}">
+      <!--<div class="maskRules menuStyle" >-->
+      <div class="modelTask">
+        <div style="">
+          <p class="maskClose" @click="closeMash">
+            <img src="/static/img/close.png" class="closeMask"/>
+          </p>
+
+          <p class="modelTitle">活动规则</p>
+          <img src="/static/img/line.png" class="lines" alt="" style="">
+          <scroll-view scroll-y>
+            <p v-html="actRule"></p>
+          </scroll-view>
+        </div>
       </div>
     </div>
     <div class="mask" :class="{menuStyle:checked == true}">
@@ -80,59 +96,7 @@
         </div>
       </div>
     </div>
-    <div class="maskRule" :class="{menuStyle:checkedRule == true}">
-      <!--<div class="maskRule menuStyle">-->
-      <div class="modelTask">
-        <div style="">
-          <p class="maskClose" @click="closeMash">
-            <img src="/static/img/close.png" class="closeMask"/>
-          </p>
-          <p class="modelTitle">{{contentTitle}}</p>
-          <p class="modelContent">
-            {{contentHead}}
-          </p>
-          <text class="codes" @longtap="copyTBL">
-            {{contentMid}}
-          </text>
-          <p class="copy" @longtap="copyTBL">（长按复制）</p>
-          <p class="copy">{{contentFoot}}</p>
-        </div>
-      </div>
-    </div>
-    <div class="maskRules" :class="{menuStyle:checkedRules == true}">
-      <!--<div class="maskRules menuStyle" >-->
-      <div class="modelTask">
-        <div style="">
-          <p class="maskClose" @click="closeMash">
-            <img src="/static/img/close.png" class="closeMask"/>
-          </p>
-          <p class="modelTitle">活动规则</p>
-          <img src="/static/img/line.png" class="lines" alt="" style="">
-          <scroll-view scroll-y>
-            <p v-html="actRule"></p>
-          </scroll-view>
-        </div>
-      </div>
-    </div>
-    <div class="exchangeProces" :class="{menuStyle:exchangeProc == true}">
-      <!--<div class="exchangeProcess menuStyle">-->
-      <div class="modelTask">
 
-        <div style="">
-          <p class="maskClose" @click="closeMash">
-            <img src="/static/img/close.png" class="closeMask"/>
-          </p>
-          <p class="modelTitle">兑换流程</p>
-          <img src="/static/img/line.png" class="lines" alt="" style="">
-          <scroll-view scroll-y>
-            <p v-html="exchangeRule">
-            </p>
-          </scroll-view>
-        </div>
-
-
-      </div>
-    </div>
   </div>
 </template>
 
@@ -153,16 +117,12 @@
         contentHead: '', //领取奖励头部
         contentMid: '', //领取奖励中部
         contentFoot: '', //领取奖励脚部
-        contentBtn: '', //领取奖励按钮
+        contentBtn: '' //领取奖励按钮
       }
     },
     onLoad(option) {
       console.log(option)
       var that = this
-
-      that.$store.state.board.otherHelpId = ''
-      that.$store.state.board.myHelpId = ''
-//      that.$store.state.board.actId = ''
 
       if (option.helpId) {
         that.$store.state.board.otherHelpId = option.helpId
@@ -233,8 +193,7 @@
                         if (res.data.success) {
                           that.headPicArr(that, res.data.data)
                         }
-                        utils.login(that, true, function (sessionID, otherHelpId) {
-                          var actId = that.$store.state.board.actId;
+                        utils.login(that, function (sessionID, actId,otherHelpId) {
                           wx.request({
                             url: that.$store.state.board.urlHttp + "/wechatapi/help/existDoHelpByActId",
                             method: "POST",
@@ -280,7 +239,7 @@
                     })
                   }
                   else {
-                    utils.login(that, false, function (sessionID, actId) {
+                    utils.login(that, function (sessionID, actId) {
                       wx.request({
                         url: that.$store.state.board.urlHttp + "/wechatapi/help/findHelpDetailUserList",
                         method: "POST",
@@ -385,7 +344,7 @@
       },
       continueToHelp() {
         var that = this;
-        utils.login(that, false, function (sessionID, actId, otherHelpId) {
+        utils.login(that, function (sessionID, actId, otherHelpId) {
           wx.request({
             url: that.$store.state.board.urlHttp + "/wechatapi/help/clickHelpUrl",
             method: "POST",
@@ -484,7 +443,7 @@
       },
       myToHelp() {
         var that = this;
-        utils.login(that, false, function (sessionID, actId) {
+        utils.login(that, function (sessionID, actId) {
           if (actId) {
             wx.request({
               url: that.$store.state.board.urlHttp + "/wechatapi/help/execuHelp",
@@ -664,6 +623,9 @@
     created() {
     },
     computed: {
+      mainInfos(){
+        return this.$store.state.board.mainInfos;
+      },
       headPic() {
         return this.$store.state.board.headPic
       },
@@ -750,6 +712,10 @@
     font-size: 22px;
     width: 100%;
     height: 100%;
+    .haode {
+      color: red;
+      font-size: 30px;
+    }
     .containes {
       width: calc(100% - 24px);
       height: calc(100% - 80px);
@@ -771,23 +737,30 @@
       button.contactsCondition {
         display: block;
       }
-      .activeRule {
+      movable-area {
+        width: calc(100% - 25px);
+        height: 260px;
         position: fixed;
-        top: 24px;
-        right: 24px;
-        display: none;
-        width: 75px;
-        height: 25px;
-        text-align: center;
-        line-height: 25px;
-        font-size: 13px;
-        background-color: rgba(0, 0, 0, 0.44);
-        color: #fff;
-        border-radius: 13px;
+        .activeRule {
+          position: absolute;
+          top: 44px;
+          right: 0px;
+          left: auto;
+          display: none;
+          width: 75px;
+          height: 25px;
+          text-align: center;
+          line-height: 25px;
+          font-size: 13px;
+          background-color: rgba(0, 0, 0, 0.44);
+          color: #fff;
+          border-radius: 13px;
+        }
+        .activeRule.rulesCondition {
+          display: block;
+        }
       }
-      span.activeRule.rulesCondition {
-        display: inline-block;
-      }
+
       img {
         width: 100%;
         height: 100%;
@@ -825,11 +798,19 @@
           border-left: 1px solid #CED0D5;
         }
       }
+      .modelTitle {
+        text-align: center;
+        font-size: 18px;
+        color: #F05522;
+        margin-top: 20px;
+        /*margin-bottom: 15px;*/
+      }
       .invitation {
         text-align: center;
         padding: 0 10px;
-        margin-top: 20px;
+        margin-top: 30px;
         .helpZero {
+          margin-top: 45px;
           img {
             display: block;
             margin: 0 auto;
@@ -853,12 +834,11 @@
           text-align: center;
           color: #F05522;
           font-size: 14px;
-
           .helpNum {
             font-size: 28px;
           }
           scroll-view {
-            height: 75px;
+            height: 80px;
             .helpUserImg {
               margin-top: 15px;
               img {
@@ -870,11 +850,13 @@
                 border: 1px solid #F05522;
               }
             }
-
           }
+
           .helpLackNum {
+            font-size: 12px;
+            font-weight: lighter;
             color: #4A4A4A;
-            margin-top: 22px;
+            margin-top: 15px;
           }
         }
       }
@@ -933,6 +915,7 @@
         pointer-events: none;
       }
     }
+
     .mask {
       display: none;
       width: calc(100% - 24px);
@@ -1107,16 +1090,13 @@
       position: fixed;
       bottom: -20px;
       left: 0px;
-      z-index: 1000;
+      z-index: 2000;
       background: url("../../../static/img/ruler.png");
       background-size: 100% 100%;
       .modelTask {
         width: calc(100% - 30px);
         height: calc(100% - 15px);
         margin: 0 auto;
-        scroll-view {
-          height: 240px;
-        }
         div {
           padding: 30px;
           /*margin-left: 15px;*/
@@ -1133,6 +1113,9 @@
             height: 1px;
             display: block;
             margin: 10px 0px;
+          }
+          scroll-view {
+            height: 232px;
           }
           .modelContent {
             font-size: 14px;
