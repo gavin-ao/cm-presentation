@@ -10,7 +10,6 @@ function login(that, func) {
       func(sessionID, actId);
     }
   }else{
-
     wx.login({
       success: function (res) {
         var code = res.code;

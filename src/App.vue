@@ -12,12 +12,32 @@
       that.$store.state.board.myHelpId = ''
       that.$store.state.board.actId = ''
       that.$store.state.board.sessionID = ''
-      if(option.path&&option.path == 'pages/showPages/main'){
-        var otherHelpId = this.$store.state.board.otherHelpId
+      if (option.query.actId) {
+        that.$store.state.board.actId = option.query.actId;
+        if (option.query.helpId) {
+          that.$store.state.board.otherHelpId = option.query.helpId;
+
+        }
         wx.redirectTo({
-          url: '/pages/activePower/main?helpId=' + otherHelpId
+          url: '/pages/activePower/main'
+        })
+      }else{
+        wx.getSetting({
+          success: function (res) {
+            if (res.authSetting['scope.userInfo']) {
+              utils.login(that, function (sessionID, actId) {
+
+              })
+
+            }else{
+              wx.redirectTo({
+                url: '/pages/instrustor/main'
+              })
+            }
+          }
         })
       }
+
     },
     created() {
 

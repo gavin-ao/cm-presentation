@@ -123,14 +123,6 @@
     onLoad(option) {
       console.log(option)
       var that = this
-
-      if (option.helpId) {
-        that.$store.state.board.otherHelpId = option.helpId
-      }
-      if (option.actId) {
-        that.$store.state.board.actId = option.actId
-      }
-
     },
     onShow(option) {
       var that = this
