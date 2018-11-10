@@ -1,30 +1,29 @@
 <template>
   <div class="instructor-toueist">
-    <div class="containes" >
-      <span class="activeRule" @click="activeRules">活动规则</span>
-      <img :src="goLink" alt="" style="">
-    </div>
-    <button class="btn"  open-type="getUserInfo"  @getuserinfo="bindGetUserInfo">邀请好友助力领取民宿优惠券</button>
-    <div class="maskRule" :class="{menuStyle:checkedRule == true}">
-      <div class="modelTask">
-        <div style="">
-          <img src="/static/img/close.png" class="closeMask" @click="closeMash"/>
-          <p class="modelTitle">活动规则</p>
-          <p class="modelContent">
-            1. 邀请5位好友点击助力即可领取50元民宿代金券；
-          </p>
-          <p class="modelContent">
-            2. 代金券以兑换码方式发放，领取后复制兑换码至途家app我的→红包→添加红包，选择“兑换码兑换”即可兑换；
-          </p>
-          <p class="modelContent">
-            3. 兑换码有效期7天，代金券有效期3个月；
-          </p>
-          <p class="modelContent">
-            4. 为好友助力也可以获得10元代金券，关注微信公众号绑定微信账号后自动发放。
-          </p>
-        </div>
+    <div class="containes">
+      <div class="search">
+        <input type="text" placeholder="输入店名" @input="selStore()" v-model="input">
+      </div>
+      <div class="expand">
+        <scroll-view style="height: 100%;width: 100%;">
+          <div v-for="(item,index) in datas" :key="index" v-if="datas.length>0">
+            <div @click="insertMp(item.storeId)">
+              <p> {{item.storeName}}（店名）</p>
+              <p>{{item.storeAddr}}（地址）</p>
+            </div>
+          </div>
+          <div v-if="datas.length==0">
+            <div v-if="datas==[]" style="height: 60px;text-align: center;line-height: 60px;">
+              请输入店名搜索相关的门店
+            </div>
+            <div v-else style="height: 60px;text-align: center;line-height: 60px;">
+              无相应的门店
+            </div>
+          </div>
+        </scroll-view>
       </div>
     </div>
+
   </div>
 </template>
 
@@ -35,324 +34,97 @@
     box-sizing: border-box;
     font-size: 14px;
     /*margin-bottom: 30px;*/
-    .containes{
-      width: 100%;
-      height: calc(100% - 50px);
-      .activeRule {
-        position: fixed;
-        top: 10px;
-        right: 10px;
-        display: inline-block;
-        width: 90px;
-        height: 30px;
-        text-align: center;
-        line-height: 30px;
-        font-size: 14px;
-        background-color: rgba(16, 16, 16, 0.5);
-        color: #fff;
-        border-radius: 15px;
+    .containes {
+      width: calc(100% - 40px);
+      margin: 0 auto;
+      height: 100%;
+      margin-top: 10px;
+      .search{
+        input {
+          border: 1px solid #ccc;
+          height: 30px;
+          border-radius: 5px;
+          padding-left: 5px;
+        }
+        input:focus {
+          border: 1px solid blue;
+        }
       }
-      img{
+      .expand{
         width: 100%;
-        height: 100%;
-      }
-    }
-
-    .btn {
-      width: 100%;
-      position: fixed;
-      bottom: 0px;
-      background-color: #EF6D00;
-      color: #fff;
-      font-size: 18px;
-      border-radius: 0px;
-      border: 0px;
-      padding: 0px;
-      height: 50px;
-      line-height: 50px;
-      z-index: 1000;
-      text-align: center;
-    }
-    .record {
-      width: 100%;
-      color: #EF6D00;
-      margin-bottom: 65px;
-      .recordTitle {
-        font-size: 12px;
-        text-align: center;
-        margin-bottom: 15px;
-        padding: 0 10px;
-      }
-      .invitation {
-        text-align: center;
-        padding: 0 10px;
-        p {
-          margin-bottom: 10px;
-          font-size: 12px;
-        }
-        .pRecord {
-          font-size: 14px;
-          font-weight: bold;
-          span {
-            background-color: #fff;
-            z-index: 1000;
-            display: inline-block;
-            width: 75px;
-            position: relative;
-          }
-        }
-        hr {
-          background-color: #FDC73F;
-          height: 1px;
-          width: 100%;
-          position: relative;
-          top: -18px;
-        }
-        div {
-          margin-top: 10px;
-          p {
-            font-size: 14px;
-          }
-          span {
-            display: inline-block;
-            color: #101010;
-          }
-          .headImg {
-            border: 1px dotted #ccc;
-            width: 30px;
-            height: 30px;
-            border-radius: 15px;
-            vertical-align: middle;
-            margin-right: 10px;
-          }
-        }
-
-      }
-    }
-    .mask {
-      display: none;
-      width: 100%;
-      height: 100%;
-      position: fixed;
-      top: 0;
-      left: 0;
-      z-index: 1000;
-      background: rgba(84, 84, 84, .5);
-      .modelTask {
-        margin: auto;
-        margin-top: 30%;
-        width: 260px;
-        height: 350px;
+        height: calc(100% - 70px);
+        background-color: rgba(144,144,144,.2);
+        margin-top: 5px;
         border-radius: 10px;
-        background: #fff;
-        div {
-          padding: 20px;
-          p {
-            text-align: center;
-          }
-          .modelTitle {
-            font-size: 18px;
-            color: #CBA567;
-            margin-bottom: 15px;
-          }
-          .modelContent {
-            font-size: 14px;
-            line-height: 24px;
-          }
-          .codes {
-            margin-top: 10px;
-          }
-          .closeMask {
-            display: inline-block;
-            width: 100%;
-            height: 30px;
-            line-height: 30px;
+        div{
+          padding-left: 10px;
+          background-color: #fff;
+          margin-top: 5px;
+          border-radius: 10px;
+          p{
+            line-height: 20px;
+            color: rgba(83, 82, 82, 1);
             font-size: 13px;
-            color: #fff;
-            background: rgba(16, 16, 16, 0.5);
-            border: 1px solid rgba(16, 16, 16, 0.5);
-            border-radius: 6px;
-            margin-top: 15px;
+            text-align: left;
+            font-family: PingFangSC-regular;
+
           }
         }
-
       }
-
-    }
-    .maskRule {
-      display: none;
-      width: 100%;
-      height: 100%;
-      position: fixed;
-      top: 0;
-      left: 0;
-      z-index: 1000;
-      background: rgba(84, 84, 84, .5);
-      .modelTask {
-        margin: auto;
-        margin-top: 30%;
-        width: 250px;
-        height: 335px;
-        border-radius: 10px;
-        background: #fff;
-        div {
-          padding: 20px;
-          position: relative;
-          .modelTitle {
-            text-align: center;
-            font-size: 18px;
-            color: #CBA567;
-            margin-bottom: 15px;
-          }
-          .modelContent {
-            font-size: 14px;
-            line-height: 24px;
-          }
-          .closeMask {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            width: 14px;
-            height: 14px;
-            font-size: 13px;
-          }
-        }
-
-      }
-
-    }
-    div.mask.menuStyle {
-      display: block;
-    }
-    div.maskRule.menuStyle {
-      display: block;
     }
   }
 </style>
 
 <script>
-  import utils from "../../utils/utils.js";
+
   export default {
     name: '',
     props: [],
     data() {
       return {
-        checked: false,
-        checkedRule: false
+        input: '',
+        datas:''
       }
     },
-    onLoad(option){
+    onLoad(option) {
       console.log(option)
-      if(option.actives == '88'){
-        var actId = wx.getStorageSync('actId');
-        var sessionID = wx.getStorageSync('sessionID');
-        wx.request({
-          url: "https://www.hejinkai.com/wechatapi/help/getHelpId",
-          method: "POST",
-          data: {actId: actId, sessionID: sessionID},
-          header: {'content-type': 'application/x-www-form-urlencoded'},
-          success: function (res) {
-            if (res.data.success) {
-              wx.setStorageSync("myHelpId", res.data.helpId)
-              var myHelpId = res.data.helpId
-              console.log(res.data.helpId)
-              if (res.data.helpId) {
-                var sysUrl = 'https://www.hejinkai.com/wechatapi/nologin/help/findHelpDetailUserList';
-                wx.request({
-                  url: sysUrl,
-                  method: "POST",
-                  data: {helpId: res.data.helpId},
-                  header: {'content-type': 'application/x-www-form-urlencoded'},
-                  success: function (res) {
-                    console.log(res);
-                    that.$store.state.board.headPic = [];
-                    if (res.data.success) {
-
-                      // this.friendsNum = res.data.data.length;
-                      for (var i = 0; i < res.data.data.length; i++) {
-                        that.$store.state.board.headPic.push({
-                          img: res.data.data[i].avatarUrl,
-                          name: res.data.data[i].nickName
-                        })
-                      }
-                    }
-                    console.log(344444444)
-                    that.$store.state.board.myExistDoHelp = false
-                    wx.redirectTo({
-                      url:'/pages/activePower/main?actId='+actId+"&helpId="+myHelpId
-                    })
-                  }
-                })
-
-              }
-            }
-          }
-        })
-      }
 
     },
-    computed: {
-      headPic() {
-        return this.$store.state.board.headPic
-      },
-      goLink() {
-        return this.$store.state.board.goLink
-      }
-    },
+    computed: {},
     methods: {
-      bindGetUserInfo(){
-        this.touristLink()
-      },
-      touristLink() {
+      selStore() {
         var that = this;
-        utils.login(that,false,function (sessionID,actId) {
-          if(actId){
-            wx.request({
-              url: "https://www.hejinkai.com/wechatapi/help/execuHelp",
-              method: "POST",
-              data: {sessionID: sessionID, actId: actId},
-              header: {'content-type': 'application/x-www-form-urlencoded'},
-              success: function (res) {
-                if (res.data.success) {
-                  wx.setStorageSync("myHelpId", res.data.helpId)
-                  wx.redirectTo({
-                    // url: '/pages/showPages/main'
-                    url: '/pages/showPages/main?actId='+actId+"&helpId="+res.data.helpId
-                  })
-                }
+        console.log(this.input)
+        if(that.input.trim()){
+          wx.request({
+            url: that.$store.state.board.urlHttp + "/wechatapi/nologin/store/findStoreTopList",
+            method: "POST",
+            data: {
+              keyword: that.input.trim(),
+              appid:that.$store.state.board.appid
+            },
+            header: {'content-type': 'application/x-www-form-urlencoded'},
+            success: function (res) {
+              console.log(res)
+              if(res.data.success){
+                that.datas = res.data.storeList;
+                console.log(that.datas)
               }
-            })
-          }
-        });
-      },
-      continueHelp(){
-        var actId = wx.getStorageSync('actId');
-        var sessionID = wx.getStorageSync('sessionID');
-        wx.request({
-          url: "https://www.hejinkai.com/wechatapi/help/getHelpId",
-          method: "POST",
-          data: {sessionID: sessionID, actId: actId},
-          header: {'content-type': 'application/x-www-form-urlencoded'},
-          success: function (res) {
-            if (res.data.success) {
-              wx.setStorageSync("myHelpId", res.data.helpId)
-              wx.redirectTo({
-                // url: '/pages/showPages/main'
-                url: '/pages/showPages/main?actId='+actId+"&helpId="+res.data.helpId
-              })
+
             }
-          }
-        })
+          })
+        }else{
+          that.datas = [];
+        }
       },
-      receiveAreward() {
-        this.checked = true;
-      },
-      activeRules() {
-        this.checkedRule = true
-      },
-      closeMash() {
-        this.checkedRule = false
-        this.checked = false;
+      insertMp(storeId){
+        if(storeId){
+          this.$store.state.board.storeId = storeId;
+          wx.setStorageSync("storeId", storeId);
+          wx.redirectTo({
+            url: '/pages/activePower/main'
+          })
+        }
       }
 
     },
@@ -363,7 +135,7 @@
       that.checked = false
       that.checkedRule = false
       wx.setNavigationBarTitle({
-        title: "盛夏狂欢季"
+        title: "门店搜索"
       })
 
       wx.getSystemInfo({
@@ -372,28 +144,6 @@
           this.$store.state.board.windowHeight = res.windowHeight
         }
       })
-
-      // var QQMapWX = require('../../../static/qqmap-wx-jssdk.min.js');
-      // var qqmapsdk;
-      // qqmapsdk = new QQMapWX({
-      //   key: 'OISBZ-SUKW6-LJ7SS-MXQHI-GC5FF-CQBGM'
-      // });
-      // wx.getLocation({
-      //   type: 'gcj02',
-      //   altitude: true,
-      //   success: (res) => {
-      //     qqmapsdk.reverseGeocoder({
-      //       location: {
-      //         latitude: res.latitude,
-      //         longitude: res.longitude
-      //       },
-      //       success: (addressRes) => {
-      //         this.$store.state.board.address = addressRes.result.address_component.province + '' + addressRes.result.address_component.district;
-      //         this.$store.state.board.location = addressRes.result.address_component.province;
-      //       }
-      //     })
-      //   }
-      // })
 
     },
     components: {}

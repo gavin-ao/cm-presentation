@@ -12,6 +12,7 @@ const state = {
   otherHelpId:'',
   myHelpId:'',
   actId:'',
+  storeId:'',
   sessionID:'',
   checked: false,
   checkedRule: false,
@@ -23,26 +24,12 @@ const state = {
   partakeNums: 0,
   drawPoster:'',
   btnText:{},
-  mainInfos:{
-    actRule: '',  //活动规则
-    exchangeRule: '', //兑换流程
-    arrImage: [],
-    rulesOfActivity: '',
-    exithelpId: '',
-    contactsCondition: '',
-    commandText: '',
-    contentTitle: '', //领取奖励标题
-    contentHead: '', //领取奖励头部
-    contentMid: '', //领取奖励中部
-    contentFoot: '', //领取奖励脚部
-    contentBtn: '' //领取奖励按钮
-  },
   actShareCopywriting:'',
-  appid:'wx7ce4b9ce272d1817',
-  secret:'d946a8de0df55661af48b97fa6de4d9b',
+  appid:'wx032f66ebe0dcce8f',
+  secret:'64a61af911d59a37a6fe86a8087a1bfa',
   headPic:[],
-  // urlHttp:'https://dataanalysis.easy7share.com'
-  urlHttp:'https://dataanalysis-cs.easy7share.com'
+  // urlHttp:'https://cm-service.easy7share.com'
+  urlHttp:'https://cm-service.easy7share.com'
 }
 
 export default {

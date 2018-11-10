@@ -15,10 +15,12 @@
       <!--<img class="backText" src="/static/img/shareBack1.png" alt="">-->
     </div>
     <div class="menu" style="">
-      <p style="" v-html="actShareCopywriting">
+      <p style=" font-size: 14px;text-align: center;color: #4A4A4A;margin-bottom: 10rpx;">
+        <span style="display: inline-block;padding: 0rpx 70rpx;">{{actShareCopywriting}}</span>
         <!--这是你的专属海报，发送给好友<br/>-->
         <!--3人助力免费赢得原价<span>288 </span>元试听课机会一次-->
       </p>
+
       <button class="shares" open-type="share">
         {{btnText.bxt_share}}
       </button>
@@ -54,10 +56,11 @@
 
       var actId = that.$store.state.board.actId
       var helpId = that.$store.state.board.myHelpId
+      var storeId = that.$store.state.board.storeId
       var path = "/pages/activePower/main";
 
-      if (actId && helpId) {
-        path = path + "?actId=" + actId + "&helpId=" + helpId
+      if (actId && helpId && storeId) {
+        path = path + "?storeId=" + storeId + "&actId=" + actId + "&helpId=" + helpId
       } else {
 
       }
@@ -83,11 +86,11 @@
         ctx.fillRect(0, 0, this.getWindowWidth, that.ctxHeight);
         ctx.draw(true)
         var heights = that.ctxHeight - 70
-        ctx.drawImage(that.drawPoster, 13, 53, (that.getWindowWidth - 26), heights-50)
+        ctx.drawImage(that.drawPoster, 13, 53, (that.getWindowWidth - 26), heights - 50)
         ctx.draw(true)
 //        ctx.drawImage('/static/img/shareBack1.png', 13, 33, (that.getWindowWidth - 26), heights)
 //        ctx.draw(true)
-        if(that.drawAvatarUrl) {
+        if (that.drawAvatarUrl) {
           ctx.save()
           ctx.beginPath()
           ctx.arc(48, 85, 20, 0, Math.PI * 2, false);
@@ -211,6 +214,7 @@
       var sessionID = that.$store.state.board.sessionID
       var myHelpId = that.$store.state.board.myHelpId
       var actId = that.$store.state.board.actId
+      var storeId = that.$store.state.board.storeId
       that.$store.state.board.qrcodeUrl = ''
       that.qrcodeUrl = ''
       // 二维码获取
@@ -222,7 +226,7 @@
           appid: that.$store.state.board.appid,
           secret: that.$store.state.board.secret,
           sessionID: sessionID,
-          path: 'pages/activePower/main?actId=' + actId + "&helpId=" + myHelpId
+          path: 'pages/activePower/main?storeId=' + storeId + 'actId=' + actId + "&helpId=" + myHelpId
         },
         header: {'content-type': 'application/x-www-form-urlencoded'},
         success: function (res) {

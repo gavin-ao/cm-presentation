@@ -10,26 +10,64 @@
 
       that.$store.state.board.otherHelpId = ''
       that.$store.state.board.myHelpId = ''
-      that.$store.state.board.actId = ''
+      // that.$store.state.board.storeId = ''
       that.$store.state.board.sessionID = ''
-      if (option.query.actId) {
-        that.$store.state.board.actId = option.query.actId;
-        if (option.query.helpId) {
-          that.$store.state.board.otherHelpId = option.query.helpId;
-
+      // var url = "http://activitycounter.easy7share.com/hello/statis/1";
+      // var dd = encodeURIComponent(url);
+      // option.query.q = dd;
+      if (option.query.q || option.query.storeId){
+        if (option.query.storeId) {
+          wx.setStorageSync("storeId", option.query.storeId)
+          that.$store.state.board.storeId = option.query.storeId;
+          if (option.query.helpId) {
+            that.$store.state.board.otherHelpId = option.query.helpId;
+          }
+          setTimeout(function () {
+            wx.redirectTo({
+              url: '/pages/activePower/main'
+            })
+          },500)
         }
-        wx.redirectTo({
-          url: '/pages/activePower/main'
-        })
-      }else{
+        if(option.query.q ){
+          var q = decodeURIComponent(option.query.q);
+          var urlArr = q.split("/");
+          var storeId  = urlArr[urlArr.length-1];
+          console.log(storeId)
+          if(storeId){
+            wx.setStorageSync("storeId", storeId)
+            that.$store.state.board.storeId =storeId;
+            setTimeout(function () {
+              wx.redirectTo({
+                url: '/pages/activePower/main'
+              })
+            },500)
+          }else{
+            wx.redirectTo({
+              url: '/pages/instrustor/main'
+            })
+          }
+        }
+
+      } else {
         wx.getSetting({
           success: function (res) {
             if (res.authSetting['scope.userInfo']) {
+              if (wx.getStorageSync("storeId")) {
+                that.$store.state.board.storeId = wx.getStorageSync("storeId")
+              }
               utils.login(that, function (sessionID, actId) {
-
+                console.log(  that.$store.state.board.storeId)
+                if(that.$store.state.board.storeId){
+                  wx.redirectTo({
+                    url: '/pages/activePower/main'
+                  })
+                }else{
+                  wx.redirectTo({
+                    url: '/pages/instrustor/main'
+                  })
+                }
               })
-
-            }else{
+            } else {
               wx.redirectTo({
                 url: '/pages/instrustor/main'
               })

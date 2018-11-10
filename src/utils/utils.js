@@ -38,6 +38,7 @@ function login(that, func) {
               data: {
                 appid: that.$store.state.board.appid,
                 secret: that.$store.state.board.secret,
+                storeId:that.$store.state.board.storeId,
                 code: code,
                 encryptedData: res.encryptedData,
                 iv: res.iv

@@ -13,14 +13,14 @@
       <img :src="goLink" alt="">
     </div>
     <div class="record" :class="{rewardCondition:rulesOfActivity===true}">
-      <p class="modelTitle" v-if="headPic.length==partakeNums">助力完成</p>
+      <p class="modelTitle" v-if="headPic.length==partakeNum">助力完成</p>
       <div class="invitation">
         <div class="helpZero" v-if="headPic.length==0">
           <img class="noneImg" src="/static/img/none.png" alt="">
           <p>还没有人助力</p>
 
         </div>
-        <div class="helpPeo" v-else-if="headPic.length<=partakeNums">
+        <div class="helpPeo" v-else-if="headPic.length<=partakeNum">
           <!--<div class="helpPeo">-->
           <p><span class="helpNum"> {{headPic.length}}</span><br/>邀请记录</p>
           <!--<span class="helpText">邀请记录</span>-->
@@ -29,7 +29,7 @@
               <img :src="item.img" v-for="(item,index) in headPic" :key="index" alt="">
             </p>
           </scroll-view>
-          <p class="helpLackNum" v-if="headPic.length<partakeNums">还差（{{partakeNums - headPic.length}}）位</p>
+          <p class="helpLackNum" v-if="headPic.length<partakeNum">还差（{{partakeNum - headPic.length}}）位</p>
           <p v-else v-html="actReply"></p>
         </div>
       </div>
@@ -55,9 +55,12 @@
         <span v-if="headPic.length==0">{{btnText.bxt_continue}}</span>
         <span v-else>{{btnText.bxt_continue1}}</span>
       </div>
-      <button class="menus" :class="{rewardCondition:receiveReward=='receiveReward'}" open-type="contact"
-              hover-class="hoverNone" hover-stay-time="800" @click="getRewardAct" type="default"  :session-from=sessionFrom>{{btnText.bxt_reward}}
-      </button>
+      <!--<button class="menus" :class="{rewardCondition:receiveReward=='receiveReward'}" open-type="contact"-->
+              <!--hover-class="hoverNone" hover-stay-time="800" @click="getRewardAct" type="default"  :session-from=sessionFrom>{{btnText.bxt_reward}}-->
+      <!--</button>-->
+      <div class="menus" @click="receiveAreward" :class="{rewardCondition:receiveReward=='receiveReward'}"
+           hover-class="hoverNone" hover-stay-time="800"> {{btnText.bxt_reward}}
+      </div>
     </div>
     <div class="maskRules" :class="{menuStyle:checkedRules == true}">
       <!--<div class="maskRules menuStyle" >-->
@@ -70,7 +73,12 @@
           <p class="modelTitle">活动规则</p>
           <img src="/static/img/line.png" class="lines" alt="" style="">
           <scroll-view scroll-y>
-            <p v-html="actRule"></p>
+            <block v-for="(item,index) in ruleArr" :key="index">
+              <p style="font-size: 13px; line-height: 17px; color: #4A4A4A; margin-top: 5px; font-weight: lighter;">
+                <span style="display: inline-block;width: 7%; float: left">{{(index+1)}}、</span>
+                <span style="display: inline-block;width: 92%;">{{item}}</span>
+              </p>
+            </block>
           </scroll-view>
         </div>
       </div>
@@ -84,19 +92,35 @@
           <p class="modelContent">
             {{contentHead}}
           </p>
-          <span class="codes" @longtap="copyTBL">
-                {{contentMid}}
-          </span>
-          <p class="copy" @longtap="copyTBL"> （长按复制）</p>
+          <p class="codes">
+                <img :src="rewardImg" alt="" mode="aspectFit">
+          </p>
           <p class="copy">
-            {{contentFoot}}
+           {{contentFoot}}
           </p>
           <!--<div class="btn" @click="receiveFood">去绑定</div>-->
           <div class="btn modelMyHelp" @click="existDoHelps">{{contentBtn}}</div>
         </div>
       </div>
     </div>
-
+    <div class="maskRule" :class="{menuStyle:checkedRule == true}">
+      <!--<div class="maskRule menuStyle">-->
+      <div class="modelTask">
+        <div style="">
+          <p class="maskClose" @click="closeMash">
+            <img src="/static/img/close.png" class="closeMask"/>
+          </p>
+          <p class="modelTitle">{{contentTitle}}</p>
+          <p class="modelContent">
+            {{contentHead}}
+          </p>
+          <p class="codes">
+            <img :src="rewardImg" alt="" mode="aspectFit">
+          </p>
+          <p class="copy"> {{contentFoot}}</p>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -117,11 +141,13 @@
         contentHead: '', //领取奖励头部
         contentMid: '', //领取奖励中部
         contentFoot: '', //领取奖励脚部
-        contentBtn: '' //领取奖励按钮
+        contentBtn: '', //领取奖励按钮
+        ruleArr:[],
+        rewardImg:''
       }
     },
     onLoad(option) {
-      console.log(option)
+      console.log(option);
       var that = this
     },
     onShow(option) {
@@ -142,7 +168,7 @@
       wx.request({
         url: sysUrl,
         method: "POST",
-        data: {appid: that.$store.state.board.appid},
+        data: {storeId: that.$store.state.board.storeId},
         header: {'content-type': 'application/x-www-form-urlencoded'},
         success: function (res) {
           console.log(new Date().getTime())
@@ -150,6 +176,7 @@
             that.$store.state.board.actId =  res.data.actId;
             that.$store.state.board.goLink = that.$store.state.board.urlHttp + res.data.url;
             that.actRule = res.data.actRule;
+            that.ruleArr = that.actRule.split('\n');
             that.exchangeRule = res.data.exchangeRule;
             that.$store.state.board.actShareTitle = res.data.actShareTitle;
             that.$store.state.board.actTitle = res.data.actTitle;
@@ -189,7 +216,7 @@
                           wx.request({
                             url: that.$store.state.board.urlHttp + "/wechatapi/help/existDoHelpByActId",
                             method: "POST",
-                            data: {actId: actId, sessionID: sessionID, helpId: otherHelpId,},
+                            data: {actId: actId, sessionID: sessionID, helpId: otherHelpId,type:1},
                             header: {'content-type': 'application/x-www-form-urlencoded'},
                             success: function (res) {
                               that.$store.state.board.checked = false
@@ -203,6 +230,7 @@
                                     that.contentBtn = res.data.rewardActContent.contentBtn;
                                     that.$store.state.board.checked = true
                                   }
+                                  that.rewardImg = that.$store.state.board.urlHttp + res.data.filePath;
 
                                 }
                                 that.$store.state.board.existDoHelp = false
@@ -305,28 +333,6 @@
     onReady(option) {
 
     },
-    onShareAppMessage(res) {
-      var that = this;
-      if (res.from === 'button') {
-        // 来自页面内转发按钮
-        console.log(res.target)
-      }
-      var actId = this.$store.state.board.actId
-      var helpId = this.$store.state.board.myHelpId
-      var path = "/pages/activePower/main";
-
-      if (actId && helpId) {
-        path = path + "?actId=" + actId + "&helpId=" + helpId
-      } else {
-        path = path + "?actId=" + actId
-      }
-      return {
-        title: that.$store.state.board.actShareTitle,
-        path: path,
-        success: function () {
-        }
-      }
-    },
     methods: {
       getUserInfoInvite() {
         this.myToHelp()
@@ -359,8 +365,40 @@
                   }
                 })
                 //奖励
+                // wx.request({
+                //   url: that.$store.state.board.urlHttp + "/wechatapi/help/getRewardActCommandByOther",
+                //   method: "POST",
+                //   data: {sessionID: sessionID, actId: actId},
+                //   header: {'content-type': 'application/x-www-form-urlencoded'},
+                //   success: function (res) {
+                //     if (res.data.success) {
+                //       // contentTitle:'', //领取奖励标题
+                //       //   contentHead:'', //领取奖励头部
+                //       //   contentMid:'', //领取奖励中部
+                //       //   contentFoot:'', //领取奖励脚部
+                //       //   contentBtn:'', //领取奖励按钮
+                //       if (res.data.rewardActContent) {
+                //         that.contentTitle = res.data.rewardActContent.contentTitle;
+                //         that.contentHead = res.data.rewardActContent.contentHead;
+                //         that.contentMid = res.data.rewardActContent.contentMid;
+                //         that.contentFoot = res.data.rewardActContent.contentFoot;
+                //         that.contentBtn = res.data.rewardActContent.contentBtn;
+                //         that.$store.state.board.checked = true
+                //       }
+                //     } else {
+                //       wx.showToast({
+                //         title: res.data.msg,
+                //         icon: 'none',
+                //         duration: 2000
+                //       })
+                //     }
+                //     that.$store.state.board.existDoHelp = false
+                //     that.$store.state.board.myExistDoHelp = true
+                //   }
+                // })
                 wx.request({
-                  url: that.$store.state.board.urlHttp + "/wechatapi/help/getRewardActCommandByOther",
+                  url: that.$store.state.board.urlHttp + "/wechatapi/help/getRewardActCommandQrcodeByOther",
+                  // url: "http://192.168.50.52:8099/wechatapi/help/getRewardActCommandQrcodeByOther",
                   method: "POST",
                   data: {sessionID: sessionID, actId: actId},
                   header: {'content-type': 'application/x-www-form-urlencoded'},
@@ -379,6 +417,7 @@
                         that.contentBtn = res.data.rewardActContent.contentBtn;
                         that.$store.state.board.checked = true
                       }
+                      that.rewardImg = that.$store.state.board.urlHttp + res.data.filePath;
                     } else {
                       wx.showToast({
                         title: res.data.msg,
@@ -386,28 +425,46 @@
                         duration: 2000
                       })
                     }
-                    that.$store.state.board.existDoHelp = false
-                    that.$store.state.board.myExistDoHelp = true
-                  }
-                })
-                //埋点
-                wx.request({
-                  url:  that.$store.state.board.urlHttp + "/wechatapi/help/getRewardActCommandOpenWindowByOther",
-                  method: "POST",
-                  data: {sessionID: sessionID,actId:actId},
-                  header: {'content-type': 'application/x-www-form-urlencoded'},
-                  success: function (res) {
-                    if (res.data.success) {
+                    that.$store.state.board.existDoHelp = false;
+                    that.$store.state.board.myExistDoHelp = true;
+                    //埋点
+                    wx.request({
+                      url:  that.$store.state.board.urlHttp + "/wechatapi/help/getRewardActCommandOpenWindowByOther",
+                      method: "POST",
+                      data: {sessionID: sessionID,actId:actId},
+                      header: {'content-type': 'application/x-www-form-urlencoded'},
+                      success: function (res) {
+                        if (res.data.success) {
 
-                    }else{
-                      wx.showToast({
-                        title: res.data.msg,
-                        icon: 'none',
-                        duration: 2000
-                      })
-                    }
+                        }else{
+                          wx.showToast({
+                            title: res.data.msg,
+                            icon: 'none',
+                            duration: 2000
+                          })
+                        }
+                      }
+                    })
                   }
                 })
+                // //埋点
+                // wx.request({
+                //   url:  that.$store.state.board.urlHttp + "/wechatapi/help/getRewardActCommandOpenWindowByOther",
+                //   method: "POST",
+                //   data: {sessionID: sessionID,actId:actId},
+                //   header: {'content-type': 'application/x-www-form-urlencoded'},
+                //   success: function (res) {
+                //     if (res.data.success) {
+                //
+                //     }else{
+                //       wx.showToast({
+                //         title: res.data.msg,
+                //         icon: 'none',
+                //         duration: 2000
+                //       })
+                //     }
+                //   }
+                // })
               }
             }
           })
@@ -465,8 +522,52 @@
         var that = this;
         var myHelpId = that.$store.state.board.myHelpId;
         var sessionID = that.$store.state.board.sessionID;
+        // wx.request({
+        //   url: that.$store.state.board.urlHttp + "/wechatapi/help/getRewardActCommand",
+        //   method: "POST",
+        //   data: {sessionID: sessionID, helpId: myHelpId},
+        //   header: {'content-type': 'application/x-www-form-urlencoded'},
+        //   success: function (res) {
+        //     if (res.data.success) {
+        //       if (res.data.rewardActContent) {
+        //         that.contentTitle = res.data.rewardActContent.contentTitle;
+        //         that.contentHead = res.data.rewardActContent.contentHead;
+        //         that.contentMid = res.data.rewardActContent.contentMid;
+        //         that.contentFoot = res.data.rewardActContent.contentFoot;
+        //         that.contentBtn = res.data.rewardActContent.contentBtn;
+        //         that.$store.state.board.checkedRule = true
+        //       }
+        //       //埋点
+        //       wx.request({
+        //         url: that.$store.state.board.urlHttp + "/wechatapi/help/getRewardActCommandOpenWindow",
+        //         method: "POST",
+        //         data: {helpId: myHelpId, sessionID: sessionID},
+        //         header: {'content-type': 'application/x-www-form-urlencoded'},
+        //         success: function (res) {
+        //           console.log(res)
+        //           if (res.data.success) {
+        //
+        //           } else {
+        //             wx.showToast({
+        //               title: res.data.msg,
+        //               icon: 'none',
+        //               duration: 2000
+        //             })
+        //           }
+        //         }
+        //       })
+        //     } else {
+        //       wx.showToast({
+        //         title: res.data.msg,
+        //         icon: 'none',
+        //         duration: 2000
+        //       })
+        //     }
+        //   }
+        // })
         wx.request({
-          url: that.$store.state.board.urlHttp + "/wechatapi/help/getRewardActCommand",
+          url: that.$store.state.board.urlHttp + "/wechatapi/help/getRewardActCommandQrcode",
+          // url:  "http://192.168.50.52:8099/wechatapi/help/getRewardActCommandQrcode",
           method: "POST",
           data: {sessionID: sessionID, helpId: myHelpId},
           header: {'content-type': 'application/x-www-form-urlencoded'},
@@ -480,6 +581,7 @@
                 that.contentBtn = res.data.rewardActContent.contentBtn;
                 that.$store.state.board.checkedRule = true
               }
+              that.rewardImg = that.$store.state.board.urlHttp + res.data.filePath;
               //埋点
               wx.request({
                 url: that.$store.state.board.urlHttp + "/wechatapi/help/getRewardActCommandOpenWindow",
@@ -584,6 +686,7 @@
             name: headPic[i].nickName.length > 10 ? headPic[i].nickName.slice(0, 9) + '...' : headPic[i].nickName
           })
         }
+        console.log( that.$store.state.board.headPic)
       },
       copyTBL(e) {
         var self = this;
@@ -615,9 +718,9 @@
     created() {
     },
     computed: {
-      mainInfos(){
-        return this.$store.state.board.mainInfos;
-      },
+      // mainInfos(){
+      //   return this.$store.state.board.mainInfos;
+      // },
       headPic() {
         return this.$store.state.board.headPic
       },
@@ -961,12 +1064,14 @@
             font-size: 15px;
             display: block;
             text-align: center;
-            margin-top: 25px;
             line-height: 20px;
             font-weight: normal;
-            border: 1px solid #ccc;
+            /*border: 1px solid #ccc;*/
             /*font-weight: bold;*/
-            padding: 8px 0px;
+            img{
+              width: 120px;
+              height: 120px;
+            }
           }
           .copy {
             /*font-size: 15px;*/
@@ -1057,12 +1162,12 @@
             font-size: 15px;
             display: block;
             text-align: center;
-            margin-top: 30px;
             line-height: 20px;
             font-weight: normal;
-            border: 1px solid #ccc;
-            /*font-weight: bold;*/
-            padding: 8px 0px;
+            img{
+              width: 140px;
+              height: 140px;
+            }
           }
           .copy {
             /*font-weight: lighter;*/
