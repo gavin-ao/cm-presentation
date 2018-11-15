@@ -177,8 +177,6 @@
                 scope: 'scope.writePhotosAlbum',
                 success: function(){
                   wx.canvasToTempFilePath({
-                    destWidth:that.getWindowWidth,
-                    destHeight:that.ctxHeight,
                     canvasId: 'shareCanvas',
                     success: (res) => {
                       wx.saveImageToPhotosAlbum({
@@ -210,8 +208,6 @@
               })
             }else{
               wx.canvasToTempFilePath({
-                destWidth:that.getWindowWidth,
-                destHeight:that.ctxHeight,
                 canvasId: 'shareCanvas',
                 success: (res) => {
                   wx.saveImageToPhotosAlbum({
@@ -317,7 +313,7 @@
           appid: that.$store.state.board.appid,
           secret: that.$store.state.board.secret,
           sessionID: sessionID,
-          path: 'pages/activePower/main?storeId=' + storeId + 'actId=' + actId + "&helpId=" + myHelpId
+          path: 'pages/activePower/main?storeId=' + storeId + '&actId=' + actId + "&helpId=" + myHelpId
         },
         header: {'content-type': 'application/x-www-form-urlencoded'},
         success: function (res) {
