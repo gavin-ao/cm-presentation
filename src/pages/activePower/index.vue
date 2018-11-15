@@ -4,15 +4,25 @@
     <!--<movable-view class="activeRule rulesCondition" @click="activeRules" :x="x" :y="y" direction="all" @change="changeDir">活动规则</movable-view>-->
     <!--<img :src="goLink" alt="">-->
     <!--</movable-area>-->
+    <div class="helpInfos" :class="{rewardCondition:helpInfos===false}">
+      <div>
+        <p class="tit">提示</p>
+        <p class="con">需要允许微信授权才能继续操作</p>
+        <button class="menus" @getuserinfo="helpInfoss" open-type="getUserInfo" hover-class="hoverNone" hover-stay-time="800"> 确定</button>
+      </div>
+    </div>
     <div class="containes">
       <movable-area style="">
         <movable-view direction="vertical" class="activeRule rulesCondition" @click="activeRules">活动规则</movable-view>
         <!--<img :src="goLink" alt="">-->
       </movable-area>
       <!--<span class="activeRule rulesCondition" @click="activeRules">活动规则</span>-->
-      <img :src="goLink" alt="">
+      <img :src="goLink" alt="" mode="widthFix"> <span></span>
     </div>
     <div class="record" :class="{rewardCondition:rulesOfActivity===true}">
+      <p style="position: fixed;z-index: 1000;width:calc(100% - 40rpx);text-align: center;" @click="modelSetClose1">
+        <img src="/static/img/modelArrow.png" alt="" style="width: 40rpx;height: 32rpx;">
+      </p>
       <p class="modelTitle" v-if="headPic.length==partakeNum">助力完成</p>
       <div class="invitation">
         <div class="helpZero" v-if="headPic.length==0">
@@ -31,37 +41,72 @@
           </scroll-view>
           <p class="helpLackNum" v-if="headPic.length<partakeNum">还差（{{partakeNum - headPic.length}}）位</p>
           <p v-else v-html="actReply"></p>
+
+        </div>
+        <div class="menu">
+          <div class="menus" @click="existDoHelps" :class="{rewardCondition:manIsFull=='manIsFull'}"
+               hover-class="hoverNone"
+               hover-stay-time="800">
+            {{btnText.bxt_full}}
+          </div>
+          <button class="menus" @getuserinfo="bindGetUserInfo" :class="{rewardCondition:giveHelp=='giveHelp'}"
+                  open-type="getUserInfo" hover-class="hoverNone" hover-stay-time="800"> {{btnText.bxt_help}}
+          </button>
+          <div class="menus" @click="existDoHelps" :class="{rewardCondition:alreadyHelp=='alreadyHelp'}"
+               hover-class="hoverNone" hover-stay-time="800">
+            {{btnText.bxt_alhelp}}
+          </div>
+          <div class="menus" @click="continueHelp" :class="{rewardCondition:continueToInvite=='continueToInvite'}"
+               hover-class="hoverNone" hover-stay-time="800">
+            <span v-if="headPic.length==0">{{btnText.bxt_continue}}</span>
+            <span v-else>{{btnText.bxt_continue1}}</span>
+          </div>
+          <!--<button class="menus" :class="{rewardCondition:receiveReward=='receiveReward'}" open-type="contact"-->
+          <!--hover-class="hoverNone" hover-stay-time="800" @click="getRewardAct" type="default"  :session-from=sessionFrom>{{btnText.bxt_reward}}-->
+          <!--</button>-->
+          <div class="menus" @click="receiveAreward" :class="{rewardCondition:receiveReward=='receiveReward'}"
+               hover-class="hoverNone" hover-stay-time="800"> {{btnText.bxt_reward}}
+          </div>
         </div>
       </div>
     </div>
     <!--<div class="menu" >-->
     <div class="menu">
-      <button class="menuss" open-type="getUserInfo" @getuserinfo="getUserInfoInvite" :class="{rewardCondition:getInfoInvite=='getInfoInvite'}" hover-class="hoverNone" hover-stay-time="800">
+      <button class="menuss" open-type="getUserInfo" @getuserinfo="getUserInfoInvite"
+              :class="{rewardCondition:getInfoInvite=='getInfoInvite'}" hover-class="hoverNone" hover-stay-time="800">
         {{btnText.bxt_invite}}
       </button>
-      <div class="menus" @click="existDoHelps" :class="{rewardCondition:manIsFull=='manIsFull'}" hover-class="hoverNone"
-           hover-stay-time="800">
-        {{btnText.bxt_full}}
-      </div>
-      <button class="menus" @getuserinfo="bindGetUserInfo" :class="{rewardCondition:giveHelp=='giveHelp'}"
-              open-type="getUserInfo" hover-class="hoverNone" hover-stay-time="800"> {{btnText.bxt_help}}
-      </button>
-      <div class="menus" @click="existDoHelps" :class="{rewardCondition:alreadyHelp=='alreadyHelp'}"
-           hover-class="hoverNone" hover-stay-time="800">
-        {{btnText.bxt_alhelp}}
-      </div>
-      <div class="menus" @click="continueHelp" :class="{rewardCondition:continueToInvite=='continueToInvite'}"
-           hover-class="hoverNone" hover-stay-time="800">
-        <span v-if="headPic.length==0">{{btnText.bxt_continue}}</span>
-        <span v-else>{{btnText.bxt_continue1}}</span>
-      </div>
-      <!--<button class="menus" :class="{rewardCondition:receiveReward=='receiveReward'}" open-type="contact"-->
-              <!--hover-class="hoverNone" hover-stay-time="800" @click="getRewardAct" type="default"  :session-from=sessionFrom>{{btnText.bxt_reward}}-->
+      <!--<div class="menus" @click="existDoHelps" :class="{rewardCondition:manIsFull=='manIsFull'}" hover-class="hoverNone"-->
+      <!--hover-stay-time="800">-->
+      <!--{{btnText.bxt_full}}-->
+      <!--</div>-->
+      <!--<button class="menus" @getuserinfo="bindGetUserInfo" :class="{rewardCondition:giveHelp=='giveHelp'}"-->
+      <!--open-type="getUserInfo" hover-class="hoverNone" hover-stay-time="800"> {{btnText.bxt_help}}-->
       <!--</button>-->
-      <div class="menus" @click="receiveAreward" :class="{rewardCondition:receiveReward=='receiveReward'}"
-           hover-class="hoverNone" hover-stay-time="800"> {{btnText.bxt_reward}}
-      </div>
+      <!--<div class="menus" @click="existDoHelps" :class="{rewardCondition:alreadyHelp=='alreadyHelp'}"-->
+      <!--hover-class="hoverNone" hover-stay-time="800">-->
+      <!--{{btnText.bxt_alhelp}}-->
+      <!--</div>-->
+      <!--<div class="menus" @click="continueHelp" :class="{rewardCondition:continueToInvite=='continueToInvite'}"-->
+      <!--hover-class="hoverNone" hover-stay-time="800">-->
+      <!--<span v-if="headPic.length==0">{{btnText.bxt_continue}}</span>-->
+      <!--<span v-else>{{btnText.bxt_continue1}}</span>-->
+      <!--</div>-->
+      <!--&lt;!&ndash;<button class="menus" :class="{rewardCondition:receiveReward=='receiveReward'}" open-type="contact"&ndash;&gt;-->
+      <!--&lt;!&ndash;hover-class="hoverNone" hover-stay-time="800" @click="getRewardAct" type="default"  :session-from=sessionFrom>{{btnText.bxt_reward}}&ndash;&gt;-->
+      <!--&lt;!&ndash;</button>&ndash;&gt;-->
+      <!--<div class="menus" @click="receiveAreward" :class="{rewardCondition:receiveReward=='receiveReward'}"-->
+      <!--hover-class="hoverNone" hover-stay-time="800"> {{btnText.bxt_reward}}-->
+      <!--</div>-->
     </div>
+    <p class="modelSetP" :class="{rewardCondition:rulesOfModel===false}" @click="modelSetExpand1">
+      <img src="/static/img/modelArrow.png"
+           style="transform: rotate(180deg);-webkit-transform: rotate(180deg);width: 40rpx;height: 32rpx;" alt="">
+    </p>
+    <p class="modelSetP" :class="{rewardCondition:modelSetP===false}" @click="modelSetExpand">
+      <img src="/static/img/modelArrow.png"
+           style="transform: rotate(180deg);-webkit-transform: rotate(180deg);width: 40rpx;height: 32rpx;" alt="">
+    </p>
     <div class="maskRules" :class="{menuStyle:checkedRules == true}">
       <!--<div class="maskRules menuStyle" >-->
       <div class="modelTask">
@@ -85,6 +130,9 @@
     </div>
     <div class="mask" :class="{menuStyle:checked == true}">
       <!--<div class="mask menuStyle">-->
+      <p style="position: fixed;z-index: 1000;width:calc(100% - 40rpx);text-align: center;" @click="modelSetClose">
+        <img src="/static/img/modelArrow.png" alt="" style="width: 40rpx;height: 32rpx;">
+      </p>
       <div class="modelTask">
         <div style="">
           <!--<img src="/static/img/close.png" class="closeMask" @click="closeMash"/>-->
@@ -93,10 +141,10 @@
             {{contentHead}}
           </p>
           <p class="codes">
-                <img :src="rewardImg" alt="" mode="aspectFit">
+            <img :src="rewardImg" alt="" mode="aspectFit">
           </p>
           <p class="copy">
-           {{contentFoot}}
+            {{contentFoot}}
           </p>
           <!--<div class="btn" @click="receiveFood">去绑定</div>-->
           <div class="btn modelMyHelp" @click="existDoHelps">{{contentBtn}}</div>
@@ -142,8 +190,12 @@
         contentMid: '', //领取奖励中部
         contentFoot: '', //领取奖励脚部
         contentBtn: '', //领取奖励按钮
-        ruleArr:[],
-        rewardImg:''
+        ruleArr: [],
+        rewardImg: '',
+        modelSet: '',
+        modelSetP: true,
+        rulesOfModel: true,
+        helpInfos: true
       }
     },
     onLoad(option) {
@@ -151,17 +203,21 @@
       var that = this
     },
     onShow(option) {
-      var that = this
+      var that = this;
       that.$store.state.board.checked = false;
       that.$store.state.board.checkedRule = false;
       that.$store.state.board.checkedRules = false;
       that.$store.state.board.exchangeProcess = false;
-      that.$store.state.board.existDoHelp = ''
-      that.$store.state.board.myExistDoHelp = ''
-      that.exithelpId = ''
-      that.rulesOfActivity = ''
-      that.contactsCondition = ''
-      that.commandText = ''
+      that.$store.state.board.existDoHelp = '';
+      that.$store.state.board.myExistDoHelp = '';
+      that.exithelpId = '';
+      that.rulesOfActivity = '';
+      that.contactsCondition = '';
+      that.commandText = '';
+      that.modelSet = '';
+      that.modelSetP = true;
+      that.rulesOfModel = true;
+      that.helpInfos = true;
 
       var sysUrl = that.$store.state.board.urlHttp + '/wechatapi/nologin/activity/getCurrentActivityInfo';
       console.log(new Date().getTime())
@@ -173,7 +229,7 @@
         success: function (res) {
           console.log(new Date().getTime())
           if (res.data.success) {
-            that.$store.state.board.actId =  res.data.actId;
+            that.$store.state.board.actId = res.data.actId;
             that.$store.state.board.goLink = that.$store.state.board.urlHttp + res.data.url;
             that.actRule = res.data.actRule;
             that.ruleArr = that.actRule.split('\n');
@@ -186,10 +242,11 @@
             wx.setNavigationBarTitle({
               title: res.data.actTitle
             })
-            if( res.data.url){
+            if (res.data.url) {
               wx.getImageInfo({
-                src:  that.$store.state.board.goLink,
+                src: that.$store.state.board.goLink,
                 success: (res) => {
+                  that.$store.state.board.posterH = res.height;
                   that.$store.state.board.drawPoster = res.path;
                 }
               })
@@ -212,14 +269,15 @@
                         if (res.data.success) {
                           that.headPicArr(that, res.data.data)
                         }
-                        utils.login(that, function (sessionID, actId,otherHelpId) {
+                        that.modelSet = true;
+                        utils.login(that, function (sessionID, actId, otherHelpId) {
                           wx.request({
                             url: that.$store.state.board.urlHttp + "/wechatapi/help/existDoHelpByActId",
                             method: "POST",
-                            data: {actId: actId, sessionID: sessionID, helpId: otherHelpId,type:1},
+                            data: {actId: actId, sessionID: sessionID, helpId: otherHelpId, type: 1},
                             header: {'content-type': 'application/x-www-form-urlencoded'},
                             success: function (res) {
-                              that.$store.state.board.checked = false
+                              that.$store.state.board.checked = false;
                               if (res.data.success) {
                                 if (res.data.commandType == 2) {
                                   if (res.data.rewardActContent) {
@@ -233,8 +291,8 @@
                                   that.rewardImg = that.$store.state.board.urlHttp + res.data.filePath;
 
                                 }
-                                that.$store.state.board.existDoHelp = false
-                                that.$store.state.board.myExistDoHelp = true
+                                that.$store.state.board.existDoHelp = false;
+                                that.$store.state.board.myExistDoHelp = true;
                                 that.exithelpId = true;
                                 that.rulesOfActivity = true;
                               } else {
@@ -246,8 +304,83 @@
                                   that.$store.state.board.myHelpId = otherHelpId;
                                   console.log(that.$store.state.board.myHelpId)
                                 } else {
-                                  that.$store.state.board.existDoHelp = true
-                                  that.$store.state.board.myExistDoHelp = true
+                                  wx.request({
+                                    url: that.$store.state.board.urlHttp + "/wechatapi/help/clickHelpUrl",
+                                    method: "POST",
+                                    data: {helpId: otherHelpId, sessionID: sessionID},
+                                    header: {'content-type': 'application/x-www-form-urlencoded'},
+                                    success: function (res) {
+                                      if (res.data.success) {
+                                        var sysUrl = that.$store.state.board.urlHttp + '/wechatapi/nologin/help/findHelpDetailUserList';
+                                        //邀请列表
+                                        wx.request({
+                                          url: sysUrl,
+                                          method: "POST",
+                                          data: {helpId: otherHelpId},
+                                          header: {'content-type': 'application/x-www-form-urlencoded'},
+                                          success: function (res) {
+                                            that.$store.state.board.headPic = []
+                                            if (res.data.success) {
+                                              that.headPicArr(that, res.data.data)
+                                            }
+                                          }
+                                        })
+                                        wx.request({
+                                          url: that.$store.state.board.urlHttp + "/wechatapi/help/getRewardActCommandQrcodeByOther",
+                                          // url: "http://192.168.50.52:8099/wechatapi/help/getRewardActCommandQrcodeByOther",
+                                          method: "POST",
+                                          data: {sessionID: sessionID, actId: actId},
+                                          header: {'content-type': 'application/x-www-form-urlencoded'},
+                                          success: function (res) {
+                                            if (res.data.success) {
+                                              // contentTitle:'', //领取奖励标题
+                                              //   contentHead:'', //领取奖励头部
+                                              //   contentMid:'', //领取奖励中部
+                                              //   contentFoot:'', //领取奖励脚部
+                                              //   contentBtn:'', //领取奖励按钮
+                                              if (res.data.rewardActContent) {
+                                                that.contentTitle = res.data.rewardActContent.contentTitle;
+                                                that.contentHead = res.data.rewardActContent.contentHead;
+                                                that.contentMid = res.data.rewardActContent.contentMid;
+                                                that.contentFoot = res.data.rewardActContent.contentFoot;
+                                                that.contentBtn = res.data.rewardActContent.contentBtn;
+                                                that.$store.state.board.checked = true
+                                              }
+                                              that.rewardImg = that.$store.state.board.urlHttp + res.data.filePath;
+                                            } else {
+                                              wx.showToast({
+                                                title: res.data.msg,
+                                                icon: 'none',
+                                                duration: 2000
+                                              })
+                                            }
+                                            that.$store.state.board.existDoHelp = false;
+                                            that.$store.state.board.myExistDoHelp = true;
+                                            //埋点
+                                            wx.request({
+                                              url: that.$store.state.board.urlHttp + "/wechatapi/help/getRewardActCommandOpenWindowByOther",
+                                              method: "POST",
+                                              data: {sessionID: sessionID, actId: actId},
+                                              header: {'content-type': 'application/x-www-form-urlencoded'},
+                                              success: function (res) {
+                                                if (res.data.success) {
+
+                                                } else {
+                                                  wx.showToast({
+                                                    title: res.data.msg,
+                                                    icon: 'none',
+                                                    duration: 2000
+                                                  })
+                                                }
+                                              }
+                                            })
+                                          }
+                                        })
+                                      }
+                                    }
+                                  })
+                                  // that.$store.state.board.existDoHelp = true;
+                                  // that.$store.state.board.myExistDoHelp = true;
                                   that.exithelpId = true;
                                   that.rulesOfActivity = true;
                                 }
@@ -273,6 +406,7 @@
                             if (res.data.data) {
                               that.headPicArr(that, res.data.data)
                             }
+                            that.modelSet = true;
                             that.$store.state.board.myExistDoHelp = false
                             that.$store.state.board.existDoHelp = true
                             that.exithelpId = true;
@@ -280,7 +414,6 @@
                           }
                           else {
                             that.exithelpId = false;
-                            that.rulesOfActivity = false;
                             that.$store.state.board.existDoHelp = true
                             that.$store.state.board.myExistDoHelp = false
                           }
@@ -292,26 +425,27 @@
                 else {
                   var otherHelpId = that.$store.state.board.otherHelpId
                   if (otherHelpId) {
-                    var sysUrl = that.$store.state.board.urlHttp + '/wechatapi/nologin/help/findHelpDetailUserList';
-                    wx.request({
-                      url: sysUrl,
-                      method: "POST",
-                      data: {helpId: otherHelpId},
-                      header: {'content-type': 'application/x-www-form-urlencoded'},
-                      success: function (res) {
-                        that.$store.state.board.headPic = [];
-                        if (res.data.success) {
-                          that.headPicArr(that, res.data.data)
-                        }
-                        that.exithelpId = true;
-                        that.rulesOfActivity = true;
-                        that.$store.state.board.existDoHelp = true
-                        that.$store.state.board.myExistDoHelp = true
-                      }
-                    })
+                    that.helpInfos = false;
+                    // var sysUrl = that.$store.state.board.urlHttp + '/wechatapi/nologin/help/findHelpDetailUserList';
+                    // wx.request({
+                    //   url: sysUrl,
+                    //   method: "POST",
+                    //   data: {helpId: otherHelpId},
+                    //   header: {'content-type': 'application/x-www-form-urlencoded'},
+                    //   success: function (res) {
+                    //     that.$store.state.board.headPic = [];
+                    //     if (res.data.success) {
+                    //       that.headPicArr(that, res.data.data)
+                    //     }
+                    //     that.modelSet = true;
+                    //     that.exithelpId = true;
+                    //     that.rulesOfActivity = true;
+                    //     that.$store.state.board.existDoHelp = true;
+                    //     that.$store.state.board.myExistDoHelp = true
+                    //   }
+                    // })
                   } else {
                     that.exithelpId = false;
-                    that.rulesOfActivity = false;
                     that.$store.state.board.existDoHelp = true
                     that.$store.state.board.myExistDoHelp = false
                   }
@@ -321,7 +455,6 @@
           }
         }
       })
-
       wx.getSystemInfo({
         success: (res) => {
           this.$store.state.board.windowWidth = res.windowWidth;
@@ -334,12 +467,152 @@
 
     },
     methods: {
+      helpInfoss() {
+        console.log(123456)
+        var that = this;
+        console.log(789)
+        utils.login(that, function (sessionID, actId, otherHelpId) {
+          var sysUrl = that.$store.state.board.urlHttp + '/wechatapi/nologin/help/findHelpDetailUserList';
+          wx.request({
+            url: sysUrl,
+            method: "POST",
+            data: {helpId: otherHelpId},
+            header: {'content-type': 'application/x-www-form-urlencoded'},
+            success: function (res) {
+              console.log(res)
+              that.helpInfos = true;
+              that.$store.state.board.headPic = [];
+              if (res.data.success) {
+                that.headPicArr(that, res.data.data)
+              }
+              that.modelSet = true;
+              wx.request({
+                url: that.$store.state.board.urlHttp + "/wechatapi/help/existDoHelpByActId",
+                method: "POST",
+                data: {actId: actId, sessionID: sessionID, helpId: otherHelpId, type: 1},
+                header: {'content-type': 'application/x-www-form-urlencoded'},
+                success: function (res) {
+                  that.$store.state.board.checked = false;
+                  if (res.data.success) {
+                    if (res.data.commandType == 2) {
+                      if (res.data.rewardActContent) {
+                        that.contentTitle = res.data.rewardActContent.contentTitle;
+                        that.contentHead = res.data.rewardActContent.contentHead;
+                        that.contentMid = res.data.rewardActContent.contentMid;
+                        that.contentFoot = res.data.rewardActContent.contentFoot;
+                        that.contentBtn = res.data.rewardActContent.contentBtn;
+                        that.$store.state.board.checked = true
+                      }
+                      that.rewardImg = that.$store.state.board.urlHttp + res.data.filePath;
+
+                    }
+                    that.$store.state.board.existDoHelp = false;
+                    that.$store.state.board.myExistDoHelp = true;
+                    that.exithelpId = true;
+                    that.rulesOfActivity = true;
+                  } else {
+                    if (res.data.code == '102') {
+                      that.$store.state.board.existDoHelp = true;
+                      that.$store.state.board.myExistDoHelp = false;
+                      that.exithelpId = true;
+                      that.rulesOfActivity = true;
+                      that.$store.state.board.myHelpId = otherHelpId;
+                      console.log(that.$store.state.board.myHelpId)
+                    } else {
+                      wx.request({
+                        url: that.$store.state.board.urlHttp + "/wechatapi/help/clickHelpUrl",
+                        method: "POST",
+                        data: {helpId: otherHelpId, sessionID: sessionID},
+                        header: {'content-type': 'application/x-www-form-urlencoded'},
+                        success: function (res) {
+                          if (res.data.success) {
+                            var sysUrl = that.$store.state.board.urlHttp + '/wechatapi/nologin/help/findHelpDetailUserList';
+                            //邀请列表
+                            wx.request({
+                              url: sysUrl,
+                              method: "POST",
+                              data: {helpId: otherHelpId},
+                              header: {'content-type': 'application/x-www-form-urlencoded'},
+                              success: function (res) {
+                                that.$store.state.board.headPic = []
+                                if (res.data.success) {
+                                  that.headPicArr(that, res.data.data)
+                                }
+                              }
+                            })
+                            wx.request({
+                              url: that.$store.state.board.urlHttp + "/wechatapi/help/getRewardActCommandQrcodeByOther",
+                              // url: "http://192.168.50.52:8099/wechatapi/help/getRewardActCommandQrcodeByOther",
+                              method: "POST",
+                              data: {sessionID: sessionID, actId: actId},
+                              header: {'content-type': 'application/x-www-form-urlencoded'},
+                              success: function (res) {
+                                if (res.data.success) {
+                                  // contentTitle:'', //领取奖励标题
+                                  //   contentHead:'', //领取奖励头部
+                                  //   contentMid:'', //领取奖励中部
+                                  //   contentFoot:'', //领取奖励脚部
+                                  //   contentBtn:'', //领取奖励按钮
+                                  if (res.data.rewardActContent) {
+                                    that.contentTitle = res.data.rewardActContent.contentTitle;
+                                    that.contentHead = res.data.rewardActContent.contentHead;
+                                    that.contentMid = res.data.rewardActContent.contentMid;
+                                    that.contentFoot = res.data.rewardActContent.contentFoot;
+                                    that.contentBtn = res.data.rewardActContent.contentBtn;
+                                    that.$store.state.board.checked = true
+                                  }
+                                  that.rewardImg = that.$store.state.board.urlHttp + res.data.filePath;
+                                } else {
+                                  wx.showToast({
+                                    title: res.data.msg,
+                                    icon: 'none',
+                                    duration: 2000
+                                  })
+                                }
+                                that.$store.state.board.existDoHelp = false;
+                                that.$store.state.board.myExistDoHelp = true;
+                                //埋点
+                                wx.request({
+                                  url: that.$store.state.board.urlHttp + "/wechatapi/help/getRewardActCommandOpenWindowByOther",
+                                  method: "POST",
+                                  data: {sessionID: sessionID, actId: actId},
+                                  header: {'content-type': 'application/x-www-form-urlencoded'},
+                                  success: function (res) {
+                                    if (res.data.success) {
+
+                                    } else {
+                                      wx.showToast({
+                                        title: res.data.msg,
+                                        icon: 'none',
+                                        duration: 2000
+                                      })
+                                    }
+                                  }
+                                })
+                              }
+                            })
+                          }
+                        }
+                      })
+                      that.exithelpId = true;
+                      that.rulesOfActivity = true;
+                    }
+                  }
+                }
+              })
+
+            }
+          })
+
+        });
+      },
       getUserInfoInvite() {
         this.myToHelp()
       },
       bindGetUserInfo() {
         this.continueToHelp()
       },
+
       continueToHelp() {
         var that = this;
         utils.login(that, function (sessionID, actId, otherHelpId) {
@@ -349,6 +622,7 @@
             data: {helpId: otherHelpId, sessionID: sessionID},
             header: {'content-type': 'application/x-www-form-urlencoded'},
             success: function (res) {
+              console.log(res)
               if (res.data.success) {
                 var sysUrl = that.$store.state.board.urlHttp + '/wechatapi/nologin/help/findHelpDetailUserList';
                 //邀请列表
@@ -429,14 +703,14 @@
                     that.$store.state.board.myExistDoHelp = true;
                     //埋点
                     wx.request({
-                      url:  that.$store.state.board.urlHttp + "/wechatapi/help/getRewardActCommandOpenWindowByOther",
+                      url: that.$store.state.board.urlHttp + "/wechatapi/help/getRewardActCommandOpenWindowByOther",
                       method: "POST",
-                      data: {sessionID: sessionID,actId:actId},
+                      data: {sessionID: sessionID, actId: actId},
                       header: {'content-type': 'application/x-www-form-urlencoded'},
                       success: function (res) {
                         if (res.data.success) {
 
-                        }else{
+                        } else {
                           wx.showToast({
                             title: res.data.msg,
                             icon: 'none',
@@ -465,6 +739,48 @@
                 //     }
                 //   }
                 // })
+              }
+              else {
+                if (res.data.code == '101') {
+                  wx.request({
+                    url: that.$store.state.board.urlHttp + "/wechatapi/help/getRewardActCommandQrcodeByOther",
+                    // url: "http://192.168.50.52:8099/wechatapi/help/getRewardActCommandQrcodeByOther",
+                    method: "POST",
+                    data: {sessionID: sessionID, actId: actId},
+                    header: {'content-type': 'application/x-www-form-urlencoded'},
+                    success: function (res) {
+                      if (res.data.success) {
+                        // contentTitle:'', //领取奖励标题
+                        //   contentHead:'', //领取奖励头部
+                        //   contentMid:'', //领取奖励中部
+                        //   contentFoot:'', //领取奖励脚部
+                        //   contentBtn:'', //领取奖励按钮
+                        if (res.data.rewardActContent) {
+                          that.contentTitle = res.data.rewardActContent.contentTitle;
+                          that.contentHead = res.data.rewardActContent.contentHead;
+                          that.contentMid = res.data.rewardActContent.contentMid;
+                          that.contentFoot = res.data.rewardActContent.contentFoot;
+                          that.contentBtn = res.data.rewardActContent.contentBtn;
+                          that.$store.state.board.checked = true
+                        }
+                        that.rewardImg = that.$store.state.board.urlHttp + res.data.filePath;
+                      } else {
+                        wx.showToast({
+                          title: res.data.msg,
+                          icon: 'none',
+                          duration: 2000
+                        })
+                      }
+                      that.$store.state.board.existDoHelp = false;
+                      that.$store.state.board.myExistDoHelp = true;
+                    }
+                  })
+                }
+                wx.showToast({
+                  title: res.data.msg,
+                  icon: 'none',
+                  duration: 1500
+                })
               }
             }
           })
@@ -653,10 +969,12 @@
             }
             else {
               that.exithelpId = false;
-              that.rulesOfActivity = false;
               that.$store.state.board.existDoHelp = true
               that.$store.state.board.myExistDoHelp = false
               that.$store.state.board.checked = false;
+              that.rulesOfModel = true;
+              that.modelSetP = true;
+              that.rulesOfActivity = '';
             }
           }
         })
@@ -686,7 +1004,7 @@
             name: headPic[i].nickName.length > 10 ? headPic[i].nickName.slice(0, 9) + '...' : headPic[i].nickName
           })
         }
-        console.log( that.$store.state.board.headPic)
+        console.log(that.$store.state.board.headPic)
       },
       copyTBL(e) {
         var self = this;
@@ -710,6 +1028,24 @@
           }
         });
 
+      },
+      modelSetClose1() {
+        this.rulesOfActivity = false;
+        this.rulesOfModel = false;
+      },
+      modelSetExpand1() {
+        this.rulesOfActivity = true;
+        this.rulesOfModel = true;
+      },
+      modelSetClose() {
+        this.modelSetP = false;
+        this.$store.state.board.checked = false;
+        this.rulesOfActivity = false;
+      },
+      modelSetExpand() {
+        this.modelSetP = true;
+        this.$store.state.board.checked = true;
+        this.rulesOfActivity = true;
       }
 
 
@@ -748,7 +1084,7 @@
       partakeNum() {
         return this.$store.state.board.partakeNums
       },
-      btnText(){
+      btnText() {
         return this.$store.state.board.btnText
       },
       getInfoInvite() {
@@ -807,14 +1143,16 @@
     font-size: 22px;
     width: 100%;
     height: 100%;
+    position: relative;
     .haode {
       color: red;
       font-size: 30px;
     }
     .containes {
       width: calc(100% - 24px);
-      height: calc(100% - 80px);
+      /*height: calc(100% - 80px);*/
       padding: 12px;
+      text-align: center;
       .contacts {
         position: fixed;
         top: 10px;
@@ -858,9 +1196,12 @@
 
       img {
         width: 100%;
-        height: 100%;
+        /*height: 100%;*/
+        max-height: 100%;
         border-radius: 8px;
+        /*vertical-align: middle;*/
       }
+      /*span{ display:inline-block; height:100%; vertical-align:middle;}*/
     }
     .record {
       position: fixed;
@@ -953,6 +1294,53 @@
             color: #4A4A4A;
             margin-top: 15px;
           }
+
+        }
+        .menu {
+          width: calc(100% - 40px);
+          position: fixed;
+          bottom: 0px;
+          /*background: #fff;*/
+          text-align: center;
+          z-index: 1000;
+          padding-bottom: 14px;
+          .menus {
+            margin: 0 auto;
+            width: 195px;
+            height: 40px;
+            display: none;
+            background: #fff;
+            border: 1px solid #F05522;
+            font-size: 14px;
+            color: #F05522;
+            text-align: center;
+            line-height: 40px;
+            border-radius: 20px;
+          }
+          .menuss {
+            margin: 0 auto;
+            width: 270px;
+            height: 40px;
+            display: none;
+            background: #EF6D00;
+            font-size: 13px;
+            color: rgba(255, 255, 255, 1);
+            text-align: center;
+            line-height: 40px;
+            border-radius: 24px;
+            /*box-shadow: 0px 1px 1px 0px #EF6D00 ;*/
+            border: none;
+          }
+          div.menus.rewardCondition, button.menus.rewardCondition {
+            display: block;
+          }
+          button.menuss.rewardCondition {
+            display: block;
+          }
+          .hoverNone {
+            /*background-color: #ccc;*/
+            pointer-events: none;
+          }
         }
       }
       .noHelp {
@@ -964,10 +1352,67 @@
     div.record.rewardCondition {
       display: block;
     }
+    .modelSetP {
+      position: fixed;
+      z-index: 1000;
+      bottom: 0px;
+      width: calc(100% - 10px);
+      text-align: center;
+      display: none;
+    }
+    .helpInfos {
+      position: fixed;
+      z-index: 1100;
+      height: 100%;
+      width: 100%;
+      background-color: rgba(144, 144, 144, 0.6);
+      display: none;
+      div{
+        background-color: #fff;
+        border-radius: 10px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 140px;
+        width: 240px;
+        margin: auto;
+        text-align: center;
+        .tit {
+          font-size: 18px;
+          margin-top: 10px;
+        }
+        .con {
+          font-size: 12px;
+          color: #aaa;
+          margin-top: 15px;
+        }
+        button {
+          margin: 0 auto;
+          margin-top: 20px;
+          width: 120px;
+          height: 40px;
+          background: #F05522;
+          border: none;
+          font-size: 14px;
+          color: #fff;
+          text-align: center;
+          line-height: 40px;
+          border-radius: 20px;
+        }
+      }
+    }
+    p.rewardCondition {
+      display: block;
+    }
+    div.rewardCondition {
+      display: block;
+    }
     .menu {
       width: 100%;
       position: fixed;
-      bottom: 0px;
+      /*bottom: 0px;*/
       /*background: #fff;*/
       text-align: center;
       z-index: 1000;
@@ -1040,7 +1485,8 @@
             text-align: center;
             font-size: 18px;
             color: #F05522;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
+            margin-top: 10px;
           }
           .modelContent {
 
@@ -1068,7 +1514,7 @@
             font-weight: normal;
             /*border: 1px solid #ccc;*/
             /*font-weight: bold;*/
-            img{
+            img {
               width: 120px;
               height: 120px;
             }
@@ -1093,7 +1539,7 @@
             border: 1px solid #F05522;
             border-radius: 20px;
             margin: 0 auto;
-            margin-top: 22px;
+            margin-top: 15px;
           }
           .modelMyHelp {
             color: #EF6D00;
@@ -1164,7 +1610,7 @@
             text-align: center;
             line-height: 20px;
             font-weight: normal;
-            img{
+            img {
               width: 140px;
               height: 140px;
             }

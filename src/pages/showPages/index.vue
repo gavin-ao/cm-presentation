@@ -8,7 +8,7 @@
         <img :src="avatarUrl" alt="" style="">
       </div>
 
-      <img class="conImg" :src="getGoLink" alt="">
+      <img class="conImg" :src="getGoLink" alt="" mode="widthFix">
       <div class="qrcodes" style="">
         <img class="codeImg" :src="qrcodeUrl" alt="" style="">
       </div>
@@ -78,69 +78,160 @@
       drawImage() {
         wx.showLoading({
           title: '绘制中...',
-        })
+        });
         let that = this;
-        console.log(new Date().getTime())
-        const ctx = wx.createCanvasContext('shareCanvas')
-//        ctx.setFillStyle('#000')
-        ctx.fillRect(0, 0, this.getWindowWidth, that.ctxHeight);
-        ctx.draw(true)
-        var heights = that.ctxHeight - 70
-        ctx.drawImage(that.drawPoster, 13, 53, (that.getWindowWidth - 26), heights - 50)
-        ctx.draw(true)
-//        ctx.drawImage('/static/img/shareBack1.png', 13, 33, (that.getWindowWidth - 26), heights)
-//        ctx.draw(true)
-        if (that.drawAvatarUrl) {
-          ctx.save()
-          ctx.beginPath()
-          ctx.arc(48, 85, 20, 0, Math.PI * 2, false);
-          ctx.clip()
-          ctx.drawImage(that.drawAvatarUrl, 28, 65, 40, 40)
-          ctx.restore()
-          ctx.draw(true)
-        }
-
-        var qrcodeUrl = that.$store.state.board.qrcodeUrl
-        //画二维码
-        console.log('444444   ' + qrcodeUrl)
+        console.log(new Date().getTime());
+        const ctx = wx.createCanvasContext('shareCanvas');
+       // ctx.setFillStyle('#000');
+       //  ctx.fillRect(0, 0, this.getWindowWidth, that.ctxHeight);
+       //  ctx.draw(true);
+       //  // var heights = that.ctxHeight - 70;
+       //  var heights = that.ctxHeight;
+//         ctx.drawImage(that.drawPoster, 13, 53, (that.getWindowWidth - 26), heights - 50);
+//
+// //        ctx.drawImage('/static/img/shareBack1.png', 13, 33, (that.getWindowWidth - 26), heights)
+// //        ctx.draw(true)
+//
+//         if (that.drawAvatarUrl) {
+//           ctx.save();
+//           ctx.beginPath();
+//           ctx.arc(48, 85, 20, 0, Math.PI * 2, false);
+//           ctx.clip();
+//           ctx.drawImage(that.drawAvatarUrl, 28, 65, 40, 40);
+//           ctx.restore();
+//           ctx.draw(true);
+//
+//         }
+//         var qrcodeUrl = that.$store.state.board.qrcodeUrl;
+//         //画二维码
+//         console.log('444444   ' + qrcodeUrl);
+//         wx.getImageInfo({
+//           src: qrcodeUrl,
+//           success: (res) => {
+//             ctx.save();
+//             ctx.beginPath();
+//             ctx.arc((that.getWindowWidth - 76), heights - 60, 50, 0, Math.PI * 2, false);
+//             ctx.setFillStyle('rgba(255, 255, 255, 0.7)');
+//             ctx.fill();
+//             ctx.clip();
+//             ctx.drawImage(res.path, (that.getWindowWidth - 126), heights - 110, 100, 100);
+//             ctx.restore();
+//             ctx.draw(true);
+//             console.log(new Date().getTime());
+//             wx.hideLoading();
+//           }
+//         })
         wx.getImageInfo({
-          src: qrcodeUrl,
+          src: that.drawPoster,
           success: (res) => {
-            ctx.save()
-            ctx.beginPath()
-            ctx.arc((that.getWindowWidth - 76), heights - 60, 50, 0, Math.PI * 2, false);
-            ctx.setFillStyle('rgba(255, 255, 255, 0.7)')
-            ctx.fill()
-            ctx.clip()
-            ctx.drawImage(res.path, (that.getWindowWidth - 126), heights - 110, 100, 100)
-            ctx.restore()
-            ctx.draw(true)
-            console.log(new Date().getTime())
-            wx.hideLoading()
+            console.log(res);
+
+             ctx.draw(true);
+             // var heights = that.ctxHeight - 70;
+             var heights = that.ctxHeight;
+            console.log(that.getWindowWidth - 26)
+            console.log(heights - 50)
+            var h = that.getWindowWidth*(res.height/res.width);
+            that.ctxHeight = h;
+            ctx.fillRect(0, 0, this.getWindowWidth, h);
+            ctx.drawImage(res.path, 0,0, that.getWindowWidth, h);
+            ctx.draw(true);
+            if (that.drawAvatarUrl) {
+              ctx.save();
+              ctx.beginPath();
+              ctx.arc(35,30, 20, 0, Math.PI * 2, false);
+              ctx.clip();
+              ctx.drawImage(that.drawAvatarUrl, 15,10, 40, 40);
+              ctx.restore();
+              ctx.draw(true);
+              var qrcodeUrl = that.$store.state.board.qrcodeUrl;
+              //画二维码
+              console.log('444444   ' + qrcodeUrl);
+              wx.getImageInfo({
+                src: qrcodeUrl,
+                success: (res) => {
+                  ctx.save();
+                  ctx.beginPath();
+                  ctx.arc((that.getWindowWidth - 76), h-60, 50, 0, Math.PI * 2, false);
+                  ctx.setFillStyle('rgba(255, 255, 255, 0.7)');
+                  ctx.fill();
+                  ctx.clip();
+                  ctx.drawImage(res.path, (that.getWindowWidth - 126), h-110, 100, 100);
+                  ctx.restore();
+                  ctx.draw(true);
+                  console.log(new Date().getTime());
+                  wx.hideLoading();
+                }
+              })
+            }
           }
         })
-
-
       },
       preview() {
-        wx.canvasToTempFilePath({
-          canvasId: 'shareCanvas',
-          success: (res) => {
-            wx.saveImageToPhotosAlbum({
-              filePath: res.tempFilePath,
-              success: (res) => {
-                wx.showToast({
-                  title: '已保存到相册',
-                  success: (res) => {
+        var that = this;
+        wx.getSetting({
+          success: function(res){
+            //不存在相册授权
+            if (!res.authSetting['scope.writePhotosAlbum']){
+              wx.authorize({
+                scope: 'scope.writePhotosAlbum',
+                success: function(){
+                  wx.canvasToTempFilePath({
+                    destWidth:that.getWindowWidth,
+                    destHeight:that.ctxHeight,
+                    canvasId: 'shareCanvas',
+                    success: (res) => {
+                      wx.saveImageToPhotosAlbum({
+                        filePath: res.tempFilePath,
+                        success: (res) => {
+                          wx.showToast({
+                            title: '已保存到相册',
+                            success: (res) => {
 
-                  }
-                })
-              },
-              fail: (res) => {
-              }
-            })
+                            }
+                          })
+                        },
+                        fail: (res) => {
+                        }
+                      })
 
 
+                    }
+                  })
+                },
+                fail: function(err){
+                  wx.openSetting({
+                    success (res) {
+                      console.log(res.authSetting)
+
+                    }
+                  })
+                }
+              })
+            }else{
+              wx.canvasToTempFilePath({
+                destWidth:that.getWindowWidth,
+                destHeight:that.ctxHeight,
+                canvasId: 'shareCanvas',
+                success: (res) => {
+                  wx.saveImageToPhotosAlbum({
+                    filePath: res.tempFilePath,
+                    success: (res) => {
+                      wx.showToast({
+                        title: '已保存到相册',
+                        success: (res) => {
+
+                        }
+                      })
+                    },
+                    fail: (res) => {
+                    }
+                  })
+
+
+                }
+              })
+            }
           }
         })
       },
@@ -202,7 +293,7 @@
       wx.showShareMenu({
         withShareTicket: true
       })
-      that.ctxHeight = that.getWindowHeight + 64
+      that.ctxHeight =  that.$store.state.board.posterH + 64
       var pages = getCurrentPages()
       var currentPage = pages[pages.length - 1]
       var url = currentPage.route
@@ -250,7 +341,7 @@
       /*border: 1px solid #CAA363;*/
       width: calc(100% - 75px);
       /*padding: 5px;*/
-      height: 79%;
+      /*height: 79%;*/
       margin: 0 auto;
       margin-top: 12px;
       position: relative;
@@ -290,7 +381,7 @@
     .conImg {
       width: 100%;
       /*margin-top: 5px;*/
-      height: calc(100% - 5px);
+      max-height: calc(100% - 5px);
       border-radius: 8px;
       position: relative;
       z-index: 100;
@@ -298,7 +389,7 @@
 
     .qrcodes {
       position: relative;
-      height: 50px;
+      /*height: 50px;*/
       z-index: 400;
       .helpText {
         position: absolute;
@@ -337,10 +428,11 @@
       height: 14%;
       background: #fff;
       text-align: center;
-      position: fixed;
-      bottom: 0px;
-      left: 0px;
+      /*position: fixed;*/
+      /*bottom: 0px;*/
+      /*left: 0px;*/
       padding-bottom: 20px;
+      margin-top: 15px;
       button {
         display: inline-block;
         margin-top: 10px;

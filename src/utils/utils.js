@@ -23,6 +23,7 @@ function login(that, func) {
             key.iv = res.iv
             that.$store.state.board.nickName = res.userInfo.nickName;
             that.$store.state.board.avatarUrl = res.userInfo.avatarUrl;
+            console.log(res.userInfo.avatarUrl)
             if(res.userInfo.avatarUrl){
               wx.getImageInfo({
                 src: res.userInfo.avatarUrl,

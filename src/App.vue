@@ -8,16 +8,16 @@
       console.log(option)
       var that = this
 
-      that.$store.state.board.otherHelpId = ''
-      that.$store.state.board.myHelpId = ''
+      that.$store.state.board.otherHelpId = '';
+      that.$store.state.board.myHelpId = '';
       // that.$store.state.board.storeId = ''
-      that.$store.state.board.sessionID = ''
+      that.$store.state.board.sessionID = '';
       // var url = "http://activitycounter.easy7share.com/hello/statis/1";
       // var dd = encodeURIComponent(url);
       // option.query.q = dd;
       if (option.query.q || option.query.storeId){
         if (option.query.storeId) {
-          wx.setStorageSync("storeId", option.query.storeId)
+          wx.setStorageSync("storeId", option.query.storeId);
           that.$store.state.board.storeId = option.query.storeId;
           if (option.query.helpId) {
             that.$store.state.board.otherHelpId = option.query.helpId;

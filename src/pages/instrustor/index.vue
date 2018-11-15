@@ -1,5 +1,7 @@
 <template>
+
   <div class="instructor-toueist">
+    <img src="/static/img/19.jpg" alt="" style="width: 100%;height: 100%;">
     <div class="containes">
       <div class="search">
         <input type="text" placeholder="输入店名" @input="selStore()" v-model="input">
@@ -33,18 +35,24 @@
     height: 100%;
     box-sizing: border-box;
     font-size: 14px;
+
+    /*background-image: url("/static/img/19.jpg");*/
     /*margin-bottom: 30px;*/
     .containes {
       width: calc(100% - 40px);
-      margin: 0 auto;
       height: 100%;
       margin-top: 10px;
+      position: fixed;
+      top:0px;
+      left: 20px;
+      z-index: 1000;
       .search{
         input {
           border: 1px solid #ccc;
           height: 30px;
           border-radius: 5px;
           padding-left: 5px;
+          background-color: #fff;
         }
         input:focus {
           border: 1px solid blue;
@@ -53,7 +61,7 @@
       .expand{
         width: 100%;
         height: calc(100% - 70px);
-        background-color: rgba(144,144,144,.2);
+        /*background-color: rgba(144,144,144,.2);*/
         margin-top: 5px;
         border-radius: 10px;
         div{

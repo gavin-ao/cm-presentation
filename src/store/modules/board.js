@@ -5,6 +5,7 @@ const state = {
   actTitle:'', //活动标题
   windowWidth: 0,
   windowHeight: 0,
+  posterH:0,
   location: "",
   nickName: '',
   avatarUrl: '',
