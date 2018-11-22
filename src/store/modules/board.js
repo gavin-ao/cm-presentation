@@ -6,6 +6,7 @@ const state = {
   windowWidth: 0,
   windowHeight: 0,
   posterH:0,
+  posterW:0,
   location: "",
   nickName: '',
   avatarUrl: '',

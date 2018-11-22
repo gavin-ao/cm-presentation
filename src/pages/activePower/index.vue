@@ -11,13 +11,13 @@
         <button class="menus" @getuserinfo="helpInfoss" open-type="getUserInfo" hover-class="hoverNone" hover-stay-time="800"> 确定</button>
       </div>
     </div>
-    <div class="containes">
+    <div class="containes" :style="{height:posterH+'px'}">
       <movable-area style="">
         <movable-view direction="vertical" class="activeRule rulesCondition" @click="activeRules">活动规则</movable-view>
         <!--<img :src="goLink" alt="">-->
       </movable-area>
       <!--<span class="activeRule rulesCondition" @click="activeRules">活动规则</span>-->
-      <img :src="goLink" alt="" mode="widthFix"> <span></span>
+      <img :src="goLink" alt="" mode="aspectFit"> <span></span>
     </div>
     <div class="record" :class="{rewardCondition:rulesOfActivity===true}">
       <p style="position: fixed;z-index: 1000;width:calc(100% - 40rpx);text-align: center;" @click="modelSetClose1">
@@ -247,6 +247,7 @@
                 src: that.$store.state.board.goLink,
                 success: (res) => {
                   that.$store.state.board.posterH = res.height;
+                  that.$store.state.board.posterW = res.width;
                   that.$store.state.board.drawPoster = res.path;
                 }
               })
@@ -1128,6 +1129,19 @@
         } else {
           return ""
         }
+      },
+      posterH(){
+        var posterW = this.$store.state.board.posterW
+        var posterH = this.$store.state.board.posterH
+        var winW = this.$store.state.board.windowWidth
+        var winH = this.$store.state.board.windowHeight
+        var temp = posterH/(posterW/(winW-24));
+        if((winH-70)<temp){
+          return (winH-70);
+        }else{
+          return temp
+        }
+
       }
     },
     mounted() {
@@ -1150,7 +1164,7 @@
     }
     .containes {
       width: calc(100% - 24px);
-      /*height: calc(100% - 80px);*/
+      height: calc(100% - 80px);
       padding: 12px;
       text-align: center;
       .contacts {
@@ -1196,8 +1210,8 @@
 
       img {
         width: 100%;
-        /*height: 100%;*/
-        max-height: 100%;
+        /*height: 100%!important;*/
+        height: 100%!important;
         border-radius: 8px;
         /*vertical-align: middle;*/
       }
