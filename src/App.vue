@@ -7,13 +7,41 @@
     onShow(option) {
       console.log(option)
       var that = this
-
-      that.$store.state.board.otherHelpId = '';
-      that.$store.state.board.myHelpId = '';
-      // that.$store.state.board.storeId = ''
-      that.$store.state.board.sessionID = '';
       // var url = "http://activitycounter.easy7share.com/hello/statis/1";
       // var dd = encodeURIComponent(url);
+      var setGloableData = {
+        goLink: '',
+        address: '',
+        actShareTitle:'', //分享标题
+        actTitle:'', //活动标题
+        rewardType:'',//奖励类型
+        invitationRewardType:1,//邀请奖励类型
+        assistanceRewardType:1,//助力奖励类型
+        windowWidth: 0,
+        windowHeight: 0,
+        posterH:0,
+        posterW:0,
+        location: "",
+        nickName: '',
+        avatarUrl: '',
+        qrcodeUrl:'',
+        otherHelpId:'',
+        myHelpId:'',
+        actId:'',
+        sessionID:'',
+        checked: false,
+        checkedRule: false,
+        checkedRules: false,
+        exchangeProcess:false,
+        existDoHelp: '',
+        myExistDoHelp:'',
+        drawAvatarUrl:'',
+        partakeNums: 0,
+        drawPoster:'',
+        btnText:{},
+        actShareCopywriting:'',
+      }
+      Object.assign(that.$store.state.board, setGloableData);
       // option.query.q = dd;
       if (option.query.q || option.query.storeId){
         if (option.query.storeId) {

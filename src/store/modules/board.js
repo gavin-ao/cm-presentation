@@ -3,6 +3,8 @@ const state = {
   address: '',
   actShareTitle:'', //分享标题
   actTitle:'', //活动标题
+  invitationRewardType:1,//邀请奖励类型
+  assistanceRewardType:1,//助力奖励类型
   windowWidth: 0,
   windowHeight: 0,
   posterH:0,

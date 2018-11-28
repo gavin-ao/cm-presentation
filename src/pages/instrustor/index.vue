@@ -152,7 +152,43 @@
           this.$store.state.board.windowHeight = res.windowHeight
         }
       })
+      var QQMapWX = require('../../../static/qqmap-wx-jssdk.min.js');
 
+      // var BMap = new bmap.BMapWX({
+      //   ak: 'qhFRmZGfcrsk17a5oOQ4li53aztUmqle'
+      // });
+      var qqmapsdk = new QQMapWX({
+        key: 'OISBZ-SUKW6-LJ7SS-MXQHI-GC5FF-CQBGM'
+      });
+      wx.getLocation({
+        type: 'gcj02',
+        altitude: true,
+        success: (res) => {
+          qqmapsdk.reverseGeocoder({
+            location: {
+              latitude:   39.998536,
+              longitude:116.330526
+            },
+            success: (addressRes) => {
+              console.log(addressRes)
+              this.$store.state.board.address = addressRes.result.address_component.province + '' + addressRes.result.address_component.district;
+              this.$store.state.board.location = addressRes.result.address_component.province;
+            }
+          })
+          qqmapsdk.geocoder({
+            address: '北京市海淀区成府路107号',
+            success: function(res) {
+              console.log(res);
+            },
+            fail: function(res) {
+              console.log(res);
+            },
+            complete: function(res) {
+              console.log(res);
+            }
+          });
+        }
+      })
     },
     components: {}
   }
