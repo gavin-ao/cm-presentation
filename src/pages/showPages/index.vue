@@ -12,13 +12,10 @@
       <div class="qrcodes" style="">
         <img class="codeImg" :src="qrcodeUrl" alt="" style="">
       </div>
-      <!--<img class="backText" src="/static/img/shareBack1.png" alt="">-->
     </div>
     <div class="menu" style="">
       <p style=" font-size: 14px;text-align: center;color: #4A4A4A;margin-bottom: 10rpx;">
         <span style="display: inline-block;padding: 0rpx 70rpx;">{{actShareCopywriting}}</span>
-        <!--这是你的专属海报，发送给好友<br/>-->
-        <!--3人助力免费赢得原价<span>288 </span>元试听课机会一次-->
       </p>
 
       <button class="shares" open-type="share">
@@ -82,45 +79,6 @@
         let that = this;
         console.log(new Date().getTime());
         const ctx = wx.createCanvasContext('shareCanvas');
-       // ctx.setFillStyle('#000');
-       //  ctx.fillRect(0, 0, this.getWindowWidth, that.ctxHeight);
-       //  ctx.draw(true);
-       //  // var heights = that.ctxHeight - 70;
-       //  var heights = that.ctxHeight;
-//         ctx.drawImage(that.drawPoster, 13, 53, (that.getWindowWidth - 26), heights - 50);
-//
-// //        ctx.drawImage('/static/img/shareBack1.png', 13, 33, (that.getWindowWidth - 26), heights)
-// //        ctx.draw(true)
-//
-//         if (that.drawAvatarUrl) {
-//           ctx.save();
-//           ctx.beginPath();
-//           ctx.arc(48, 85, 20, 0, Math.PI * 2, false);
-//           ctx.clip();
-//           ctx.drawImage(that.drawAvatarUrl, 28, 65, 40, 40);
-//           ctx.restore();
-//           ctx.draw(true);
-//
-//         }
-//         var qrcodeUrl = that.$store.state.board.qrcodeUrl;
-//         //画二维码
-//         console.log('444444   ' + qrcodeUrl);
-//         wx.getImageInfo({
-//           src: qrcodeUrl,
-//           success: (res) => {
-//             ctx.save();
-//             ctx.beginPath();
-//             ctx.arc((that.getWindowWidth - 76), heights - 60, 50, 0, Math.PI * 2, false);
-//             ctx.setFillStyle('rgba(255, 255, 255, 0.7)');
-//             ctx.fill();
-//             ctx.clip();
-//             ctx.drawImage(res.path, (that.getWindowWidth - 126), heights - 110, 100, 100);
-//             ctx.restore();
-//             ctx.draw(true);
-//             console.log(new Date().getTime());
-//             wx.hideLoading();
-//           }
-//         })
         wx.getImageInfo({
           src: that.drawPoster,
           success: (res) => {

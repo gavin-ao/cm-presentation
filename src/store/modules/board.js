@@ -3,8 +3,8 @@ const state = {
   address: '',
   actShareTitle:'', //分享标题
   actTitle:'', //活动标题
-  invitationRewardType:1,//邀请奖励类型
-  assistanceRewardType:1,//助力奖励类型
+  invitationRewardType:1,//邀请奖励类型 1兑换码 2淘口令 3进群和落地页
+  assistanceRewardType:1,//助力奖励类型 0没奖  1兑换码 2淘口令 3进群和落地页
   windowWidth: 0,
   windowHeight: 0,
   posterH:0,
@@ -21,7 +21,6 @@ const state = {
   checked: false,
   checkedRule: false,
   checkedRules: false,
-  exchangeProcess:false,
   existDoHelp: '',
   myExistDoHelp:'',
   drawAvatarUrl:'',
@@ -33,7 +32,7 @@ const state = {
   secret:'64a61af911d59a37a6fe86a8087a1bfa',
   headPic:[],
   // urlHttp:'https://cm-service.easy7share.com'
-  urlHttp:'https://cm-service.easy7share.com'
+  urlHttp:'https://dataanalysis-cs.easy7share.com'
 }
 
 export default {

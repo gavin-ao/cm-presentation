@@ -1,9 +1,5 @@
 <template>
   <div class="vist-userInfo">
-    <!--<movable-area class="containes">-->
-    <!--<movable-view class="activeRule rulesCondition" @click="activeRules" :x="x" :y="y" direction="all" @change="changeDir">活动规则</movable-view>-->
-    <!--<img :src="goLink" alt="">-->
-    <!--</movable-area>-->
     <div class="helpInfos" :class="{rewardCondition:helpInfos===false}">
       <div>
         <p class="tit">提示</p>
@@ -16,9 +12,7 @@
     <div class="containes" :style="{height:posterH+'px'}">
       <movable-area style="">
         <movable-view direction="vertical" class="activeRule rulesCondition" @click="activeRules">活动规则</movable-view>
-        <!--<img :src="goLink" alt="">-->
       </movable-area>
-      <!--<span class="activeRule rulesCondition" @click="activeRules">活动规则</span>-->
       <img :src="goLink" alt="" mode="aspectFit"> <span></span>
     </div>
     <div class="record" :class="{rewardCondition:rulesOfActivity===true}">
@@ -33,17 +27,16 @@
 
         </div>
         <div class="helpPeo" v-else-if="headPic.length<=partakeNum">
-          <!--<div class="helpPeo">-->
           <p><span class="helpNum"> {{headPic.length}}</span><br/>邀请记录</p>
-          <!--<span class="helpText">邀请记录</span>-->
           <scroll-view scroll-y>
             <p class="helpUserImg">
               <img :src="item.img" v-for="(item,index) in headPic" :key="index" alt="">
             </p>
           </scroll-view>
           <p class="helpLackNum" v-if="headPic.length<partakeNum">还差（{{partakeNum - headPic.length}}）位</p>
-          <p v-else v-html="actReply"></p>
-
+          <!--<p v-else-if="invitationRewardType == 3">-->
+            <!--<span style="display: inline-block;font-size: 14px;font-weight: lighter;margin-top: 10px;">数量有限，先到先得哦</span>-->
+          <!--</p>-->
         </div>
         <div class="menu">
           <div class="menus" @click="existDoHelps" :class="{rewardCondition:manIsFull=='manIsFull'}"
@@ -64,43 +57,21 @@
             <span v-else>{{btnText.bxt_continue1}}</span>
           </div>
           <div class="menus" @click="receiveAreward" :class="{rewardCondition:receiveReward=='receiveReward'}"
-               hover-class="hoverNone" hover-stay-time="800" v-if="invitationRewardType==1 || invitationRewardType==2"> {{btnText.bxt_reward}}
+               hover-class="hoverNone" hover-stay-time="800" v-if="invitationRewardType==1 || invitationRewardType==2">
+            {{btnText.bxt_reward}}
           </div>
           <button class="menus" :class="{rewardCondition:receiveReward=='receiveReward'}" open-type="contact"
                   hover-class="hoverNone" hover-stay-time="800" @click="getRewardAct" type="default"
-                  :session-from=sessionFrom  v-else-if="invitationRewardType==3">{{btnText.bxt_reward}}
+                  :session-from=invitationSessionFrom v-else-if="invitationRewardType==3" style="margin-top: 10px;">{{btnText.bxt_reward}}
           </button>
         </div>
       </div>
     </div>
-    <!--<div class="menu" >-->
     <div class="menu">
       <button class="menuss" open-type="getUserInfo" @getuserinfo="getUserInfoInvite"
               :class="{rewardCondition:getInfoInvite=='getInfoInvite'}" hover-class="hoverNone" hover-stay-time="800">
         {{btnText.bxt_invite}}
       </button>
-      <!--<div class="menus" @click="existDoHelps" :class="{rewardCondition:manIsFull=='manIsFull'}" hover-class="hoverNone"-->
-      <!--hover-stay-time="800">-->
-      <!--{{btnText.bxt_full}}-->
-      <!--</div>-->
-      <!--<button class="menus" @getuserinfo="bindGetUserInfo" :class="{rewardCondition:giveHelp=='giveHelp'}"-->
-      <!--open-type="getUserInfo" hover-class="hoverNone" hover-stay-time="800"> {{btnText.bxt_help}}-->
-      <!--</button>-->
-      <!--<div class="menus" @click="existDoHelps" :class="{rewardCondition:alreadyHelp=='alreadyHelp'}"-->
-      <!--hover-class="hoverNone" hover-stay-time="800">-->
-      <!--{{btnText.bxt_alhelp}}-->
-      <!--</div>-->
-      <!--<div class="menus" @click="continueHelp" :class="{rewardCondition:continueToInvite=='continueToInvite'}"-->
-      <!--hover-class="hoverNone" hover-stay-time="800">-->
-      <!--<span v-if="headPic.length==0">{{btnText.bxt_continue}}</span>-->
-      <!--<span v-else>{{btnText.bxt_continue1}}</span>-->
-      <!--</div>-->
-      <!--&lt;!&ndash;<button class="menus" :class="{rewardCondition:receiveReward=='receiveReward'}" open-type="contact"&ndash;&gt;-->
-      <!--&lt;!&ndash;hover-class="hoverNone" hover-stay-time="800" @click="getRewardAct" type="default"  :session-from=sessionFrom>{{btnText.bxt_reward}}&ndash;&gt;-->
-      <!--&lt;!&ndash;</button>&ndash;&gt;-->
-      <!--<div class="menus" @click="receiveAreward" :class="{rewardCondition:receiveReward=='receiveReward'}"-->
-      <!--hover-class="hoverNone" hover-stay-time="800"> {{btnText.bxt_reward}}-->
-      <!--</div>-->
     </div>
     <p class="modelSetP" :class="{rewardCondition:rulesOfModel===false}" @click="modelSetExpand1">
       <img src="/static/img/modelArrow.png"
@@ -132,18 +103,16 @@
       </div>
     </div>
     <div class="mask" :class="{menuStyle:checked == true}">
-      <!--<div class="mask menuStyle">-->
       <p style="position: fixed;z-index: 1000;width:calc(100% - 40rpx);text-align: center;" @click="modelSetClose">
         <img src="/static/img/modelArrow.png" alt="" style="width: 40rpx;height: 32rpx;">
       </p>
       <div class="modelTask">
         <div style="">
-          <!--<img src="/static/img/close.png" class="closeMask" @click="closeMash"/>-->
-          <p class="modelTitle">{{contentTitle}}</p>
-          <p class="modelContent">
-            {{contentHead}}
-          </p>
+          <p class="modelTitle">为好友助力成功</p>
           <block v-if="assistanceRewardType==1">
+            <p class="modelContent">
+              {{contentHead}}
+            </p>
             <p class="codes">
               <img :src="rewardImg" alt="" mode="aspectFit">
             </p>
@@ -152,18 +121,28 @@
             </p>
           </block>
           <block v-else-if="assistanceRewardType==2">
-            <p class="codes" @longtap="copyTBL">
+            <p class="modelContent">
+              恭喜您获得 助力奖励
+            </p>
+            <p class="codess" @longtap="copyTBL">
               {{contentMid}}
             </p>
             <p class="copy" @longtap="copyTBL"> （长按复制）</p>
+            <p class="copy">
+              {{contentFoot}}
+            </p>
           </block>
           <block v-else-if="assistanceRewardType==3">
-            <p class="codes" >
-              <button class="menus receiveReward" open-type="contact"
-                      hover-class="hoverNone" hover-stay-time="800" @click="assistanceRewardAct" type="default"
-                      :session-from=sessionFrom >{{btnText.bxt_reward}}
-              </button>
+            <p class="modelContent" style="font-size: 14px;color: #F05522;margin-bottom: 50px;margin-top: 10px;">
+              恭喜您获得 助力奖励
             </p>
+            <p class="copy">
+              {{contentFoot}}
+            </p>
+            <button class="btn modelMyHelp" open-type="contact"
+                    hover-class="hoverNone" hover-stay-time="800" @click="assistanceRewardAct" type="default"
+                    :session-from=assistanceSessionFrom>{{btnText.bxt_reward}}
+            </button>
           </block>
           <div class="btn modelMyHelp" @click="existDoHelps">{{contentBtn}}</div>
         </div>
@@ -176,11 +155,12 @@
           <p class="maskClose" @click="closeMash">
             <img src="/static/img/close.png" class="closeMask"/>
           </p>
-          <p class="modelTitle">{{contentTitle}}</p>
-          <p class="modelContent">
-            {{contentHead}}
-          </p>
+          <p class="modelTitle">任务达成</p>
+
           <block v-if="invitationRewardType==1">
+            <p class="modelContent">
+              {{contentHead}}
+            </p>
             <p class="codes">
               <img :src="rewardImg" alt="" mode="aspectFit">
             </p>
@@ -189,10 +169,16 @@
             </p>
           </block>
           <block v-else-if="invitationRewardType==2">
-            <p class="codes" @longtap="copyTBL">
+            <p class="modelContent">
+              恭喜您获得 奖励
+            </p>
+            <p class="codess" @longtap="copyTBL">
               {{contentMid}}
             </p>
             <p class="copy" @longtap="copyTBL"> （长按复制）</p>
+            <p class="copy">
+              {{contentFoot}}
+            </p>
           </block>
         </div>
       </div>
@@ -232,43 +218,28 @@
     },
     onShow(option) {
       var that = this;
-      // that.$store.state.board.checked = false;
-      // that.$store.state.board.checkedRule = false;
-      // that.$store.state.board.checkedRules = false;
-      // that.$store.state.board.exchangeProcess = false;
-      // that.$store.state.board.existDoHelp = '';
-      // that.$store.state.board.myExistDoHelp = '';
-      // that.exithelpId = '';
-      // that.rulesOfActivity = '';
-      // that.contactsCondition = '';
-      // that.commandText = '';
-      // that.modelSet = '';
-      // that.modelSetP = true;
-      // that.rulesOfModel = true;
-      // that.helpInfos = true;
-      Object.assign(that.$data, that.$options.data())
-      console.log(that.$data)
+      Object.assign(that.$data, that.$options.data());
 
       var sysUrl = that.$store.state.board.urlHttp + '/wechatapi/nologin/activity/getCurrentActivityInfo';
-      // console.log(new Date().getTime())
       wx.request({
         url: sysUrl,
         method: "POST",
         data: {storeId: that.$store.state.board.storeId},
         header: {'content-type': 'application/x-www-form-urlencoded'},
         success: function (res) {
-          console.log(new Date().getTime())
           if (res.data.success) {
-            that.$store.state.board.actId = res.data.actId;
-            that.$store.state.board.goLink = that.$store.state.board.urlHttp + res.data.url;
+            that.$store.state.board.actId = res.data.actId;   //活动ID
+            that.$store.state.board.goLink = that.$store.state.board.urlHttp + res.data.url;   //海报图片
             that.actRule = res.data.actRule;
-            that.ruleArr = that.actRule.split('\n');
-            that.exchangeRule = res.data.exchangeRule;
-            that.$store.state.board.actShareTitle = res.data.actShareTitle;
-            that.$store.state.board.actTitle = res.data.actTitle;
-            that.$store.state.board.partakeNums = res.data.partakeNum;
-            that.$store.state.board.btnText = res.data.btnText;
-            that.$store.state.board.actShareCopywriting = res.data.actShareCopywriting;
+            that.ruleArr = that.actRule.split('\n'); //活动规则
+            that.exchangeRule = res.data.exchangeRule;   //兑换流程
+            that.$store.state.board.actShareTitle = res.data.actShareTitle;  //分享标题
+            that.$store.state.board.actTitle = res.data.actTitle;   //活动标题
+            that.$store.state.board.partakeNums = res.data.partakeNum;  //助力人数
+            that.$store.state.board.btnText = res.data.btnText;   //按钮文案
+            that.$store.state.board.actShareCopywriting = res.data.actShareCopywriting;  //玩法说明
+            that.$store.state.board.invitationRewardType = res.data.initiatorRewardType; //邀请奖励类型
+            that.$store.state.board.assistanceRewardType = res.data.assistanceRewardType; //助力奖励类型
             wx.setNavigationBarTitle({
               title: res.data.actTitle
             })
@@ -282,12 +253,12 @@
                 }
               })
             }
-            // // 查看是否授权
+            // 查看是否授权
             wx.getSetting({
               success: function (res) {
                 if (res.authSetting['scope.userInfo']) {
                   // 已经授权，可以直接调用 getUserInfo 获取头像昵称
-                  var otherHelpId = that.$store.state.board.otherHelpId
+                  var otherHelpId = that.$store.state.board.otherHelpId;
                   if (otherHelpId) {
                     var sysUrl = that.$store.state.board.urlHttp + '/wechatapi/nologin/help/findHelpDetailUserList';
                     wx.request({
@@ -311,23 +282,6 @@
                               that.$store.state.board.checked = false;
                               if (res.data.success) {
                                 that.assistanceModel(res.data);
-                                // if(that.assistanceRewardType == 1 || that.assistanceRewardType == 2){
-                                //   if (res.data.commandType == 2) {
-                                //     if (res.data.rewardActContent) {
-                                //       that.contentTitle = res.data.rewardActContent.contentTitle;
-                                //       that.contentHead = res.data.rewardActContent.contentHead;
-                                //       that.contentMid = res.data.rewardActContent.contentMid;
-                                //       that.contentFoot = res.data.rewardActContent.contentFoot;
-                                //       that.contentBtn = res.data.rewardActContent.contentBtn;
-                                //       that.$store.state.board.checked = true
-                                //     }
-                                //     if(res.data.filePath){
-                                //       that.rewardImg = that.$store.state.board.urlHttp + res.data.filePath;
-                                //     }else{
-                                //       that.rewardImg ="";
-                                //     }
-                                //   }
-                                // }
                                 that.$store.state.board.existDoHelp = false;
                                 that.$store.state.board.myExistDoHelp = true;
                                 that.exithelpId = true;
@@ -341,7 +295,7 @@
                                   that.$store.state.board.myHelpId = otherHelpId;
                                   console.log(that.$store.state.board.myHelpId)
                                 } else {
-                                  that.wantActivity(sessionID, otherHelpId, actId);
+                                  that.wantActivity(that, sessionID, otherHelpId, actId);
                                 }
                               }
                             }
@@ -358,7 +312,6 @@
                         data: {actId: actId, sessionID: sessionID},
                         header: {'content-type': 'application/x-www-form-urlencoded'},
                         success: function (res) {
-                          console.log(new Date().getTime())
                           that.$store.state.board.headPic = [];
                           if (res.data.success) {
                             that.$store.state.board.myHelpId = res.data.helpId;
@@ -366,14 +319,14 @@
                               that.headPicArr(that, res.data.data)
                             }
                             that.modelSet = true;
-                            that.$store.state.board.myExistDoHelp = false
-                            that.$store.state.board.existDoHelp = true
+                            that.$store.state.board.myExistDoHelp = false;
+                            that.$store.state.board.existDoHelp = true;
                             that.exithelpId = true;
                             that.rulesOfActivity = true;
                           }
                           else {
                             that.exithelpId = false;
-                            that.$store.state.board.existDoHelp = true
+                            that.$store.state.board.existDoHelp = true;
                             that.$store.state.board.myExistDoHelp = false
                           }
                         }
@@ -387,13 +340,13 @@
                     that.helpInfos = false;
                   } else {
                     that.exithelpId = false;
-                    that.$store.state.board.existDoHelp = true
-                    that.$store.state.board.myExistDoHelp = false
+                    that.$store.state.board.existDoHelp = true;
+                    that.$store.state.board.myExistDoHelp = false;
                   }
                 }
               }
             })
-          }else{
+          } else {
             wx.setStorageSync("storeId", "");
           }
         }
@@ -411,9 +364,7 @@
     },
     methods: {
       helpInfoss() {
-        console.log(123456)
         var that = this;
-        console.log(789)
         utils.login(that, function (sessionID, actId, otherHelpId) {
           var sysUrl = that.$store.state.board.urlHttp + '/wechatapi/nologin/help/findHelpDetailUserList';
           wx.request({
@@ -422,7 +373,6 @@
             data: {helpId: otherHelpId},
             header: {'content-type': 'application/x-www-form-urlencoded'},
             success: function (res) {
-              console.log(res)
               that.helpInfos = true;
               that.$store.state.board.headPic = [];
               if (res.data.success) {
@@ -438,18 +388,6 @@
                   that.$store.state.board.checked = false;
                   if (res.data.success) {
                     that.assistanceModel(res.data);
-                    // if (res.data.commandType == 2) {
-                    //   if (res.data.rewardActContent) {
-                    //     that.contentTitle = res.data.rewardActContent.contentTitle;
-                    //     that.contentHead = res.data.rewardActContent.contentHead;
-                    //     that.contentMid = res.data.rewardActContent.contentMid;
-                    //     that.contentFoot = res.data.rewardActContent.contentFoot;
-                    //     that.contentBtn = res.data.rewardActContent.contentBtn;
-                    //     that.$store.state.board.checked = true
-                    //   }
-                    //   that.rewardImg = that.$store.state.board.urlHttp + res.data.filePath;
-
-                    // }
                     that.$store.state.board.existDoHelp = false;
                     that.$store.state.board.myExistDoHelp = true;
                     that.exithelpId = true;
@@ -461,17 +399,14 @@
                       that.exithelpId = true;
                       that.rulesOfActivity = true;
                       that.$store.state.board.myHelpId = otherHelpId;
-                      console.log(that.$store.state.board.myHelpId)
                     } else {
-                      that.wantActivity(sessionID, otherHelpId, actId);
+                      that.wantActivity(that, sessionID, otherHelpId, actId);
                     }
                   }
                 }
               })
-
             }
           })
-
         });
       },
       getUserInfoInvite() {
@@ -496,7 +431,7 @@
           header: {'content-type': 'application/x-www-form-urlencoded'},
           success: function (res) {
             if (res.data.success) {
-              that.$store.state.board.myHelpId = res.data.helpId
+              that.$store.state.board.myHelpId = res.data.helpId;
               wx.redirectTo({
                 url: '/pages/showPages/main?actId=' + actId + "&helpId=" + res.data.helpId
               })
@@ -515,7 +450,7 @@
               header: {'content-type': 'application/x-www-form-urlencoded'},
               success: function (res) {
                 if (res.data.success) {
-                  that.$store.state.board.myHelpId = res.data.helpId
+                  that.$store.state.board.myHelpId = res.data.helpId;
                   wx.redirectTo({
                     url: '/pages/showPages/main?actId=' + actId + "&helpId=" + res.data.helpId
                   })
@@ -525,9 +460,8 @@
           }
         });
       },
-      wantActivity(sessionID, otherHelpId, actId) {
-        var that = this;
-        if (that.headPic.length < that.partakeNums) {
+      wantActivity(that, sessionID, otherHelpId, actId) {
+        if (that.headPic.length < that.partakeNum) {
           wx.request({
             url: that.$store.state.board.urlHttp + "/wechatapi/help/clickHelpUrl",
             method: "POST",
@@ -543,64 +477,117 @@
                   data: {helpId: otherHelpId},
                   header: {'content-type': 'application/x-www-form-urlencoded'},
                   success: function (res) {
-                    that.$store.state.board.headPic = []
+                    that.$store.state.board.headPic = [];
                     if (res.data.success) {
                       that.headPicArr(that, res.data.data)
                     }
                   }
                 })
-                if(that.$store.state.board.exitAssistanceReward == 0){
+                if (that.$store.state.board.assistanceRewardType == 2) {
                   that.$store.state.board.existDoHelp = false;
                   that.$store.state.board.myExistDoHelp = true;
-                }else{
-                  wx.request({
-                    url: that.$store.state.board.urlHttp + "/wechatapi/help/getRewardActCommandQrcodeByOther",
-                    // url: "http://192.168.50.52:8099/wechatapi/help/getRewardActCommandQrcodeByOther",
-                    method: "POST",
-                    data: {sessionID: sessionID, actId: actId},
-                    header: {'content-type': 'application/x-www-form-urlencoded'},
-                    success: function (res) {
-                      that.$store.state.board.checked = false
-                      if (res.data.success) {
-                        that.assistanceModel(res.data);
-                        // if (res.data.rewardActContent) {
-                        //   that.contentTitle = res.data.rewardActContent.contentTitle;
-                        //   that.contentHead = res.data.rewardActContent.contentHead;
-                        //   that.contentMid = res.data.rewardActContent.contentMid;
-                        //   that.contentFoot = res.data.rewardActContent.contentFoot;
-                        //   that.contentBtn = res.data.rewardActContent.contentBtn;
-                        //   that.$store.state.board.checked = true
-                        // }
-                        // that.rewardImg = that.$store.state.board.urlHttp + res.data.filePath;
-                      } else {
-                        wx.showToast({
-                          title: res.data.msg,
-                          icon: 'none',
-                          duration: 2000
+                } else {
+                  if(that.assistanceRewardType == 1){
+                    wx.request({
+                      url: that.$store.state.board.urlHttp + "/wechatapi/help/getRewardActCommandQrcodeByOther",
+                      // url: "http://192.168.50.52:8099/wechatapi/help/getRewardActCommandQrcodeByOther",
+                      method: "POST",
+                      data: {sessionID: sessionID, actId: actId},
+                      header: {'content-type': 'application/x-www-form-urlencoded'},
+                      success: function (res) {
+                        that.$store.state.board.checked = false;
+                        if (res.data.success) {
+                          that.assistanceModel(res.data);
+                        } else {
+                          wx.showToast({
+                            title: res.data.msg,
+                            icon: 'none',
+                            duration: 2000
+                          })
+                        }
+                        that.$store.state.board.existDoHelp = false;
+                        that.$store.state.board.myExistDoHelp = true;
+                        //埋点
+                        wx.request({
+                          url: that.$store.state.board.urlHttp + "/wechatapi/help/getRewardActCommandOpenWindowByOther",
+                          method: "POST",
+                          data: {sessionID: sessionID, actId: actId},
+                          header: {'content-type': 'application/x-www-form-urlencoded'},
+                          success: function (res) {
+                            if (res.data.success) {
+
+                            } else {
+                              wx.showToast({
+                                title: res.data.msg,
+                                icon: 'none',
+                                duration: 2000
+                              })
+                            }
+                          }
                         })
                       }
-                      that.$store.state.board.existDoHelp = false;
-                      that.$store.state.board.myExistDoHelp = true;
-                      //埋点
-                      wx.request({
-                        url: that.$store.state.board.urlHttp + "/wechatapi/help/getRewardActCommandOpenWindowByOther",
-                        method: "POST",
-                        data: {sessionID: sessionID, actId: actId},
-                        header: {'content-type': 'application/x-www-form-urlencoded'},
-                        success: function (res) {
-                          if (res.data.success) {
-
-                          } else {
-                            wx.showToast({
-                              title: res.data.msg,
-                              icon: 'none',
-                              duration: 2000
-                            })
-                          }
+                    })
+                  }else if(that.assistanceRewardType == 2){
+                    wx.request({
+                      url: that.$store.state.board.urlHttp + "/wechatapi/help/getRewardActCommandByOther",
+                      method: "POST",
+                      data: {sessionID: sessionID, actId: actId},
+                      header: {'content-type': 'application/x-www-form-urlencoded'},
+                      success: function (res) {
+                        if (res.data.success) {
+                          // contentTitle:'', //领取奖励标题
+                          //   contentHead:'', //领取奖励头部
+                          //   contentMid:'', //领取奖励中部
+                          //   contentFoot:'', //领取奖励脚部
+                          //   contentBtn:'', //领取奖励按钮
+                          that.assistanceModel(res.data);
+                        } else {
+                          wx.showToast({
+                            title: res.data.msg,
+                            icon: 'none',
+                            duration: 2000
+                          })
                         }
-                      })
-                    }
-                  })
+                        that.$store.state.board.existDoHelp = false;
+                        that.$store.state.board.myExistDoHelp = true;
+                        wx.request({
+                          url: that.$store.state.board.urlHttp + "/wechatapi/help/getRewardActCommandOpenWindowByOther",
+                          method: "POST",
+                          data: {sessionID: sessionID, actId: actId},
+                          header: {'content-type': 'application/x-www-form-urlencoded'},
+                          success: function (res) {
+                            if (res.data.success) {
+
+                            } else {
+                              wx.showToast({
+                                title: res.data.msg,
+                                icon: 'none',
+                                duration: 2000
+                              })
+                            }
+                          }
+                        })
+                      }
+                    })
+                  }else if(that.assistanceRewardType == 3){
+                    wx.request({
+                      url: that.$store.state.board.urlHttp + "/wechatapi/help/existDoHelpByActId",
+                      method: "POST",
+                      data: {actId: actId, sessionID: sessionID, helpId: otherHelpId, type: 1},
+                      header: {'content-type': 'application/x-www-form-urlencoded'},
+                      success: function (res) {
+                        that.$store.state.board.checked = false;
+                        if (res.data.success) {
+                          that.assistanceModel(res.data);
+                          that.$store.state.board.existDoHelp = false;
+                          that.$store.state.board.myExistDoHelp = true;
+                          that.exithelpId = true;
+                          that.rulesOfActivity = true;
+                        }
+                      }
+                    })
+                  }
+
                 }
               }
             }
@@ -616,10 +603,9 @@
         var that = this;
         var myHelpId = that.$store.state.board.myHelpId;
         var sessionID = that.$store.state.board.sessionID;
-        if(that.invitationRewardType == 1){
+        if (that.invitationRewardType == 1) {
           wx.request({
             url: that.$store.state.board.urlHttp + "/wechatapi/help/getRewardActCommandQrcode",
-            // url:  "http://192.168.50.52:8099/wechatapi/help/getRewardActCommandQrcode",
             method: "POST",
             data: {sessionID: sessionID, helpId: myHelpId},
             header: {'content-type': 'application/x-www-form-urlencoded'},
@@ -662,7 +648,7 @@
               }
             }
           })
-        }else if(that.invitationRewardType==2){
+        } else if (that.invitationRewardType == 2) {
           wx.request({
             url: that.$store.state.board.urlHttp + "/wechatapi/help/getRewardActCommand",
             method: "POST",
@@ -707,30 +693,28 @@
             }
           })
         }
-
       },
-      assistanceModel(data){
+      assistanceModel(data) {
         var that = this;
-        if(that.assistanceRewardType == 1 || that.assistanceRewardType == 2) {
-          if (data.commandType == 2) {
-            if (res.data.rewardActContent) {
-              // contentTitle:'', //领取奖励标题
-              //   contentHead:'', //领取奖励头部
-              //   contentMid:'', //领取奖励中部
-              //   contentFoot:'', //领取奖励脚部
-              //   contentBtn:'', //领取奖励按钮
-              that.contentTitle = data.rewardActContent.contentTitle;
-              that.contentHead = data.rewardActContent.contentHead;
-              that.contentMid = data.rewardActContent.contentMid;
-              that.contentFoot = data.rewardActContent.contentFoot;
-              that.contentBtn = data.rewardActContent.contentBtn;
-              that.$store.state.board.checked = true
-            }
-            if (data.filePath) {
-              that.rewardImg = that.$store.state.board.urlHttp + data.filePath;
-            } else {
-              that.rewardImg = "";
-            }
+        console.log(that.assistanceRewardType);
+        if (that.assistanceRewardType != 0 ) {
+          if (data.rewardActContent) {
+            // contentTitle:'', //领取奖励标题
+            //   contentHead:'', //领取奖励头部
+            //   contentMid:'', //领取奖励中部
+            //   contentFoot:'', //领取奖励脚部
+            //   contentBtn:'', //领取奖励按钮
+            that.contentTitle = data.rewardActContent.contentTitle;
+            that.contentHead = data.rewardActContent.contentHead;
+            that.contentMid = data.rewardActContent.contentMid;
+            that.contentFoot = data.rewardActContent.contentFoot;
+            that.contentBtn = data.rewardActContent.contentBtn;
+            that.$store.state.board.checked = true
+          }
+          if (data.filePath) {
+            that.rewardImg = that.$store.state.board.urlHttp + data.filePath;
+          } else {
+            that.rewardImg = "";
           }
         }
       },
@@ -738,23 +722,12 @@
         this.$store.state.board.checkedRule = false;
         this.$store.state.board.checked = false;
         this.$store.state.board.checkedRules = false;
-        this.$store.state.board.exchangeProcess = false;
       },
-      receiveFood() {
+      existDoHelps() {   //我也要领奖励
         var that = this;
-        that.$store.state.board.checked = false;
-      },
-      exchangeProcess() {
-        var that = this;
-        that.$store.state.board.exchangeProcess = true;
-      },
-      existDoHelps() {
-        var that = this;
-        that.$store.state.board.existDoHelp = ''
-        that.$store.state.board.myExistDoHelp = ''
-        // wx.setStorageSync('otherHelpId', "")
-        this.$store.state.board.otherHelpId = ''
-//        utils.login(that, false, function (sessionID, actId) {
+        that.$store.state.board.existDoHelp = '';
+        that.$store.state.board.myExistDoHelp = '';
+        this.$store.state.board.otherHelpId = '';
         var actId = that.$store.state.board.actId;
         var sessionID = that.$store.state.board.sessionID;
         wx.request({
@@ -763,21 +736,21 @@
           data: {actId: actId, sessionID: sessionID},
           header: {'content-type': 'application/x-www-form-urlencoded'},
           success: function (res) {
-            console.log(new Date().getTime())
+            console.log(new Date().getTime());
             that.$store.state.board.headPic = [];
             if (res.data.success) {
               that.$store.state.board.myHelpId = res.data.helpId;
-              that.headPicArr(that, res.data.data)
-              that.$store.state.board.myExistDoHelp = false
-              that.$store.state.board.existDoHelp = true
+              that.headPicArr(that, res.data.data);
+              that.$store.state.board.myExistDoHelp = false;
+              that.$store.state.board.existDoHelp = true;
               that.exithelpId = true;
               that.rulesOfActivity = true;
               that.$store.state.board.checked = false;
             }
             else {
               that.exithelpId = false;
-              that.$store.state.board.existDoHelp = true
-              that.$store.state.board.myExistDoHelp = false
+              that.$store.state.board.existDoHelp = true;
+              that.$store.state.board.myExistDoHelp = false;
               that.$store.state.board.checked = false;
               that.rulesOfModel = true;
               that.modelSetP = true;
@@ -785,20 +758,6 @@
             }
           }
         })
-      },
-      nextMyToHelp() {
-
-        var actId = this.$store.state.board.actId;
-        var otherHelpId = this.$store.state.board.otherHelpId;
-        if (otherHelpId) {
-          wx.redirectTo({
-            url: '/pages/showPages/main?actId=' + actId + "&helpId=" + otherHelpId
-          })
-        } else {
-          wx.redirectTo({
-            url: '/pages/showPages/main?actId=' + actId
-          })
-        }
       },
       activeRules() {
         var that = this;
@@ -864,6 +823,8 @@
         var that = this;
 
         console.log("助力客服奖励");
+        // var sessionID = that.$store.state.board.sessionID;
+        // var myHelpId = that.$store.state.board.myHelpId;
         // wx.request({
         //   url: that.$store.state.board.urlHttp + "/wechatapi/help/getRewardActCommandOpenWindow",
         //   method: "POST",
@@ -903,54 +864,46 @@
       }
 
 
-    }
-    ,
-
+    },
     created() {
-    }
-    ,
+    },
     computed: {
-      invitationRewardType() {
+      invitationRewardType() { //邀请奖励类型
         return this.$store.state.board.invitationRewardType;
       },
-      assistanceRewardType() {
+      assistanceRewardType() {  //助力奖励类型
         return this.$store.state.board.assistanceRewardType;
+        // return 3;
       },
-      sessionFrom() {
-        return '{"nickName":"' + this.$store.state.board.nickName + '","avatarUrl":"' + this.$store.state.board.avatarUrl + '"}';
+      invitationSessionFrom() {  //邀请 客服消息传递参数
+        return '{"actId":"'+ this.$store.state.board.actId+'","type":1}';
       },
-      headPic() {
+      assistanceSessionFrom() {  //助力 客服消息传递参数
+        return '{"actId":"'+ this.$store.state.board.actId+'","type":1}';
+      },
+      headPic() {  //助力人头像
         return this.$store.state.board.headPic
-      }
-      ,
+      },
       goLink() {
         return this.$store.state.board.goLink
       }
       ,
       checked() {
         return this.$store.state.board.checked
-      }
-      ,
+      },
       checkedRule() {
         return this.$store.state.board.checkedRule
-      }
-      ,
+      },
       checkedRules() {
         return this.$store.state.board.checkedRules
-      }
-      ,
-      exchangeProc() {
-        return this.$store.state.board.exchangeProcess
-      }
-      ,
+      },
       myExistDoHelp() {
         return this.$store.state.board.myExistDoHelp
       }
       ,
       existDoHelp() {
         return this.$store.state.board.existDoHelp
-      }
-      ,
+      },
       partakeNum() {
         return this.$store.state.board.partakeNums
       }
@@ -973,40 +926,35 @@
         } else {
           return ""
         }
-      }
-      ,
+      },
       giveHelp() {
         if (this.headPic.length < this.partakeNum && this.myExistDoHelp === true && this.existDoHelp === true && this.exithelpId) {
           return 'giveHelp';
         } else {
           return ""
         }
-      }
-      ,
+      },
       alreadyHelp() {
         if (this.myExistDoHelp === true && this.existDoHelp === false && this.exithelpId) {
           return 'alreadyHelp';
         } else {
           return ""
         }
-      }
-      ,
+      },
       continueToInvite() {
         if (this.headPic.length < this.partakeNum && this.myExistDoHelp === false && this.exithelpId) {
           return 'continueToInvite';
         } else {
           return ""
         }
-      }
-      ,
+      },
       receiveReward() {
         if (this.headPic.length >= this.partakeNum && this.myExistDoHelp === false && this.exithelpId) {
           return 'receiveReward';
         } else {
           return ""
         }
-      }
-      ,
+      },
       posterH() {
         var posterW = this.$store.state.board.posterW
         var posterH = this.$store.state.board.posterH
@@ -1018,15 +966,11 @@
         } else {
           return temp
         }
-
       }
-    }
-    ,
+    },
     mounted() {
       var that = this;
-
     }
-
   }
 </script>
 
@@ -1088,26 +1032,20 @@
 
       img {
         width: 100%;
-        /*height: 100%!important;*/
         height: 100% !important;
         border-radius: 8px;
-        /*vertical-align: middle;*/
       }
-      /*span{ display:inline-block; height:100%; vertical-align:middle;}*/
     }
     .record {
       position: fixed;
       bottom: 0px;
       left: 12px;
       width: calc(100% - 24px);
-      /*padding: 12px;*/
       height: 310px;
-      /*color: #EF6D00;*/
       margin: 0 auto;
       background: #fff;
       border-radius: 8px;
       box-shadow: 0px 0px 15px rgba(0, 0, 0, .3);
-      /*padding-bottom: 4px;*/
       display: none;
       .recordTitle {
         color: #9397A4;
@@ -1131,7 +1069,6 @@
         font-size: 18px;
         color: #F05522;
         margin-top: 20px;
-        /*margin-bottom: 15px;*/
       }
       .invitation {
         text-align: center;
@@ -1179,20 +1116,17 @@
               }
             }
           }
-
           .helpLackNum {
             font-size: 12px;
             font-weight: lighter;
             color: #4A4A4A;
             margin-top: 15px;
           }
-
         }
         .menu {
           width: calc(100% - 40px);
           position: fixed;
           bottom: 0px;
-          /*background: #fff;*/
           text-align: center;
           z-index: 1000;
           padding-bottom: 14px;
@@ -1220,7 +1154,6 @@
             text-align: center;
             line-height: 40px;
             border-radius: 24px;
-            /*box-shadow: 0px 1px 1px 0px #EF6D00 ;*/
             border: none;
           }
           div.menus.rewardCondition, button.menus.rewardCondition {
@@ -1230,7 +1163,6 @@
             display: block;
           }
           .hoverNone {
-            /*background-color: #ccc;*/
             pointer-events: none;
           }
         }
@@ -1304,8 +1236,6 @@
     .menu {
       width: 100%;
       position: fixed;
-      /*bottom: 0px;*/
-      /*background: #fff;*/
       text-align: center;
       z-index: 1000;
       padding-bottom: 14px;
@@ -1333,7 +1263,6 @@
         text-align: center;
         line-height: 40px;
         border-radius: 24px;
-        /*box-shadow: 0px 1px 1px 0px #EF6D00 ;*/
         border: none;
       }
       div.menus.rewardCondition, button.menus.rewardCondition {
@@ -1343,11 +1272,9 @@
         display: block;
       }
       .hoverNone {
-        /*background-color: #ccc;*/
         pointer-events: none;
       }
     }
-
     .mask {
       display: none;
       width: calc(100% - 24px);
@@ -1356,16 +1283,13 @@
       bottom: -10px;
       left: 12.5px;
       z-index: 1000;
-      /*padding: 0 7px;*/
       background: #fff;
       border-radius: 8px;
       box-shadow: 0px 0px 15px rgba(0, 0, 0, .3);
       .modelTask {
         margin: 0 auto;
-        /*margin-top: 30%;*/
         width: calc(100% - 50px);
         height: 100%;
-        /*border-radius: 8px;*/
         background: #fff;
         div {
           padding: 0 10px;
@@ -1381,9 +1305,7 @@
             margin-top: 10px;
           }
           .modelContent {
-
             line-height: 24px;
-            /*color: #4A4A4A;*/
             margin-top: 20px;
             font-weight: lighter;
             text-align: center;
@@ -1396,7 +1318,6 @@
             right: 0px;
             width: 14px;
             height: 14px;
-            /*font-size: 14px;*/
           }
           .codes {
             font-size: 15px;
@@ -1404,16 +1325,22 @@
             text-align: center;
             line-height: 20px;
             font-weight: normal;
-            /*border: 1px solid #ccc;*/
-            /*font-weight: bold;*/
             img {
               width: 120px;
               height: 120px;
             }
           }
+          .codess {
+            font-size: 15px;
+            display: block;
+            text-align: center;
+            margin-top: 25px;
+            line-height: 20px;
+            font-weight: normal;
+            border: 1px solid #ccc;
+            padding: 8px 0px;
+          }
           .copy {
-            /*font-size: 15px;*/
-            /*display: inline-block;*/
             text-align: center;
             font-weight: lighter;
             line-height: 17px;
@@ -1439,9 +1366,7 @@
             border: 1px solid #EF6D00;
           }
         }
-
       }
-
     }
     .maskRule {
       display: none;
@@ -1451,16 +1376,13 @@
       bottom: -10px;
       left: 12.5px;
       z-index: 1000;
-      /*padding: 0 7px;*/
       background: #fff;
       border-radius: 8px;
       box-shadow: 0px 0px 15px rgba(0, 0, 0, .3);
       .modelTask {
         margin: 0 auto;
-        /*margin-top: 30%;*/
         width: calc(100% - 50px);
         height: 100%;
-        /*border-radius: 8px;*/
         background: #fff;
         div {
           padding: 0 10px;
@@ -1476,10 +1398,8 @@
             color: #F05522;
             margin-bottom: 15px;
           }
-
           .modelContent {
             margin-top: 25px;
-            /*font-weight: lighter;*/
           }
           .maskClose {
             position: absolute;
@@ -1495,7 +1415,6 @@
               margin-top: 8px;
             }
           }
-
           .codes {
             font-size: 15px;
             display: block;
@@ -1507,17 +1426,22 @@
               height: 140px;
             }
           }
+          .codess {
+            font-size: 15px;
+            display: block;
+            text-align: center;
+            margin-top: 25px;
+            line-height: 20px;
+            font-weight: normal;
+            border: 1px solid #ccc;
+            padding: 8px 0px;
+          }
           .copy {
-            /*font-weight: lighter;*/
-            /*display: inline-block;*/
             margin-top: 15px;
           }
         }
-
       }
-
     }
-
     .maskRules {
       display: none;
       width: 100%;
@@ -1534,14 +1458,12 @@
         margin: 0 auto;
         div {
           padding: 30px;
-          /*margin-left: 15px;*/
           position: relative;
           .modelTitle {
             text-align: center;
             font-size: 17px;
             color: #F05522;
             margin-top: 0px;
-            /*margin-bottom: 15px;*/
           }
           .lines {
             width: 100%;
@@ -1584,84 +1506,7 @@
             }
           }
         }
-
       }
-
-    }
-
-    .exchangeProces {
-      display: none;
-      width: 100%;
-      height: 343px;
-      position: fixed;
-      bottom: -20px;
-      left: 0px;
-      z-index: 1000;
-      background: url("../../../static/img/ruler.png");
-      background-size: 100% 100%;
-      .modelTask {
-        margin: 0 auto;
-        width: calc(100% - 30px);
-        height: calc(100% - 15px);
-        /*border-radius: 8px;*/
-        /*background: #fff;*/
-        scroll-view {
-          height: 240px;
-        }
-        div {
-          padding: 30px;
-          /*margin-left: 15px;*/
-          position: relative;
-          p {
-            font-size: 14px;
-          }
-          .modelTitle {
-            text-align: center;
-            font-size: 17px;
-            color: #F05522;
-            margin-top: 0px;
-          }
-          .lines {
-            width: 100%;
-            height: 1px;
-            display: block;
-            margin: 10px 0px;
-          }
-          .modelContent {
-            font-size: 14px;
-            line-height: 18px;
-            color: #4A4A4A;
-            margin-top: 5px;
-            font-weight: lighter;
-            span {
-              display: inline-block;
-            }
-            .modelNum {
-              width: 7%;
-              float: left
-            }
-            .modelTe {
-              width: 92%;
-            }
-          }
-          .maskClose {
-            position: absolute;
-            top: 18px;
-            right: 5px;
-            width: 30px;
-            height: 30px;
-            .closeMask {
-              display: block;
-              width: 14px;
-              height: 14px;
-              margin: 0 auto;
-              margin-top: 8px;
-            }
-          }
-        }
-
-      }
-
     }
     div.mask.menuStyle {
       display: block;
@@ -1670,9 +1515,6 @@
       display: block;
     }
     div.maskRules.menuStyle {
-      display: block;
-    }
-    div.exchangeProces.menuStyle {
       display: block;
     }
 

@@ -153,10 +153,6 @@
         }
       })
       var QQMapWX = require('../../../static/qqmap-wx-jssdk.min.js');
-
-      // var BMap = new bmap.BMapWX({
-      //   ak: 'qhFRmZGfcrsk17a5oOQ4li53aztUmqle'
-      // });
       var qqmapsdk = new QQMapWX({
         key: 'OISBZ-SUKW6-LJ7SS-MXQHI-GC5FF-CQBGM'
       });
@@ -170,7 +166,7 @@
               longitude:116.330526
             },
             success: (addressRes) => {
-              console.log(addressRes)
+              console.log(addressRes);
               this.$store.state.board.address = addressRes.result.address_component.province + '' + addressRes.result.address_component.district;
               this.$store.state.board.location = addressRes.result.address_component.province;
             }
