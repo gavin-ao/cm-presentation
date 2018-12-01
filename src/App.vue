@@ -5,7 +5,7 @@
     onLaunch(option) {
     },
     onShow(option) {
-      console.log(option)
+      // console.log(option)
       var that = this
       // var url = "http://activitycounter.easy7share.com/hello/statis/1";
       // var dd = encodeURIComponent(url);
@@ -25,6 +25,9 @@
         nickName: '',
         avatarUrl: '',
         qrcodeUrl:'',
+        otherHelpId:'',
+        myHelpId:'',
+        sessionID:'',
         checked: false,
         checkedRule: false,
         checkedRules: false,
@@ -55,7 +58,7 @@
           var q = decodeURIComponent(option.query.q);
           var urlArr = q.split("/");
           var storeId  = urlArr[urlArr.length-1];
-          console.log(storeId)
+          // console.log(storeId)
           if(storeId){
             wx.setStorageSync("storeId", storeId)
             that.$store.state.board.storeId =storeId;
@@ -79,7 +82,7 @@
                 that.$store.state.board.storeId = wx.getStorageSync("storeId")
               }
               utils.login(that, function (sessionID, actId) {
-                console.log(  that.$store.state.board.storeId)
+                // console.log(  that.$store.state.board.storeId)
                 if(that.$store.state.board.storeId){
                   wx.redirectTo({
                     url: '/pages/activePower/main'
