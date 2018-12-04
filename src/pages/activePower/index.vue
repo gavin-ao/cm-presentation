@@ -351,17 +351,24 @@
           } else {
             wx.setStorageSync("storeId", "");
             wx.showToast({
-              title: res.data.msg,
+              title: "该门店暂无进行中的活动",
               icon: 'none',
               duration: 2000
+            })
+            wx.redirectTo({
+              url: '/pages/instrustor/main'
             })
           }
         },
         fail:function (err) {
+          wx.setStorageSync("storeId", "");
           wx.showToast({
-            title: "获取失败",
+            title: "接口请求失败",
             icon: 'none',
             duration: 2000
+          })
+          wx.redirectTo({
+            url: '/pages/instrustor/main'
           })
         }
       })

@@ -43,10 +43,10 @@
       height: 100%;
       margin-top: 10px;
       position: fixed;
-      top:0px;
+      top: 0px;
       left: 20px;
       z-index: 1000;
-      .search{
+      .search {
         input {
           border: 1px solid #ccc;
           height: 30px;
@@ -58,18 +58,18 @@
           border: 1px solid blue;
         }
       }
-      .expand{
+      .expand {
         width: 100%;
         height: calc(100% - 70px);
         /*background-color: rgba(144,144,144,.2);*/
         margin-top: 5px;
         border-radius: 10px;
-        div{
+        div {
           padding-left: 10px;
           background-color: #fff;
           margin-top: 5px;
           border-radius: 10px;
-          p{
+          p {
             line-height: 20px;
             color: rgba(83, 82, 82, 1);
             font-size: 13px;
@@ -91,7 +91,8 @@
     data() {
       return {
         input: '',
-        datas:''
+        datas: '',
+        point: {}
       }
     },
     onLoad(option) {
@@ -100,91 +101,98 @@
     },
     computed: {},
     methods: {
-      selStore() {
+      selStore(res) {
         var that = this;
-        console.log(this.input)
-        if(that.input.trim()){
-          wx.request({
-            url: that.$store.state.board.urlHttp + "/wechatapi/nologin/store/findStoreTopList",
-            method: "POST",
-            data: {
-              keyword: that.input.trim(),
-              appid:that.$store.state.board.appid
-            },
-            header: {'content-type': 'application/x-www-form-urlencoded'},
-            success: function (res) {
-              console.log(res)
-              if(res.data.success){
-                that.datas = res.data.storeList;
-                console.log(that.datas)
-              }
+        console.log(this.input);
+        var parmas = {};
+        parmas.keyword = that.input.trim();
+        parmas.appid = that.$store.state.board.appid;
 
+        parmas.longitude = that.point.longitude ? that.point.longitude : "";
+        parmas.latitude = that.point.latitude ? that.point.latitude : "";
+        console.log(parmas);
+        wx.request({
+          url: that.$store.state.board.urlHttp + "/wechatapi/nologin/store/findStoreTopList",
+          method: "POST",
+          data: parmas,
+          header: {'content-type': 'application/x-www-form-urlencoded'},
+          success: function (res) {
+            console.log(res)
+            if (res.data.success) {
+              that.datas = res.data.storeList;
+              console.log(that.datas)
+            } else {
+              that.datas = [];
             }
-          })
-        }else{
-          that.datas = [];
-        }
+
+          }
+        })
+
       },
-      insertMp(storeId){
-        if(storeId){
+      insertMp(storeId) {
+        if (storeId) {
           this.$store.state.board.storeId = storeId;
           wx.setStorageSync("storeId", storeId);
           wx.redirectTo({
             url: '/pages/activePower/main'
           })
         }
-      }
+      },
+      sortBy(filed, rev, primer) {
+        rev = (rev) ? -1 : 1;
+        return function (a, b) {
+          a = a[filed];
+          b = b[filed];
+          if (typeof (primer) != 'undefined') {
+            a = primer(a);
+            b = primer(b);
+          }
+          if (a < b) {
+            return rev * -1;
+          }
+          if (a > b) {
+            return rev * 1;
+          }
+          return 1;
+        }
+      },
+
 
     },
     created() {
     },
     mounted() {
       var that = this;
-      that.checked = false
-      that.checkedRule = false
+      that.checked = false;
+      that.checkedRule = false;
       wx.setNavigationBarTitle({
         title: "门店搜索"
       })
 
-      // wx.getSystemInfo({
-      //   success: (res) => {
-      //     this.$store.state.board.windowWidth = res.windowWidth;
-      //     this.$store.state.board.windowHeight = res.windowHeight
-      //   }
-      // })
-      // var QQMapWX = require('../../../static/qqmap-wx-jssdk.min.js');
-      // var qqmapsdk = new QQMapWX({
-      //   key: 'OISBZ-SUKW6-LJ7SS-MXQHI-GC5FF-CQBGM'
-      // });
-      // wx.getLocation({
-      //   type: 'gcj02',
-      //   altitude: true,
-      //   success: (res) => {
-      //     qqmapsdk.reverseGeocoder({
-      //       location: {
-      //         latitude:   39.998536,
-      //         longitude:116.330526
-      //       },
-      //       success: (addressRes) => {
-      //         // console.log(addressRes);
-      //         this.$store.state.board.address = addressRes.result.address_component.province + '' + addressRes.result.address_component.district;
-      //         this.$store.state.board.location = addressRes.result.address_component.province;
-      //       }
-      //     })
-      //     qqmapsdk.geocoder({
-      //       address: '北京市海淀区成府路107号',
-      //       success: function(res) {
-      //         console.log(res);
-      //       },
-      //       fail: function(res) {
-      //         console.log(res);
-      //       },
-      //       complete: function(res) {
-      //         console.log(res);
-      //       }
-      //     });
-      //   }
-      // })
+      var QQMapWX = require('../../../static/qqmap-wx-jssdk.min.js');
+      var qqmapsdk = new QQMapWX({
+        key: 'OISBZ-SUKW6-LJ7SS-MXQHI-GC5FF-CQBGM'
+      });
+      wx.getLocation({
+        type: 'gcj02',
+        altitude: true,
+        success: (res) => {
+          console.log(res);
+          that.point = res;
+          that.selStore();
+          qqmapsdk.reverseGeocoder({
+            location: {
+              latitude: res.latitude,
+              longitude: res.longitude
+            },
+            success: (addressRes) => {
+              // console.log(addressRes);
+              this.$store.state.board.address = addressRes.result.address_component.province + '' + addressRes.result.address_component.district;
+              this.$store.state.board.location = addressRes.result.address_component.province;
+            }
+          })
+        }
+      })
     },
     components: {}
   }
