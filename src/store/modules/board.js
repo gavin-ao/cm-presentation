@@ -27,12 +27,13 @@ const state = {
   partakeNums: 0,
   drawPoster:'',
   btnText:{},
+  infos:{},
   actShareCopywriting:'',
   appid:'wx032f66ebe0dcce8f',
   secret:'64a61af911d59a37a6fe86a8087a1bfa',
   headPic:[],
-  urlHttp:'https://cm-service.easy7share.com'
-  // urlHttp:'https://dataanalysis-cs.easy7share.com'
+  // urlHttp:'https://cm-service.easy7share.com'
+  urlHttp:'https://dataanalysis-cs.easy7share.com'
 }
 
 export default {
