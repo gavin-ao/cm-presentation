@@ -6,7 +6,7 @@ import './iconfont/iconfont.css';
 // import 'mp-weui/lib/style.css'
 var Fly = require("flyio/dist/npm/wx");
 
-
+ 
 var fly = new Fly();
 
 Vue.prototype.$ajax = fly; //将fly实例挂在vue原型上

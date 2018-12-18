@@ -34,14 +34,15 @@
     height: 100%;
     font-size: 14px;
     background-color: #EF1436;
-    background-color: #fff;
+    box-sizing: border-box;
+    padding: 15px;
     .confirmTotal{
       background-color: #FFFBEE;
       width: 100%;
       height: 100%;
       text-align: center;
-      padding: 15px;
       border-radius: 12px;
+      padding: 20px;
       box-sizing: border-box;
       .title{
         width: 200px;
@@ -51,7 +52,7 @@
         color: #F6120A;
         word-wrap:break-word;
         margin: auto;
-        margin-top: 94px;
+        margin-top: 74px;
         position: relative;
         img{
           width: 100%;
@@ -93,10 +94,12 @@
         margin-top: 35px;
         .taobaoPassword{
           width: 185px;
-          height: 70px;
           color: #5F5F5F;
           font-size: 14px;
-          word-wrap:break-word
+          word-wrap:break-word;
+          margin: auto;
+          border: 1px solid #ccc;
+          padding: 10px;
         }
         .perYard{
           margin: auto;
@@ -118,6 +121,7 @@
       height: 134px;
       position: fixed;
       bottom: 0px;
+      left: 0px;
       text-align: center;
       img.beijing{
         width: 100%;
@@ -146,25 +150,29 @@
       }
     },
     onLoad(option) {
-      this.datas = JSON.parse(option.datas);
-      console.log(option.datas)
       var that = this;
       var myHelpId = that.$store.state.board.myHelpId;
       var sessionID = that.$store.state.board.sessionID;
-      if (that.datas.rewardType == 1) {
+      if(option&&option.datas){
+        this.datas = JSON.parse(option.datas);
+        that.rewardText(sessionID,myHelpId);
+      }else{
         wx.request({
-          url: that.$store.state.board.urlHttp + "/wechatapi/help/getRewardActCommandQrcode",
+          url: that.$store.state.board.urlHttp + "/wechatapi/help/haveRewardActCommand",
           method: "POST",
-          data: {sessionID: sessionID, helpId: myHelpId},
+          data: {helpId:myHelpId,sessionID:sessionID},
           header: {'content-type': 'application/x-www-form-urlencoded'},
           success: function (res) {
+            console.log(res);
             if (res.data.success) {
-              if (res.data.rewardActContent) {
-                that.contentMid = res.data.rewardActContent.contentMid;
+              console.log(that.infos)
+              for(var i=0;i<that.infos.initiatorReward.length;i++){
+                if(that.infos.initiatorReward[i].initiatorRewardId == res.data.initiatorRewardId){
+                  that.datas = that.infos.initiatorReward[i];
+                }
               }
-              that.rewardImg = that.$store.state.board.urlHttp + res.data.filePath;
-              //邀请 埋点
-              that.getRewardActCommandOpenWindow();
+              that.rewardText(sessionID,myHelpId);
+
             } else {
               wx.showToast({
                 title: res.data.msg,
@@ -172,43 +180,72 @@
                 duration: 2000
               })
             }
-          }
-        })
-      } else if (that.datas.rewardType == 2) {
-        wx.request({
-          url: that.$store.state.board.urlHttp + "/wechatapi/help/getRewardActCommand",
-          method: "POST",
-          data: {sessionID: sessionID, helpId: myHelpId},
-          header: {'content-type': 'application/x-www-form-urlencoded'},
-          success: function (res) {
-            if (res.data.success) {
-              if (res.data.rewardActContent) {
-                that.contentMid = res.data.rewardActContent.contentMid;
-              }
-              //邀请 埋点
-              that.getRewardActCommandOpenWindow();
-            } else {
-              wx.showToast({
-                title: res.data.msg,
-                icon: 'none',
-                duration: 2000
-              })
-            }
+
           }
         })
       }
-
     },
     onShow(){
       var that = this;
 
     },
     computed: {
-
-    },
-    methods: {
+      infos(){
+        return this.$store.state.board.infos;
+      },
       invitationSessionFrom() {  //邀请 客服消息传递参数
         return '{"actId":"' + this.$store.state.board.actId + '","type":1}';
+      }
+    },
+    methods: {
+      rewardText(sessionID,myHelpId){
+        var that = this;
+        if (that.datas.rewardType == 1) {
+          wx.request({
+            url: that.$store.state.board.urlHttp + "/wechatapi/help/getRewardActCommandQrcode",
+            method: "POST",
+            data: {sessionID: sessionID, helpId: myHelpId},
+            header: {'content-type': 'application/x-www-form-urlencoded'},
+            success: function (res) {
+              if (res.data.success) {
+                if (res.data.rewardActContent) {
+                  that.contentMid = res.data.rewardActContent.contentMid;
+                }
+                that.rewardImg = that.$store.state.board.urlHttp + res.data.filePath;
+                //邀请 埋点
+                that.getRewardActCommandOpenWindow();
+              } else {
+                wx.showToast({
+                  title: res.data.msg,
+                  icon: 'none',
+                  duration: 2000
+                })
+              }
+            }
+          })
+        } else if (that.datas.rewardType == 2) {
+          wx.request({
+            url: that.$store.state.board.urlHttp + "/wechatapi/help/getRewardActCommand",
+            method: "POST",
+            data: {sessionID: sessionID, helpId: myHelpId},
+            header: {'content-type': 'application/x-www-form-urlencoded'},
+            success: function (res) {
+              if (res.data.success) {
+                if (res.data.rewardActContent) {
+                  that.contentMid = res.data.rewardActContent.contentMid;
+                }
+                //邀请 埋点
+                that.getRewardActCommandOpenWindow();
+              } else {
+                wx.showToast({
+                  title: res.data.msg,
+                  icon: 'none',
+                  duration: 2000
+                })
+              }
+            }
+          })
+        }
       },
       getRewardActCommandOpenWindow() {   //邀请 埋点
         var that = this;

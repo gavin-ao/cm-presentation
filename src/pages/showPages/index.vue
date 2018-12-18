@@ -51,10 +51,10 @@
         console.log(res.target)
       }
 
-      var actId = that.$store.state.board.actId
-      var helpId = that.$store.state.board.myHelpId
-      var storeId = that.$store.state.board.storeId
-      var path = "/pages/activePower/main";
+      var actId = that.$store.state.board.actId;
+      var helpId = that.$store.state.board.myHelpId;
+      var storeId = that.$store.state.board.storeId;
+      var path = "/pages/logs/main";
 
       if (actId && helpId && storeId) {
         path = path + "?storeId=" + storeId + "&actId=" + actId + "&helpId=" + helpId
@@ -271,7 +271,7 @@
           appid: that.$store.state.board.appid,
           secret: that.$store.state.board.secret,
           sessionID: sessionID,
-          path: 'pages/activePower/main?storeId=' + storeId + 'actId=' + actId + "&helpId=" + myHelpId
+          path: 'pages/logs/main?storeId=' + storeId + 'actId=' + actId + "&helpId=" + myHelpId
         },
         header: {'content-type': 'application/x-www-form-urlencoded'},
         success: function (res) {

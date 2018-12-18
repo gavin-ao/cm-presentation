@@ -13,22 +13,34 @@
     <div class="containes">
       <movable-area style="">
         <movable-view direction="vertical" class="activeRule" :class="{rulesCondition:rulesInfos===true}"
-                      @click="activeRules">活动规则
+                      @click="activeRules" v-if="activityTypes===0">活动规则
         </movable-view>
       </movable-area>
-      <img :src="goLink" alt="" mode="aspectFit"> <span></span>
+      <img :src="goLink" alt="" mode="widthFix">
       <!--//阶梯助力   助力列表-->
-      <div v-if="activityTypes==1&&headPic.length" class="ladderHelp">
-        <div>助力列表</div>
-        <div v-for="(item,index) in headPic" :key="index" class="ladderList">
-          <span class="serialNum">{{index+1}}</span>
-          <img :src="item.img" alt="">
-          <span class="listName">{{item.name}}</span>
-          <span class="listTime">{{item.time}}</span>
+      <div v-if="activityTypes===1">
+        <div class="ruText">
+          <div class="ruTitle">活动说明</div>
+          <block v-for="(item,index) in ruleArr" :key="index">
+            <p>
+              <span class="first" style="">{{(index+1)}}、</span>
+              <span class="two" style="">{{item}}</span>
+            </p>
+          </block>
+        </div>
+        <div v-if="headPic.length" class="ladderHelp">
+          <div class="titles">好友助力榜</div>
+          <div v-for="(item,index) in headPic" :key="index" class="ladderList">
+            <span class="serialNum">{{index+1}}</span>
+            <img :src="item.img" alt="">
+            <span class="listName">{{item.name}}</span>
+            <span class="listTime">{{item.time}}</span>
+          </div>
         </div>
       </div>
+
     </div>
-    <div class="record" :class="{rewardCondition:rulesOfActivity===true}" v-if="activityTypes==0">
+    <div class="record" :class="{rewardCondition:rulesOfActivity===true}" v-if="activityTypes===0">
       <p style="position: fixed;z-index: 1000;width:calc(100% - 40rpx);text-align: center;" @click="modelSetClose1">
         <img src="/static/img/modelArrow.png" alt="" style="width: 40rpx;height: 32rpx;">
       </p>
@@ -40,7 +52,7 @@
 
         </div>
         <!--助力-->
-        <div class="helpPeo" v-if="headPic.length<=partakeNum">
+        <div class="helpPeo" v-else>
           <p><span class="helpNum">{{headPic.length}}</span><br/>邀请记录</p>
           <scroll-view scroll-y>
             <p class="helpUserImg">
@@ -52,7 +64,6 @@
           <!--<span style="display: inline-block;font-size: 14px;font-weight: lighter;margin-top: 10px;">数量有限，先到先得哦</span>-->
           <!--</p>-->
         </div>
-        <!--阶梯助力-->
 
         <div class="menu">
           <div class="menus" @click="existDoHelps" :class="{rewardCondition:manIsFull=='manIsFull'}"
@@ -85,7 +96,8 @@
         </div>
       </div>
     </div>
-    <div class="recordLadder" :class="{rewardCondition:rulesOfActivity===true}" v-if="activityTypes==1">
+    <div class="recordLadder" :class="{rewardCondition:rulesOfActivity===true}"
+         v-if="activityTypes===1&&checked!=true&&myHelpId!=''" :style="{top:topsLoc+'px'}">
       <!--<p style="position: fixed;z-index: 1000;width:calc(100% - 40rpx);text-align: center;" @click="modelSetClose1">-->
       <!--<img src="/static/img/modelArrow.png" alt="" style="width: 40rpx;height: 32rpx;">-->
       <!--</p>-->
@@ -96,13 +108,13 @@
 
         </div>
         <!--阶梯助力-->
-        <div class="ladderHelpPeo">
+        <div class="ladderHelpPeo" v-else>
           <div class="title">
             好友助力领奖励
           </div>
           <div class="hongbaoImg">
             <div v-for="(item,index) in infos.initiatorReward" :key="index"
-                 :style="{left:((item.partakeNum/maxPartNum)*tempWidth-30)+'px',top:'-4px'}">
+                 :style="{left:(((item.partakeNum- infos.initiatorReward[0].partakeNum+infos.initiatorReward[0].partakeNum/3)/maxPartNum)*tempWidth-27)+'px',top:'-4px'}">
               <img src="/static/images/hongbao.png" alt="">
               <p>
                 <span>{{item.rewardContent}}</span>
@@ -110,16 +122,26 @@
 
             </div>
           </div>
-          <div class="progressBar" style="">
-            <progress activeColor="#DE3120" border-radius="5" backgroundColor="#E6E6E6"
-                      :percent="(headPic.length/maxPartNum)*100" stroke-width="10"></progress>
-            <div v-for="(item,index) in infos.initiatorReward" :key="index"
-                 :style="{left:((item.partakeNum/maxPartNum)*tempWidth-9)+'px',top:'-3px'}">
-              <p class="quan"></p>
-              <p class="wen">
-                <span style="">{{item.partakeNum}}</span>位助力
-              </p>
+          <div class="progressBar">
+            <div class="proList" style="">
+              <progress activeColor="#DE3120" border-radius="5" backgroundColor="#E6E6E6"
+                        :percent="percents" stroke-width="10"></progress>
             </div>
+
+            <block v-for="(item,index) in infos.initiatorReward" :key="index">
+              <div v-if="index==0" :style="{left:((item.partakeNum/3/maxPartNum)*tempWidth-3)+'px',top:'0px'}">
+                <p class="quan"></p>
+                <p class="wen">
+                  <span style="">{{item.partakeNum}}</span>位助力
+                </p>
+              </div>
+              <div v-else :style="{left:(((item.partakeNum- infos.initiatorReward[0].partakeNum+infos.initiatorReward[0].partakeNum/3)/maxPartNum)*tempWidth)+'px',top:'0px'}">
+                <p class="quan"></p>
+                <p class="wen">
+                  <span style="">{{item.partakeNum}}</span>位助力
+                </p>
+              </div>
+            </block>
           </div>
         </div>
 
@@ -140,10 +162,16 @@
           <div class="listHelp">
 
             <div class="receive" @click="confirmReward" :class="{rewardCondition:receiveReward=='receiveReward'}"
-                 hover-class="hoverNone" hover-stay-time="800" v-if="headPic.length>=partakeNum">
-              结束，我要领奖
+                 hover-class="hoverNone" hover-stay-time="800" v-if="headPic.length>=partakeNum&&userExitEnd!=1"
+                 :style="{marginRight:'20px'}">
+              <span>结束，我要领奖</span>
             </div>
-            <div class="menusH" @click="continueHelp" :class="{rewardCondition:continueToInvite=='continueToInvite'}"
+            <div class="receive" @click="confirmRewards" :class="{rewardCondition:receiveReward=='receiveReward'}"
+                 hover-class="hoverNone" hover-stay-time="800" v-if="userExitEnd==1" :style="{marginRight:'0px'}">
+              <span>我要领奖</span>
+            </div>
+            <div class="menusH" v-if="headPic.length<maxPartNum&&userExitEnd!=1" @click="continueHelp"
+                 :class="{rewardCondition:continueToInvite=='continueToInvite'}"
                  hover-class="hoverNone" hover-stay-time="800">
               <span v-if="headPic.length==0">{{btnText.bxt_continue}}</span>
               <span v-else>邀请好友继续助力</span>
@@ -197,7 +225,10 @@
           <p class="modelTitle">为好友助力成功</p>
           <block v-if="assistanceRewardType==1">
             <p class="modelContent">
-              {{contentHead}}{{infos.assistanceReward[0].remark}}
+              {{contentHead}}
+              <block v-if="infos.assistanceReward">
+                {{infos.assistanceReward[0].remark}}
+              </block>
             </p>
             <p class="codes">
               <img :src="rewardImg" alt="" mode="aspectFit">
@@ -269,42 +300,6 @@
         </div>
       </div>
     </div>
-    <div class="invitTable" :class="{menuStyle:invitTables == true}">
-      <!--<div class="maskRule menuStyle">-->
-      <div class="modelTask">
-        <div style="">
-          <p class="maskClose" @click="closeMash">
-            <img src="/static/img/close.png" class="closeMask"/>
-          </p>
-          <p class="modelTitle">任务达成</p>
-
-          <block v-if="invitationRewardType==1">
-            <p class="modelContent">
-              {{contentHead}}
-            </p>
-            <p class="codes">
-              <img :src="rewardImg" alt="" mode="aspectFit">
-            </p>
-            <p class="copy">
-              {{contentFoot}}
-            </p>
-          </block>
-          <block v-else-if="invitationRewardType==2">
-            <p class="modelContent">
-              恭喜您获得 奖励
-            </p>
-            <p class="codess" @longtap="copyTBL">
-              {{contentMid}}
-            </p>
-            <p class="copy" @longtap="copyTBL"> （长按复制）</p>
-            <p class="copy">
-              {{contentFoot}}
-            </p>
-          </block>
-
-        </div>
-      </div>
-    </div>
   </div>
 </template>
 
@@ -336,26 +331,10 @@
         rulesOfModel: true,
         helpInfos: true,
         rulesInfos: false,
-        activityTypes: 0,  //活动类型  0 助力   1 阶梯助力
+        activityTypes: "",  //活动类型  0 助力   1 阶梯助力
         maxPartNum: 0,
         tempWidth: 0,
-        headPices: [
-          {
-            img: "https://wx.qlogo.cn/mmopen/vi_32/LsB3Yf8NkHsST1hZe0G5EupjLzicKrw2rfLFwQ3KJGS6w8SKVvXwJUru2icHDRvHiaE5CibibasEshpD9oWfWYcqzgw/132",
-            name: "智慧营销",
-            time: "2018-10-29 08:36:21"
-          },
-          {
-            img: "https://wx.qlogo.cn/mmopen/vi_32/v5pbqibQpxMkzD1ib8SnZw3wX4Ly1kPGfXhiaUDpYv5UpZPzYnA7GcFd9OUj1Iz8XIicayQ5vjXR7YecYs0MWEb2DQ/132",
-            name: "苍桑岁月",
-            time: "2018-10-29 08:37:20"
-          },
-          {
-            img: "https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTInL3Re8ePAPw3AT9kvevylSAb4vQiauDDzxeXov7cUnZNibGhTzXxiaQLYoicn2MLNfIIAd8TLCatteg/132",
-            name: "曦晴嗨皮",
-            time: "2018-11-12 09:18:45"
-          },
-        ]
+        userExitEnd: ""
       }
     },
     onLoad(option) {
@@ -391,7 +370,6 @@
               that.$store.state.board.invitationRewardType = res.data.initiatorReward[0].rewardType; //邀请奖励类型
             }
             that.$store.state.board.assistanceRewardType = res.data.assistanceReward[0].rewardType; //助力奖励类型
-            console.log(res.data.assistanceReward[0].rewardType)
             wx.setNavigationBarTitle({
               title: res.data.actTitle
             })
@@ -432,6 +410,8 @@
                             header: {'content-type': 'application/x-www-form-urlencoded'},
                             success: function (res) {
                               that.$store.state.board.checked = false;
+                              console.log(123);
+                              console.log(res);
                               if (res.data.success) {
                                 that.assistanceModel(res.data);
                                 that.$store.state.board.existDoHelp = false;
@@ -458,6 +438,7 @@
                   }
                   else {
                     utils.login(that, function (sessionID, actId) {
+                      that.exitEnd(sessionID, actId);
                       wx.request({
                         url: that.$store.state.board.urlHttp + "/wechatapi/help/findHelpDetailUserList",
                         method: "POST",
@@ -521,6 +502,14 @@
             url: '/pages/instrustor/main'
           })
         }
+      });
+
+      wx.getSystemInfo({
+        success: (res) => {
+          this.$store.state.board.windowWidth = res.windowWidth;
+          this.$store.state.board.windowHeight = res.windowHeight;
+          this.tempWidth = res.windowWidth - 54 / (320 / res.windowWidth);
+        }
       })
     },
     onReady(option) {
@@ -564,6 +553,7 @@
                       that.rulesOfActivity = true;
                       that.$store.state.board.myHelpId = otherHelpId;
                     } else {
+                      console.log(76808098)
                       that.wantActivity(that, sessionID, otherHelpId, actId);
                     }
                   }
@@ -579,10 +569,9 @@
       bindGetUserInfo() {
         this.continueToHelp()
       },
-
       continueToHelp() {
         var that = this;
-        that.helpInfoss();
+        that.continueHelp();
       },
       continueHelp() {
         var actId = this.$store.state.board.actId;
@@ -637,14 +626,23 @@
         });
       },
       wantActivity(that, sessionID, otherHelpId, actId) {
-        if (that.headPic.length < that.partakeNum) {
+        if (that.headPic.length < that.maxPartNum) {
           wx.request({
             url: that.$store.state.board.urlHttp + "/wechatapi/help/clickHelpUrl",
             method: "POST",
             data: {helpId: otherHelpId, sessionID: sessionID},
             header: {'content-type': 'application/x-www-form-urlencoded'},
             success: function (res) {
+              console.log(123456);
+              console.log(res);
               if (res.data.success) {
+                if (that.activityTypes === 1) {
+                  wx.showToast({
+                    title: res.data.msg,
+                    icon: 'none',
+                    duration: 2000
+                  })
+                }
                 var sysUrl = that.$store.state.board.urlHttp + '/wechatapi/nologin/help/findHelpDetailUserList';
                 //邀请列表
                 wx.request({
@@ -665,11 +663,14 @@
                     }
                   }
                 })
-                if (that.$store.state.board.assistanceRewardType == 2) {
+                if (that.$store.state.board.assistanceRewardType == 0) {
                   that.$store.state.board.existDoHelp = false;
                   that.$store.state.board.myExistDoHelp = true;
+                  if (that.activityTypes === 1) {
+                    that.exithelpId = false;
+                  }
                 } else {
-                  if (that.assistanceRewardType == 1) {
+                  if (that.$store.state.board.assistanceRewardType == 1) {
                     wx.request({
                       url: that.$store.state.board.urlHttp + "/wechatapi/help/getRewardActCommandQrcodeByOther",
                       // url: "http://192.168.50.52:8099/wechatapi/help/getRewardActCommandQrcodeByOther",
@@ -693,7 +694,7 @@
                         that.getRewardActCommandOpenWindowByOther();
                       }
                     })
-                  } else if (that.assistanceRewardType == 2) {
+                  } else if (that.$store.state.board.assistanceRewardType == 2) {
                     wx.request({
                       url: that.$store.state.board.urlHttp + "/wechatapi/help/getRewardActCommandByOther",
                       method: "POST",
@@ -720,7 +721,7 @@
                         that.getRewardActCommandOpenWindowByOther();
                       }
                     })
-                  } else if (that.assistanceRewardType == 3) {
+                  } else if (that.$store.state.board.assistanceRewardType == 3) {
                     wx.request({
                       url: that.$store.state.board.urlHttp + "/wechatapi/help/existDoHelpByActId",
                       method: "POST",
@@ -752,6 +753,9 @@
                   icon: 'none',
                   duration: 2000
                 })
+                if (that.activityTypes === 1) {
+                  that.exithelpId = false;
+                }
               }
             }
           })
@@ -896,8 +900,8 @@
         for (var i = 0; i < headPic.length; i++) {
           that.$store.state.board.headPic.push({
             img: headPic[i].avatarUrl,
-            name: headPic[i].nickName.length > 10 ? headPic[i].nickName.slice(0, 9) + '...' : headPic[i].nickName,
-            time: utils.formatTime(headPic[i].createAt)
+            name: headPic[i].nickName.length > 10 ? headPic[i].nickName.slice(0, 6) + '...' : headPic[i].nickName,
+            time: utils.formatTime(headPic[i].helpAt)
           })
         }
         // console.log(that.$store.state.board.headPic)
@@ -1002,12 +1006,34 @@
         wx.navigateTo({
           url: "/pages/confirmPage/main"
         })
+      },
+      confirmRewards() {  //阶梯助力  奖励确认
+        wx.navigateTo({
+          url: "/pages/rewardPage/main"
+        })
+      },
+      exitEnd(sessionID, actId) {
+        var that = this;
+        wx.request({
+          url: that.$store.state.board.urlHttp + "/wechatapi/help/getHelpId",
+          method: "POST",
+          data: {sessionID: sessionID, actId: actId},
+          header: {'content-type': 'application/x-www-form-urlencoded'},
+          success: function (res) {
+            if (res.data.success) {
+              that.userExitEnd = res.data.stats;
+            }
+          }
+        })
       }
 
     },
     created() {
     },
     computed: {
+      topsLoc() {
+        return this.$store.state.board.posterH * this.$store.state.board.windowWidth / this.$store.state.board.posterW - (280 / (320 / this.$store.state.board.windowWidth));
+      },
       infos() { //活动信息
         return this.$store.state.board.infos;
       },
@@ -1029,16 +1055,15 @@
       },
       goLink() {
         return this.$store.state.board.goLink
-      }
-      ,
+      },
+      myHelpId() {
+        return this.$store.state.board.myHelpId
+      },
       checked() {
         return this.$store.state.board.checked
       },
       checkedRule() {
         return (this.$store.state.board.checkedRule && this.activityTypes == 0)
-      },
-      invitTables() {
-        return (this.$store.state.board.checkedRule && this.activityTypes == 1)
       },
       checkedRules() {
         return this.$store.state.board.checkedRules
@@ -1102,15 +1127,34 @@
         }
       },
       posterH() {
-        var posterW = this.$store.state.board.posterW
-        var posterH = this.$store.state.board.posterH
-        var winW = this.$store.state.board.windowWidth
-        var winH = this.$store.state.board.windowHeight
+        var posterW = this.$store.state.board.posterW;
+        var posterH = this.$store.state.board.posterH;
+        var winW = this.$store.state.board.windowWidth;
+        var winH = this.$store.state.board.windowHeight;
         var temp = posterH / (posterW / (winW - 24));
         if ((winH - 70) < temp) {
           return (winH - 70);
         } else {
           return temp
+        }
+      },
+      percents(){
+        if(this.infos.initiatorReward){
+          if(this.headPic.length<=this.infos.initiatorReward[0].partakeNum){
+            return this.headPic.length/3/this.maxPartNum*100
+          }else{
+            return (this.infos.initiatorReward[0].partakeNum/3 +(this.headPic.length-this.infos.initiatorReward[0].partakeNum))/this.maxPartNum*100
+          }
+        }
+
+      },
+      leftR(data){
+        if(this.infos.initiatorReward){
+          if(this.headPic.length<=this.infos.initiatorReward[0].partakeNum){
+            return this.headPic.length/3/this.maxPartNum
+          }else{
+            return (this.infos.initiatorReward[0].partakeNum/3 +(data-this.infos.initiatorReward[0].partakeNum))/this.maxPartNum
+          }
         }
       }
     },
@@ -1141,13 +1185,7 @@
     },
     mounted() {
       var that = this;
-      wx.getSystemInfo({
-        success: (res) => {
-          this.$store.state.board.windowWidth = res.windowWidth;
-          this.$store.state.board.windowHeight = res.windowHeight
-          this.tempWidth = res.windowWidth - 54 / (320 / res.windowWidth);
-        }
-      })
+
     }
   }
 </script>
@@ -1164,9 +1202,10 @@
     }
     .containes {
       width: calc(100% - 24px);
-      height: calc(100% - 80px);
+      /*height: calc(100% - 80px);*/
       padding: 12px;
       text-align: center;
+      padding-bottom: 65px;
       .contacts {
         position: fixed;
         top: 10px;
@@ -1210,59 +1249,96 @@
 
       img {
         width: 100%;
-        height: 100% !important;
+        /*height: 100% !important;*/
         border-radius: 8px;
       }
-      .ladderHelp {
-        border-radius: 15px;
-        margin-bottom: 20px;
-        margin-top: 10px;
-        padding: 10px 0px;
-        background-color: #FFFBEE;
-        .ladderList {
-          width: 100%;
-          height: 35px;
-          font-size: 14px;
-          line-height: 35px;
-          text-align: left;
-          padding: 0px 10px;
-          margin: 5px 0px;
+      div {
+        .ruText {
+          color: #124545;
+          margin-top: 20px;
+          padding: 10px;
           box-sizing: border-box;
-          .serialNum {
-            display: inline-block;
-            float: left;
-            margin-right: 10px;
-            width: 20px;
-            height: 20px;
-            border-radius: 10px;
-            line-height: 20px;
-            text-align: center;
-            color: #F05522;
-            background-color: #FFDDB6;
-            margin-top: 10px;
-          }
-          .listName {
-            display: inline-block;
-            float: left;
+          border-radius: 15px;
+          border: 1px solid #ccc;
+          .ruTitle {
             color: #124545;
-            /*margin-right: 10px;*/
+            font-size: 16px;
           }
-          .listTime {
-            display: inline-block;
-            float: right;
+          p {
+            margin-top: 5px;
+            font-weight: lighter;
+            font-size: 14px;
           }
-          img {
-            width: 35px;
-            /*height: 35px;*/
-            border-radius: 17.5px;
+          span {
             display: inline-block;
-            vertical-align: middle;
-            float: left;
-            margin-right: 10px;
-            border: 1px solid #F05522;
+          }
+          .first {
+            width: 7%;
+            float: left
+          }
+          .two {
+            width: 92%;
+            text-align: left;
+          }
+
+        }
+        .ladderHelp {
+          border-radius: 15px;
+          margin-bottom: 20px;
+          margin-top: 20px;
+          padding: 10px;
+          box-sizing: border-box;
+          background-color: #FFFBEE;
+          .titles {
+            color: #124545;
+            font-size: 16px;
+          }
+          .ladderList {
+            width: 100%;
+            height: 35px;
+            font-size: 14px;
+            line-height: 35px;
+            text-align: left;
+            padding: 0px 10px;
+            margin: 5px 0px;
+            box-sizing: border-box;
+            .serialNum {
+              display: inline-block;
+              float: left;
+              margin-right: 10px;
+              width: 20px;
+              height: 20px;
+              border-radius: 10px;
+              line-height: 20px;
+              text-align: center;
+              color: #F05522;
+              background-color: #FFDDB6;
+              margin-top: 10px;
+            }
+            .listName {
+              display: inline-block;
+              float: left;
+              color: #124545;
+              /*margin-right: 10px;*/
+            }
+            .listTime {
+              display: inline-block;
+              float: right;
+            }
+            img {
+              width: 35px;
+              height: 35px;
+              border-radius: 50%;
+              display: inline-block;
+              vertical-align: middle;
+              float: left;
+              margin-right: 10px;
+              border: 1px solid #F05522;
+            }
           }
         }
       }
+
     }
     .record {
       position: fixed;
@@ -1351,69 +1427,6 @@
             margin-top: 15px;
           }
         }
-        .ladderHelpPeo {
-          .title {
-            color: #F05522;
-            font-size: 20px;
-          }
-          .hongbaoImg {
-            position: relative;
-            width: 100%;
-            height: 80px;
-            margin-top: 20px;
-            margin-bottom: 30px;
-            div {
-              display: inline-block;
-              width: 65px;
-              height: 77px;
-              position: absolute;
-              img {
-                width: 100%;
-                height: 100%;
-              }
-              p {
-                position: relative;
-                top: -62.5px;
-                display: inline-block;
-                width: calc(100% - 20px);
-                margin: auto;
-                font-size: 10px;
-                color: #fff;
-                height: 25px;
-                overflow: hidden;
-                span {
-                  display: inline-block;
-                  width: 100%;
-                  word-wrap: break-word
-                }
-              }
-            }
-          }
-          .progressBar {
-            width: calc(100% - 20px);
-            text-align: left;
-            position: relative;
-            div {
-              position: absolute;
-              p.quan {
-                width: 18px;
-                height: 18px;
-                border-radius: 9px;
-                border: 3px solid #F05522;
-                background-color: #fff;
-                box-sizing: border-box;
-              }
-              p.wen {
-                font-size: 12px;
-                margin-left: -13px;
-                width: 50px;
-                span {
-                  color: #F05522;
-                }
-              }
-            }
-          }
-        }
         .menu {
           width: calc(100% - 40px);
           position: fixed;
@@ -1497,12 +1510,12 @@
     }
     .recordLadder {
       position: absolute;
-      bottom: 68px;
+      /*bottom: 58px;*/
       left: 12px;
       width: calc(100% - 24px);
+      background-color: #FFFBEE;
       height: 310px;
       margin: 0 auto;
-      background: #fff;
       border-radius: 8px;
       box-shadow: 0px 0px 15px rgba(0, 0, 0, .3);
       display: none;
@@ -1595,8 +1608,8 @@
             margin-bottom: 30px;
             div {
               display: inline-block;
-              width: 65px;
-              height: 77px;
+              width: 78px;
+              height: 92.4px;
               position: absolute;
               img {
                 width: 100%;
@@ -1604,11 +1617,12 @@
               }
               p {
                 position: relative;
-                top: -62.5px;
+                top: -75px;
+                text-align: top;
                 display: inline-block;
                 width: calc(100% - 20px);
                 margin: auto;
-                font-size: 10px;
+                font-size: 9px;
                 color: #fff;
                 height: 25px;
                 overflow: hidden;
@@ -1622,8 +1636,19 @@
           }
           .progressBar {
             width: calc(100% - 20px);
+            height: 25px;
             text-align: left;
             position: relative;
+            .proList {
+              width: 100%;
+              overflow: hidden;
+              height: 10px;
+              border-radius: 5px;
+              margin-top: 5px;
+              progress {
+                width: 100%;
+              }
+            }
             div {
               position: absolute;
               p.quan {
@@ -1637,7 +1662,7 @@
               p.wen {
                 font-size: 12px;
                 margin-left: -13px;
-                width: 50px;
+                width: 55px;
                 span {
                   color: #F05522;
                 }
@@ -1834,7 +1859,7 @@
       height: 320px;
       position: fixed;
       bottom: -10px;
-      left: 12.5px;
+      left: 12px;
       z-index: 1000;
       background: #fff;
       border-radius: 8px;
@@ -1927,7 +1952,7 @@
       height: 320px;
       position: fixed;
       bottom: -10px;
-      left: 12.5px;
+      left: 12px;
       z-index: 1000;
       background: #fff;
       border-radius: 8px;
@@ -2061,80 +2086,6 @@
         }
       }
     }
-    .invitTable {
-      display: none;
-      width: calc(100% - 24px);
-      height: 320px;
-      position: fixed;
-      bottom: -10px;
-      left: 12.5px;
-      z-index: 1000;
-      background: #fff;
-      border-radius: 8px;
-      box-shadow: 0px 0px 15px rgba(0, 0, 0, .3);
-      .modelTask {
-        margin: 0 auto;
-        width: calc(100% - 50px);
-        height: 100%;
-        background: #fff;
-        div {
-          padding: 0 10px;
-          padding-top: 25px;
-          position: relative;
-          line-height: 17px;
-          color: #4A4A4A;
-          font-size: 12px;
-          text-align: center;
-          .modelTitle {
-
-            font-size: 18px;
-            color: #F05522;
-            margin-bottom: 15px;
-          }
-          .modelContent {
-            margin-top: 25px;
-          }
-          .maskClose {
-            position: absolute;
-            top: 12px;
-            right: -9px;
-            width: 30px;
-            height: 30px;
-            .closeMask {
-              display: block;
-              width: 14px;
-              height: 14px;
-              margin: 0 auto;
-              margin-top: 8px;
-            }
-          }
-          .codes {
-            font-size: 15px;
-            display: block;
-            text-align: center;
-            line-height: 20px;
-            font-weight: normal;
-            img {
-              width: 140px;
-              height: 140px;
-            }
-          }
-          .codess {
-            font-size: 15px;
-            display: block;
-            text-align: center;
-            margin-top: 25px;
-            line-height: 20px;
-            font-weight: normal;
-            border: 1px solid #ccc;
-            padding: 8px 0px;
-          }
-          .copy {
-            margin-top: 15px;
-          }
-        }
-      }
-    }
     div.mask.menuStyle {
       display: block;
     }
@@ -2142,9 +2093,6 @@
       display: block;
     }
     div.maskRules.menuStyle {
-      display: block;
-    }
-    div.invitTable.menuStyle {
       display: block;
     }
 

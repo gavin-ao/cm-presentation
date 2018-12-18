@@ -38,6 +38,7 @@
         drawPoster:'',
         btnText:{},
         actShareCopywriting:'',
+        headPic:[]
       }
       Object.assign(that.$store.state.board, setGloableData);
       // option.query.q = dd;
@@ -60,7 +61,7 @@
           var storeId  = urlArr[urlArr.length-1];
           // console.log(storeId)
           if(storeId){
-            wx.setStorageSync("storeId", storeId)
+            wx.setStorageSync("storeId", storeId);
             that.$store.state.board.storeId =storeId;
             setTimeout(function () {
               wx.redirectTo({
@@ -113,6 +114,7 @@
   page {
     height: 100%;
     width: 100%;
+    background-color: #FFF;
   }
 
   .container {
