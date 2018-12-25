@@ -48,7 +48,7 @@
       var that = this;
       if (res.from === 'button') {
         // 来自页面内转发按钮
-        console.log(res.target)
+
       }
 
       var actId = that.$store.state.board.actId;
@@ -61,7 +61,7 @@
       } else {
 
       }
-      console.log(path)
+
       return {
         title: that.$store.state.board.actShareTitle,
         path: path,
@@ -77,18 +77,17 @@
           title: '绘制中...',
         });
         let that = this;
-        console.log(new Date().getTime());
+
         const ctx = wx.createCanvasContext('shareCanvas');
         wx.getImageInfo({
           src: that.drawPoster,
           success: (res) => {
-            console.log(res);
+
 
              ctx.draw(true);
              // var heights = that.ctxHeight - 70;
              var heights = that.ctxHeight;
-            console.log(that.getWindowWidth - 26)
-            console.log(heights - 50)
+
             var h = that.getWindowWidth*(res.height/res.width);
             that.ctxHeight = h;
             ctx.fillRect(0, 0, this.getWindowWidth, h);
@@ -104,7 +103,6 @@
               ctx.draw(true);
               var qrcodeUrl = that.$store.state.board.qrcodeUrl;
               //画二维码
-              console.log('444444   ' + qrcodeUrl);
               wx.getImageInfo({
                 src: qrcodeUrl,
                 success: (res) => {
@@ -117,7 +115,7 @@
                   ctx.drawImage(res.path, (that.getWindowWidth - 126), h-110, 100, 100);
                   ctx.restore();
                   ctx.draw(true);
-                  console.log(new Date().getTime());
+
                   wx.hideLoading();
                 }
               })
@@ -158,7 +156,7 @@
                 fail: function(err){
                   wx.openSetting({
                     success (res) {
-                      console.log(res.authSetting)
+
 
                     }
                   })
@@ -239,7 +237,7 @@
     },
     mounted() {
       var that = this;
-      this.checked = false
+      this.checked = false;
 
       wx.setNavigationBarTitle({
         title: that.$store.state.board.actTitle
@@ -247,21 +245,21 @@
       wx.showShareMenu({
         withShareTicket: true
       })
-      that.ctxHeight =  that.$store.state.board.posterH + 64
-      var pages = getCurrentPages()
-      var currentPage = pages[pages.length - 1]
-      var url = currentPage.route
+      that.ctxHeight =  that.$store.state.board.posterH + 64;
+      var pages = getCurrentPages();
+      var currentPage = pages[pages.length - 1];
+      var url = currentPage.route;
       if (url === "pages/showPages/main") {
         this.$store.state.board.isabled = false;
       } else {
         this.$store.state.board.isabled = true;
       }
-      var sessionID = that.$store.state.board.sessionID
-      var myHelpId = that.$store.state.board.myHelpId
-      var actId = that.$store.state.board.actId
-      var storeId = that.$store.state.board.storeId
-      that.$store.state.board.qrcodeUrl = ''
-      that.qrcodeUrl = ''
+      var sessionID = that.$store.state.board.sessionID;
+      var myHelpId = that.$store.state.board.myHelpId;
+      var actId = that.$store.state.board.actId;
+      var storeId = that.$store.state.board.storeId;
+      that.$store.state.board.qrcodeUrl = '';
+      that.qrcodeUrl = '';
       // 二维码获取
       var sysUrls = that.$store.state.board.urlHttp + '/wechatapi/qrcode/createWXQrcodeA';
       wx.request({
@@ -271,12 +269,12 @@
           appid: that.$store.state.board.appid,
           secret: that.$store.state.board.secret,
           sessionID: sessionID,
-          path: 'pages/logs/main?storeId=' + storeId + 'actId=' + actId + "&helpId=" + myHelpId
+          path: 'pages/logs/main?storeId=' + storeId + '&actId=' + actId + "&helpId=" + myHelpId
         },
         header: {'content-type': 'application/x-www-form-urlencoded'},
         success: function (res) {
           if (res.data.success) {
-            that.$store.state.board.qrcodeUrl = that.$store.state.board.urlHttp + res.data.qrcodeUrl
+            that.$store.state.board.qrcodeUrl = that.$store.state.board.urlHttp + res.data.qrcodeUrl;
             that.qrcodeUrl = that.$store.state.board.urlHttp + res.data.qrcodeUrl;
             that.drawImage();
           }

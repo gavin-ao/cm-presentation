@@ -114,7 +114,7 @@
           </div>
           <div class="hongbaoImg">
             <div v-for="(item,index) in infos.initiatorReward" :key="index"
-                 :style="{left:(((item.partakeNum- infos.initiatorReward[0].partakeNum+infos.initiatorReward[0].partakeNum/3)/maxPartNum)*tempWidth-27)+'px',top:'-4px'}">
+                 :style="{left:(((item.partakeNum- infos.initiatorReward[0].partakeNum+infos.initiatorReward[0].partakeNum/3)/maxPartNum)*tempWidth-25/ratios)+'px',top:'-4px'}">
               <img src="/static/images/hongbao.png" alt="">
               <p>
                 <span>{{item.rewardContent}}</span>
@@ -129,13 +129,13 @@
             </div>
 
             <block v-for="(item,index) in infos.initiatorReward" :key="index">
-              <div v-if="index==0" :style="{left:((item.partakeNum/3/maxPartNum)*tempWidth-3)+'px',top:'0px'}">
+              <div v-if="index==0" :style="{left:((item.partakeNum/3/maxPartNum)*tempWidth-8/ratios)+'px',top:'0px'}">
                 <p class="quan"></p>
                 <p class="wen">
                   <span style="">{{item.partakeNum}}</span>位助力
                 </p>
               </div>
-              <div v-else :style="{left:(((item.partakeNum- infos.initiatorReward[0].partakeNum+infos.initiatorReward[0].partakeNum/3)/maxPartNum)*tempWidth)+'px',top:'0px'}">
+              <div v-else :style="{left:(((item.partakeNum- infos.initiatorReward[0].partakeNum+infos.initiatorReward[0].partakeNum/3)/maxPartNum)*tempWidth-8/ratios)+'px',top:'0px'}">
                 <p class="quan"></p>
                 <p class="wen">
                   <span style="">{{item.partakeNum}}</span>位助力
@@ -334,11 +334,11 @@
         activityTypes: "",  //活动类型  0 助力   1 阶梯助力
         maxPartNum: 0,
         tempWidth: 0,
-        userExitEnd: ""
+        userExitEnd: "",
+        ratios:0
       }
     },
     onLoad(option) {
-      // console.log(option);
       var that = this
     },
     onShow(option) {
@@ -410,8 +410,6 @@
                             header: {'content-type': 'application/x-www-form-urlencoded'},
                             success: function (res) {
                               that.$store.state.board.checked = false;
-                              console.log(123);
-                              console.log(res);
                               if (res.data.success) {
                                 that.assistanceModel(res.data);
                                 that.$store.state.board.existDoHelp = false;
@@ -425,7 +423,6 @@
                                   that.exithelpId = true;
                                   that.rulesOfActivity = true;
                                   that.$store.state.board.myHelpId = otherHelpId;
-                                  // console.log(that.$store.state.board.myHelpId)
                                 } else {
                                   that.wantActivity(that, sessionID, otherHelpId, actId);
                                 }
@@ -508,7 +505,8 @@
         success: (res) => {
           this.$store.state.board.windowWidth = res.windowWidth;
           this.$store.state.board.windowHeight = res.windowHeight;
-          this.tempWidth = res.windowWidth - 54 / (320 / res.windowWidth);
+          this.ratios = (320 / res.windowWidth);
+          this.tempWidth = res.windowWidth - 53 / (320 / res.windowWidth);
         }
       })
     },
@@ -553,7 +551,6 @@
                       that.rulesOfActivity = true;
                       that.$store.state.board.myHelpId = otherHelpId;
                     } else {
-                      console.log(76808098)
                       that.wantActivity(that, sessionID, otherHelpId, actId);
                     }
                   }
@@ -633,8 +630,6 @@
             data: {helpId: otherHelpId, sessionID: sessionID},
             header: {'content-type': 'application/x-www-form-urlencoded'},
             success: function (res) {
-              console.log(123456);
-              console.log(res);
               if (res.data.success) {
                 if (that.activityTypes === 1) {
                   wx.showToast({
@@ -829,7 +824,6 @@
       },
       assistanceModel(data) {
         var that = this;
-        // console.log(that.assistanceRewardType);
         if (that.assistanceRewardType != 0) {
           if (data.rewardActContent) {
             // contentTitle:'', //领取奖励标题
@@ -869,7 +863,6 @@
           data: {actId: actId, sessionID: sessionID},
           header: {'content-type': 'application/x-www-form-urlencoded'},
           success: function (res) {
-            // console.log(new Date().getTime());
             that.$store.state.board.headPic = [];
             if (res.data.success) {
               that.$store.state.board.myHelpId = res.data.helpId;
@@ -904,7 +897,6 @@
             time: utils.formatTime(headPic[i].helpAt)
           })
         }
-        // console.log(that.$store.state.board.headPic)
       },
       copyTBL(e) {
         var self = this;
@@ -967,7 +959,6 @@
           data: {helpId: myHelpId, sessionID: sessionID},
           header: {'content-type': 'application/x-www-form-urlencoded'},
           success: function (res) {
-            console.log(res)
             if (res.data.success) {
 
             } else {
@@ -1636,6 +1627,7 @@
           }
           .progressBar {
             width: calc(100% - 20px);
+            margin-left: 10px;
             height: 25px;
             text-align: left;
             position: relative;
