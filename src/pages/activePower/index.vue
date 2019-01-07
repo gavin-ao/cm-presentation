@@ -28,13 +28,58 @@
             </p>
           </block>
         </div>
+        <div class="luckDraw" v-if="lotteryDraw == 1">
+          <div class="luckDrawText">
+            锦鲤奖加载进度
+          </div>
+          <div class="luckDrawPro">
+            <progress activeColor="#F15522" border-radius="5" backgroundColor="#E6E6E6"
+                      :percent="lotteryProgress" stroke-width="10"></progress>
+          </div>
+          <div class="luckDrawDes">
+            参与人数达到{{lotteryDrawTarget}}人即可解锁抽奖
+          </div>
+        </div>
         <div v-if="headPic.length" class="ladderHelp">
-          <div class="titles">好友助力榜</div>
-          <div v-for="(item,index) in headPic" :key="index" class="ladderList">
-            <span class="serialNum">{{index+1}}</span>
-            <img :src="item.img" alt="">
-            <span class="listName">{{item.name}}</span>
-            <span class="listTime">{{item.time}}</span>
+          <div class="assistantLimit" v-if="ifAssistanceLimit == 0">
+            <div class="titles">好友助力榜</div>
+            <div v-for="(item,index) in headPic" :key="index" class="ladderList">
+              <span class="serialNum">{{index+1}}</span>
+              <img :src="item.img" alt="">
+              <span class="listName">{{item.name}}</span>
+              <span class="listTime">{{item.time}}</span>
+            </div>
+          </div>
+          <div class="assistantNoLimit"  v-if="ifAssistanceLimit == 1">
+            <div class="rankTopNav">
+              <span class="rankNavsel" data-listindex="1" @click="rankingList"  :class="{selNav:rankingListNum== 1}">邀请排行榜</span>
+              <span class="rankNavsel" data-listindex="2" @click="rankingList"  :class="{selNav:rankingListNum==2}">好友助力榜</span>
+            </div>
+            <div class="rankHelpList">
+              <div v-if="rankingListNum == 1" class="rankListShow">
+                <div class="rankNumber">您当前位于排行榜第<span style="color:#F15522;">20</span> 名</div>
+                <div class="rankIdentification">
+                  <span>排名</span>
+                  <span>昵称</span>
+                  <span>助力人数</span>
+                </div>
+                <div v-for="(item,index) in headPic" :key="index" class="ladderList">
+                  <span class="serialNum">{{index+1}}</span>
+                  <img :src="item.img" alt="">
+                  <span class="listName">{{item.name}}</span>
+                  <span class="listTime">{{item.time}}</span>
+                </div>
+                <div class="rankBottomIn">排行榜数据每小时更新一次</div>
+              </div>
+              <div v-if="rankingListNum == 2">
+                <div v-for="(item,index) in headPic" :key="index" class="ladderList">
+                  <span class="serialNum">{{index+1}}</span>
+                  <img :src="item.img" alt="">
+                  <span class="listName">{{item.name}}</span>
+                  <span class="listTime">{{item.time}}</span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -135,7 +180,8 @@
                   <span style="">{{item.partakeNum}}</span>位助力
                 </p>
               </div>
-              <div v-else :style="{left:(((item.partakeNum- infos.initiatorReward[0].partakeNum+infos.initiatorReward[0].partakeNum/3)/maxPartNum)*tempWidth-8/ratios)+'px',top:'0px'}">
+              <div v-else
+                   :style="{left:(((item.partakeNum- infos.initiatorReward[0].partakeNum+infos.initiatorReward[0].partakeNum/3)/maxPartNum)*tempWidth-8/ratios)+'px',top:'0px'}">
                 <p class="quan"></p>
                 <p class="wen">
                   <span style="">{{item.partakeNum}}</span>位助力
@@ -160,22 +206,35 @@
           </div>
           <!--阶梯助力-->
           <div class="listHelp">
-
-            <div class="receive" @click="confirmReward" :class="{rewardCondition:receiveReward=='receiveReward'}"
-                 hover-class="hoverNone" hover-stay-time="800" v-if="headPic.length>=partakeNum&&userExitEnd!=1"
-                 :style="{marginRight:'20px'}">
-              <span>结束，我要领奖</span>
-            </div>
-            <div class="receive" @click="confirmRewards" :class="{rewardCondition:receiveReward=='receiveReward'}"
-                 hover-class="hoverNone" hover-stay-time="800" v-if="userExitEnd==1" :style="{marginRight:'0px'}">
-              <span>我要领奖</span>
-            </div>
-            <div class="menusH" v-if="headPic.length<maxPartNum&&userExitEnd!=1" @click="continueHelp"
-                 :class="{rewardCondition:continueToInvite=='continueToInvite'}"
-                 hover-class="hoverNone" hover-stay-time="800">
-              <span v-if="headPic.length==0">{{btnText.bxt_continue}}</span>
-              <span v-else>邀请好友继续助力</span>
-            </div>
+            <block v-if="ifRewardUnique == 0">
+              <div class="receive" @click="confirmReward" :class="{rewardCondition:receiveReward=='receiveReward'}"
+                   hover-class="hoverNone" hover-stay-time="800" v-if="headPic.length>=partakeNum&&userExitEnd!=1"
+                   :style="{marginRight:'20px'}">
+                <span>结束，我要领奖</span>
+              </div>
+              <div class="receive" @click="confirmRewards" :class="{rewardCondition:receiveReward=='receiveReward'}"
+                   hover-class="hoverNone" hover-stay-time="800" v-if="userExitEnd==1" :style="{marginRight:'0px'}">
+                <span>我要领奖</span>
+              </div>
+              <div class="menusH" v-if="headPic.length<maxPartNum&&userExitEnd!=1" @click="continueHelp"
+                   :class="{rewardCondition:continueToInvite=='continueToInvite'}"
+                   hover-class="hoverNone" hover-stay-time="800">
+                <span v-if="headPic.length==0">{{btnText.bxt_continue}}</span>
+                <span v-else>继续邀请好友助力</span>
+              </div>
+            </block>
+           <block  v-if="ifRewardUnique == 1">
+             <div class="receive" @click="receiveAllReward" :class="{rewardCondition:receiveReward=='receiveReward'}"
+                  hover-class="hoverNone" hover-stay-time="800"  :style="{marginRight:'20px'}">
+               <span>查看我的奖品</span>
+             </div>
+             <div class="menusH" @click="continueHelp"
+                  :class="{rewardCondition:continueToInvite=='continueToInvite'}"
+                  hover-class="hoverNone" hover-stay-time="800">
+               <span v-if="headPic.length==0">{{btnText.bxt_continue}}</span>
+               <span v-else>继续邀请好友助力</span>
+             </div>
+           </block>
           </div>
 
         </div>
@@ -335,7 +394,10 @@
         maxPartNum: 0,
         tempWidth: 0,
         userExitEnd: "",
-        ratios:0
+        ratios: 0,
+        rankingListNum:1,  //排行榜选择
+        lotteryDraw: 0, //设置抽奖
+        lotteryDrawTarget: 0 //抽奖设置助力人数
       }
     },
     onLoad(option) {
@@ -366,6 +428,10 @@
             that.$store.state.board.partakeNums = res.data.initiatorReward[0].partakeNum;  //助力人数
             that.$store.state.board.btnText = res.data.btnText;   //按钮文案
             that.$store.state.board.actShareCopywriting = res.data.actShareCopywriting;  //玩法说明
+            that.$store.state.board.ifRewardUnique = res.data.rewardUnique;  //只领取最高奖励   全部奖励
+            that.$store.state.board.ifAssistanceLimit = res.data.assistanceLimit; //助力是否有上限
+            that.lotteryDraw = res.data.lotteryDraw; //设置抽奖
+            that.lotteryDrawTarget = res.data.lotteryDrawTarget; //设置抽奖
             if (res.data.actRewardType == 0) {
               that.$store.state.board.invitationRewardType = res.data.initiatorReward[0].rewardType; //邀请奖励类型
             }
@@ -514,6 +580,9 @@
 
     },
     methods: {
+      rankingList(e){
+        this.rankingListNum = e.currentTarget.dataset.listindex;
+      },
       helpInfoss() {
         var that = this;
         utils.login(that, function (sessionID, actId, otherHelpId) {
@@ -993,14 +1062,19 @@
           }
         })
       },
-      confirmReward() {  //阶梯助力  奖励确认
+      confirmReward() {  //阶梯助力  奖励确认  领取最高奖励
         wx.navigateTo({
           url: "/pages/confirmPage/main"
         })
       },
-      confirmRewards() {  //阶梯助力  奖励确认
+      confirmRewards() {  //阶梯助力  奖励确认  领取最高奖励
         wx.navigateTo({
           url: "/pages/rewardPage/main"
+        })
+      },
+      receiveAllReward(){    //阶梯助力 领取所有奖励
+        wx.navigateTo({
+          url: "/pages/multilevelReward/main"
         })
       },
       exitEnd(sessionID, actId) {
@@ -1029,7 +1103,7 @@
         return this.$store.state.board.infos;
       },
       invitationRewardType() { //邀请奖励类型
-        return this.$store.state.board.invitationRewardType;
+        return this.$store.state.board.invitationRewardType  ;
       },
       assistanceRewardType() {  //助力奖励类型
         return this.$store.state.board.assistanceRewardType;
@@ -1129,24 +1203,33 @@
           return temp
         }
       },
-      percents(){
-        if(this.infos.initiatorReward){
-          if(this.headPic.length<=this.infos.initiatorReward[0].partakeNum){
-            return this.headPic.length/3/this.maxPartNum*100
-          }else{
-            return (this.infos.initiatorReward[0].partakeNum/3 +(this.headPic.length-this.infos.initiatorReward[0].partakeNum))/this.maxPartNum*100
+      percents() {
+        if (this.infos.initiatorReward) {
+          if (this.headPic.length <= this.infos.initiatorReward[0].partakeNum) {
+            return this.headPic.length / 3 / this.maxPartNum * 100
+          } else {
+            return (this.infos.initiatorReward[0].partakeNum / 3 + (this.headPic.length - this.infos.initiatorReward[0].partakeNum)) / this.maxPartNum * 100
           }
         }
 
       },
-      leftR(data){
-        if(this.infos.initiatorReward){
-          if(this.headPic.length<=this.infos.initiatorReward[0].partakeNum){
-            return this.headPic.length/3/this.maxPartNum
-          }else{
-            return (this.infos.initiatorReward[0].partakeNum/3 +(data-this.infos.initiatorReward[0].partakeNum))/this.maxPartNum
+      leftR(data) {
+        if (this.infos.initiatorReward) {
+          if (this.headPic.length <= this.infos.initiatorReward[0].partakeNum) {
+            return this.headPic.length / 3 / this.maxPartNum
+          } else {
+            return (this.infos.initiatorReward[0].partakeNum / 3 + (data - this.infos.initiatorReward[0].partakeNum)) / this.maxPartNum
           }
         }
+      },
+      lotteryProgress(){
+        return this.headPic.length / this.lotteryDrawTarget * 100
+      },
+      ifRewardUnique(){    //只领取最高奖励   全部奖励
+        return this.$store.state.board.ifRewardUnique;
+      },
+      ifAssistanceLimit(){   //助力是否有上限
+        return this.$store.state.board.ifAssistanceLimit;
       }
     },
     // 下拉刷新
@@ -1187,6 +1270,8 @@
     width: 100%;
     height: 100%;
     position: relative;
+    background-color: #FFC000;
+    font-family: PingFangSC-regular;
     .haode {
       color: red;
       font-size: 30px;
@@ -1197,6 +1282,7 @@
       padding: 12px;
       text-align: center;
       padding-bottom: 65px;
+      background-color: #FFC000;
       .contacts {
         position: fixed;
         top: 10px;
@@ -1251,6 +1337,7 @@
           box-sizing: border-box;
           border-radius: 15px;
           border: 1px solid #ccc;
+          background-color: #fff;
           .ruTitle {
             color: #124545;
             font-size: 16px;
@@ -1273,58 +1360,213 @@
           }
 
         }
+        .luckDraw{
+          border-radius: 8px;
+          background-color: rgba(255, 255, 255, 1);
+          color: rgba(16, 16, 16, 1);
+          font-size: 14px;
+          text-align: center;
+          box-shadow: 0px -1px 0px 0px rgba(255, 255, 255, 0);
+          font-family: Arial;
+          border: 1px solid rgba(255, 255, 255, 0);
+          margin-top: 10px;
+          .luckDrawText{
+            height: 28px;
+            color: rgba(240, 85, 34, 1);
+            font-size: 20px;
+            text-align: center;
+            padding-top: 10px;
+          }
+          .luckDrawPro{
+            margin: 20px 0px;
+            padding: 0px 10px;
+            box-sizing: border-box;
+            progress{
+              width: 100%;
+            }
+          }
+          .luckDrawDes{
+            color: rgba(87, 87, 87, 1);
+            font-size: 10px;
+            text-align: center;
+            padding-bottom: 8px;
+          }
+        }
         .ladderHelp {
           border-radius: 15px;
           margin-bottom: 20px;
           margin-top: 20px;
-          padding: 10px;
-          box-sizing: border-box;
-          background-color: #FFFBEE;
-          .titles {
-            color: #124545;
-            font-size: 16px;
-          }
-          .ladderList {
-            width: 100%;
-            height: 35px;
-            font-size: 14px;
-            line-height: 35px;
-            text-align: left;
-            padding: 0px 10px;
-            margin: 5px 0px;
+          /*padding: 10px;*/
+          background-color: #FFF;
+          .assistantLimit {
+            padding: 10px;
             box-sizing: border-box;
-            .serialNum {
-              display: inline-block;
-              float: left;
-              margin-right: 10px;
-              width: 20px;
-              height: 20px;
-              border-radius: 10px;
-              line-height: 20px;
-              text-align: center;
-              color: #F05522;
-              background-color: #FFDDB6;
-              margin-top: 10px;
-            }
-            .listName {
-              display: inline-block;
-              float: left;
+            .titles {
               color: #124545;
-              /*margin-right: 10px;*/
+              font-size: 16px;
             }
-            .listTime {
-              display: inline-block;
-              float: right;
-            }
-            img {
-              width: 35px;
+            .ladderList {
+              width: 100%;
               height: 35px;
-              border-radius: 50%;
-              display: inline-block;
-              vertical-align: middle;
-              float: left;
-              margin-right: 10px;
-              border: 1px solid #F05522;
+              font-size: 14px;
+              line-height: 35px;
+              text-align: left;
+              /*padding: 0px 10px;*/
+              margin: 15px 0px;
+              /*box-sizing: border-box;*/
+              .serialNum {
+                display: inline-block;
+                float: left;
+                margin-right: 10px;
+                width: 20px;
+                height: 20px;
+                border-radius: 10px;
+                line-height: 20px;
+                text-align: center;
+                color: #F05522;
+                background-color: #FFDDB6;
+                margin-top: 10px;
+              }
+              .listName {
+                display: inline-block;
+                float: left;
+                color: #124545;
+                /*margin-right: 10px;*/
+              }
+              .listTime {
+                display: inline-block;
+                float: right;
+              }
+              img {
+                width: 35px;
+                height: 35px;
+                border-radius: 50%;
+                display: inline-block;
+                vertical-align: middle;
+                float: left;
+                margin-right: 10px;
+                border: 1px solid #F05522;
+              }
+            }
+            margin-bottom: 10px;
+          }
+          .assistantNoLimit{
+            margin-bottom: 10px;
+            .rankTopNav{
+              background-color: #FFC000;
+              .rankNavsel{
+                display: inline-block;
+                width: 50%;
+                text-align: center;
+                height: 40px;
+                line-height: 40px;
+                font-size: 16px;
+                border-radius: 8px 8px 0px 0px;
+                font-family: Arial;
+                background-color: rgba(255, 217, 60, 1);
+                color: rgba(255, 255, 255, 1);
+              }
+              .selNav{
+                color: #010101;
+                background-color: rgba(255, 255, 255, 1);
+              }
+            }
+            .rankHelpList{
+              padding-bottom: 10px;
+              div{
+                .rankNumber{
+                  margin: 10px 0px;
+                  text-align: center;
+                  color: rgba(107, 107, 107, 1);
+                  font-size: 14px;
+                }
+                .rankIdentification{
+                  height: 30px;
+                  line-height: 30px;
+                  background-color: rgba(244, 244, 244, 1);
+                  color: rgba(16, 16, 16, 1);
+                  font-size: 14px;
+                  text-align: center;
+                  font-family: Arial;
+                  span{
+                    display: inline-block;
+                    height: 30px;
+                    line-height: 30px;
+                    text-align: left;
+                  }
+                  span:nth-child(1){
+                    width: 25%;
+                    box-sizing: border-box;
+                    padding-left: 15px;
+                  }
+                  span:nth-child(2){
+                    width: calc(75% - 80px);
+                  }
+                  span:nth-child(3){
+                    width: 80px;
+                  }
+                }
+                .ladderList {
+                  padding: 10px;
+                  padding-top: 0px;
+                  box-sizing: border-box;
+                  width: 100%;
+                  height: 35px;
+                  font-size: 14px;
+                  line-height: 35px;
+                  text-align: left;
+                  /*padding: 0px 10px;*/
+                  margin: 15px 0px;
+                  /*box-sizing: border-box;*/
+                  .serialNum {
+                    display: inline-block;
+                    float: left;
+                    margin-right: 10px;
+                    width: 20px;
+                    height: 20px;
+                    border-radius: 10px;
+                    line-height: 20px;
+                    text-align: center;
+                    color: #F05522;
+                    background-color: #FFDDB6;
+                    margin-top: 10px;
+                  }
+                  .listName {
+                    display: inline-block;
+                    float: left;
+                    color: #124545;
+                  }
+                  .listTime {
+                    display: inline-block;
+                    float: right;
+                  }
+                  img {
+                    width: 35px;
+                    height: 35px;
+                    border-radius: 50%;
+                    display: inline-block;
+                    vertical-align: middle;
+                    float: left;
+                    margin-right: 10px;
+                    border: 1px solid #F05522;
+                  }
+                }
+                .rankBottomIn{
+                  text-align: center;
+                  color: rgba(0, 0, 0, 0.3);
+                  font-size: 10px;
+                }
+              }
+              .rankListShow{
+                .ladderList {
+                  .listName {
+                    width: calc(75% - 80px);
+                  }
+                  .listTime {
+                    width: 80px;
+                  }
+                }
+              }
             }
           }
         }

@@ -29,6 +29,8 @@ const state = {
   btnText:{},
   infos:{},
   actShareCopywriting:'',
+  ifRewardUnique:'',   //只领取最高奖励   全部奖励
+  ifAssistanceLimit:'',  //助力是否有上限
   appid:'wx032f66ebe0dcce8f',
   secret:'64a61af911d59a37a6fe86a8087a1bfa',
   headPic:[],
