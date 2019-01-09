@@ -35,6 +35,7 @@
           <div class="luckDrawPro">
             <progress activeColor="#F15522" border-radius="5" backgroundColor="#E6E6E6"
                       :percent="lotteryProgress" stroke-width="10"></progress>
+            <span style="color: red;display: inline-block;margin-top: 5px;">{{lotteryProgress}}%</span>
           </div>
           <div class="luckDrawDes">
             参与人数达到{{lotteryDrawTarget}}人即可解锁抽奖
@@ -319,6 +320,35 @@
                     hover-class="hoverNone" hover-stay-time="800" @click="assistanceRewardAct" type="default"
                     :session-from=assistanceSessionFrom>{{btnText.bxt_reward}}
             </button>
+          </block>
+          <block v-else-if="assistanceRewardType==5">
+            <p class="modelContent">
+              {{contentHead}}
+              <block v-if="infos.assistanceReward">
+                {{infos.assistanceReward[0].remark}}
+              </block>
+            </p>
+            <div class="assisReward">
+              <img src="/static/images/assist.png" alt="" mode="widthFix">
+              <div class="assisCon">
+                <p class="assisName">
+                  <block v-if="infos.assistanceReward">
+                    {{infos.assistanceReward[0].remark}}
+                  </block>
+                </p>
+                <p class="assisDes">
+                  <block v-if="infos.assistanceReward">
+                    {{infos.assistanceReward[0].remark}}
+                  </block>
+                </p>
+              </div>
+              <div class="assisBtn"  @click="privateMall">
+                领奖
+              </div>
+            </div>
+            <p class="copy">
+              {{contentFoot}}
+            </p>
           </block>
           <div class="btn modelMyHelp" @click="existDoHelps">{{contentBtn}}</div>
         </div>
@@ -1208,10 +1238,17 @@
           if (this.headPic.length <= this.infos.initiatorReward[0].partakeNum) {
             return this.headPic.length / 3 / this.maxPartNum * 100
           } else {
-            return (this.infos.initiatorReward[0].partakeNum / 3 + (this.headPic.length - this.infos.initiatorReward[0].partakeNum)) / this.maxPartNum * 100
+            if(this.headPic.length>this.infos.initiatorReward[this.infos.initiatorReward.length-1].partakeNum){
+              if(((this.infos.initiatorReward[0].partakeNum / 3 + (this.headPic.length - this.infos.initiatorReward[0].partakeNum)) / this.maxPartNum) < 1){
+                return (this.infos.initiatorReward[0].partakeNum / 3 + (this.headPic.length - this.infos.initiatorReward[0].partakeNum)) / this.maxPartNum * 100;
+              }else{
+                return 100;
+              }
+            }else{
+              return (this.infos.initiatorReward[0].partakeNum / 3 + (this.headPic.length - this.infos.initiatorReward[0].partakeNum)) / this.maxPartNum * 100;
+            }
           }
         }
-
       },
       leftR(data) {
         if (this.infos.initiatorReward) {
@@ -1223,7 +1260,11 @@
         }
       },
       lotteryProgress(){
-        return this.headPic.length / this.lotteryDrawTarget * 100
+        if(this.headPic.length<this.lotteryDrawTarget){
+          return (this.headPic.length / this.lotteryDrawTarget).toFixed(2) * 100;
+        }else{
+          return 100;
+        }
       },
       ifRewardUnique(){    //只领取最高奖励   全部奖励
         return this.$store.state.board.ifRewardUnique;
@@ -1378,7 +1419,8 @@
             padding-top: 10px;
           }
           .luckDrawPro{
-            margin: 20px 0px;
+            margin-top: 20px;
+            margin-bottom: 10px;
             padding: 0px 10px;
             box-sizing: border-box;
             progress{
@@ -2115,6 +2157,45 @@
             color: #F05522;
             margin-bottom: 10px;
             margin-top: 10px;
+          }
+          .assisReward{
+            position: relative;
+            margin-bottom: 20px;
+            img{
+              width: 100%;
+            }
+            .assisCon{
+              height: 45px;
+              position: absolute;
+              left: 20px;
+              top:calc(50% - 22.5px);
+              .assisName{
+                height: 25px;
+                color: rgba(255, 255, 255, 1);
+                font-size: 18px;
+                text-align: left;
+              }
+              .assisDes{
+                height: 14px;
+                color: rgba(255, 255, 255, 1);
+                font-size: 10px;
+                text-align: left;
+              }
+            }
+            .assisBtn{
+              width: 80px;
+              height: 30px;
+              line-height: 30px;
+              border-radius: 15px;
+              color: rgba(72, 156, 255, 1);
+              font-size: 14px;
+              text-align: center;
+              font-family: Arial;
+              position: absolute;
+              right: 25px;
+              top:calc(50% - 15px);
+              background-color: #fff;
+            }
           }
           .modelContent {
             line-height: 24px;
