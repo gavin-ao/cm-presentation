@@ -108,11 +108,11 @@
                 success: (res) => {
                   ctx.save();
                   ctx.beginPath();
-                  ctx.arc((that.getWindowWidth - 76), h-60, 50, 0, Math.PI * 2, false);
+                  ctx.arc((that.getWindowWidth - 60), h-60, 50, 0, Math.PI * 2, false);
                   ctx.setFillStyle('rgba(255, 255, 255, 0.7)');
                   ctx.fill();
                   ctx.clip();
-                  ctx.drawImage(res.path, (that.getWindowWidth - 126), h-110, 100, 100);
+                  ctx.drawImage(res.path, (that.getWindowWidth - 110), h-110, 100, 100);
                   ctx.restore();
                   ctx.draw(true);
 

@@ -12,73 +12,230 @@
     <!--<div class="containes" :style="{height:posterH+'px'}">-->
     <div class="containes">
       <movable-area style="">
+        <!--<movable-view direction="vertical" class="activeRule" :class="{rulesCondition:rulesInfos===true}"-->
+                      <!--@click="activeRules" v-if="activityTypes===0">活动规则-->
+        <!--</movable-view>-->
         <movable-view direction="vertical" class="activeRule" :class="{rulesCondition:rulesInfos===true}"
-                      @click="activeRules" v-if="activityTypes===0">活动规则
+                      @click="activeRules">活动规则
         </movable-view>
       </movable-area>
       <img :src="goLink" alt="" mode="widthFix">
-      <!--//阶梯助力   助力列表-->
-      <div v-if="activityTypes===1">
-        <div class="ruText">
-          <div class="ruTitle">活动说明</div>
-          <block v-for="(item,index) in ruleArr" :key="index">
-            <p>
-              <span class="first" style="">{{(index+1)}}、</span>
-              <span class="two" style="">{{item}}</span>
-            </p>
-          </block>
+      <!--<div class="recordLadder" :class="{rewardCondition:rulesOfActivity===true}" v-if="activityTypes===1&&checked!=true&&myHelpId!=''" :style="{top:topsLoc+'px'}">-->
+      <div class="recordLadder" :class="{rewardCondition:rulesOfActivity===true}" v-if="activityTypes===1&&checked!=true&&myHelpId!=''">
+       <!--<p style="position: fixed;z-index: 1000;width:calc(100% - 40rpx);text-align: center;" @click="modelSetClose1">-->
+        <!--<img src="/static/img/modelArrow.png" alt="" style="width: 40rpx;height: 32rpx;">-->
+        <!--</p>-->
+        <div class="invitation">
+          <!--<div class="helpZero" v-if="headPic.length==0">-->
+            <!--<img class="noneImg" src="/static/img/none.png" alt="">-->
+            <!--<p>还没有人助力</p>-->
+
+          <!--</div>-->
+          <!--阶梯助力-->
+          <!--<div class="ladderHelpPeo" v-else>-->
+          <div class="ladderHelpPeo">
+            <div class="title">
+              好友助力进度
+            </div>
+            <div class="titleAssNum" v-if="ifAssistanceLimit == 1">
+              已获得<span style="color: #F05522;">{{currentPeopleRanking.helpNum}}</span> 位好友助力
+            </div>
+            <div class="hongbaoImg">
+              <block v-if="infos.initiatorReward[0].rewardType==5">
+                <div v-for="(item,index) in infos.initiatorReward" :key="index"
+                     :style="{left:(((item.partakeNum- infos.initiatorReward[0].partakeNum+infos.initiatorReward[0].partakeNum/3)/maxPartNum)*tempWidth-17/ratios)+'px',top:'-4px'}">
+                  <!--<img src="/static/reward/10.png" alt="" v-if="index == 0">-->
+                  <img src="/static/reward/10.png" alt="" v-if="index == 0" mode="widthFix">
+                  <img src="/static/reward/20.png" alt=""  v-if="index == 1" mode="widthFix">
+                  <!--<img src="/static/reward/20_1.png" alt=""  v-if="index == 1" mode="widthFix">-->
+                  <img src="/static/reward/50.png" alt="" v-if="index == 2" mode="widthFix">
+                </div>
+              </block>
+              <block v-else>
+                <div v-for="(item,index) in infos.initiatorReward" :key="index"
+                     :style="{left:(((item.partakeNum- infos.initiatorReward[0].partakeNum+infos.initiatorReward[0].partakeNum/3)/maxPartNum)*tempWidth-17/ratios)+'px',top:'-4px'}">
+                  <img src="/static/images/hongbao.png" alt=""  mode="widthFix">
+                  <p>
+                  <span>{{item.rewardContent}}</span>
+                  </p>
+
+                </div>
+              </block>
+
+            </div>
+            <div class="progressBar">
+              <div class="proList" style="">
+                <progress activeColor="#DE3120" border-radius="5" backgroundColor="#E6E6E6"
+                          :percent="percents" stroke-width="10"></progress>
+              </div>
+
+              <block v-for="(item,index) in infos.initiatorReward" :key="index">
+                <div v-if="index==0" :style="{left:((item.partakeNum/3/maxPartNum)*tempWidth-8/ratios)+'px',top:'0px'}">
+                  <p class="quan"></p>
+                  <p class="wen">
+                    <span style="">{{item.partakeNum}}</span>位助力
+                  </p>
+                </div>
+                <div v-else
+                     :style="{left:(((item.partakeNum- infos.initiatorReward[0].partakeNum+infos.initiatorReward[0].partakeNum/3)/maxPartNum)*tempWidth-8/ratios)+'px',top:'0px'}">
+                  <p class="quan"></p>
+                  <p class="wen">
+                    <span style="">{{item.partakeNum}}</span>位助力
+                  </p>
+                </div>
+              </block>
+            </div>
+          </div>
+
+          <div class="menues">
+            <div class="menus" @click="existDoHelps" :class="{rewardCondition:manIsFull=='manIsFull'}"
+                 hover-class="hoverNone"
+                 hover-stay-time="800">
+              {{btnText.bxt_full}}
+            </div>
+            <button class="menus" @getuserinfo="bindGetUserInfo" :class="{rewardCondition:giveHelp=='giveHelp'}"
+                    open-type="getUserInfo" hover-class="hoverNone" hover-stay-time="800"> {{btnText.bxt_help}}
+            </button>
+            <div class="menus" @click="existDoHelps" :class="{rewardCondition:alreadyHelp=='alreadyHelp'}"
+                 hover-class="hoverNone" hover-stay-time="800">
+              {{btnText.bxt_alhelp}}
+            </div>
+            <!--阶梯助力-->
+            <div class="listHelp">
+              <block v-if="ifRewardUnique == 0">
+                <div class="receive" @click="confirmReward" :class="{rewardCondition:receiveReward=='receiveReward'}"
+                     hover-class="hoverNone" hover-stay-time="800" v-if="headPic.length>=partakeNum&&userExitEnd!=1"
+                     :style="{marginRight:'20px'}">
+                  <span>结束，我要领奖</span>
+                </div>
+                <div class="receive" @click="confirmRewards" :class="{rewardCondition:receiveReward=='receiveReward'}"
+                     hover-class="hoverNone" hover-stay-time="800" v-if="userExitEnd==1" :style="{marginRight:'0px'}">
+                  <span>我要领奖</span>
+                </div>
+                <div class="menusH" v-if="headPic.length<maxPartNum&&userExitEnd!=1" @click="continueHelp"
+                     :class="{rewardCondition:continueToInvite=='continueToInvite'}"
+                     hover-class="hoverNone" hover-stay-time="800">
+                  <span v-if="headPic.length==0">{{btnText.bxt_continue}}</span>
+                  <span v-else>继续邀请好友助力</span>
+                </div>
+              </block>
+              <block v-if="ifRewardUnique == 1">
+                <div class="receive" @click="receiveAllReward" :class="{rewardCondition:receiveReward=='receiveReward'}"
+                     hover-class="hoverNone" hover-stay-time="800" :style="{marginRight:'20px'}">
+                  <span>查看我的奖品</span>
+                </div>
+                <div class="menusH" @click="continueHelp"
+                     :class="{rewardCondition:continueToInvite=='continueToInvite'}"
+                     hover-class="hoverNone" hover-stay-time="800">
+                  <!--<span v-if="headPic.length==0">{{btnText.bxt_continue}}</span>-->
+                  <span>继续邀请好友助力</span>
+                </div>
+              </block>
+            </div>
+
+          </div>
         </div>
+      </div>
+      <!--//阶梯助力   助力列表-->
+      <div v-if="activityTypes===1&&assistangShows==true" style="position: relative;z-index: 1000;">
+        <!--<div class="ruText">-->
+          <!--<div class="ruTitle">活动说明</div>-->
+          <!--<block v-for="(item,index) in ruleArr" :key="index">-->
+            <!--<p>-->
+              <!--<span class="first" style="">{{(index+1)}}、</span>-->
+              <!--<span class="two" style="">{{item}}</span>-->
+            <!--</p>-->
+          <!--</block>-->
+        <!--</div>-->
         <div class="luckDraw" v-if="lotteryDraw == 1">
           <div class="luckDrawText">
             锦鲤奖加载进度
           </div>
           <div class="luckDrawPro">
-            <progress activeColor="#F15522" border-radius="5" backgroundColor="#E6E6E6"
-                      :percent="lotteryProgress" stroke-width="10"></progress>
-            <span style="color: red;display: inline-block;margin-top: 5px;">{{lotteryProgress}}%</span>
+            <div class="progressTotal">
+              <div class="progressLine">
+                <div class="showProL"></div>
+                <div class="showProSe" :style="{height:lotteryProgress/100*70*2+'rpx'}"></div>
+                <div class="showProText" :style="{bottom:(lotteryProgress/100*70*2+10)+'rpx'}">
+                  {{lotteryProgress}}%
+                </div>
+              </div>
+              <!--<div class='progress_box'>-->
+                <!--<canvas class="progress_bg"   canvas-id="canvasProgressbg">  </canvas>-->
+                <!--<canvas class="progress_canvas"   canvas-id="canvasProgress">  </canvas>-->
+                <!--<div class="progress_text">-->
+                  <!--&lt;!&ndash; <view class="progress_dot"></view>  &ndash;&gt;-->
+                  <!--<text class='progress_info'> {{lotteryProgress}}%</text>-->
+                <!--</div>-->
+              <!--</div>-->
+            </div>
+            <img src="/static/reward/S60.png" alt=""  mode="widthFix">
+
+            <!--<progress activeColor="#F15522" border-radius="5" backgroundColor="#E6E6E6"-->
+                      <!--:percent="lotteryProgress" stroke-width="10"></progress>-->
+            <!--<span style="color: red;display: inline-block;margin-top: 5px;">{{lotteryProgress}}%</span>-->
           </div>
           <div class="luckDrawDes">
             参与人数达到{{lotteryDrawTarget}}人即可解锁抽奖
           </div>
         </div>
-        <div v-if="headPic.length" class="ladderHelp">
+        <!--<div v-if="headPic.length" class="ladderHelp">-->
+        <div class="ladderHelp">
           <div class="assistantLimit" v-if="ifAssistanceLimit == 0">
             <div class="titles">好友助力榜</div>
-            <div v-for="(item,index) in headPic" :key="index" class="ladderList">
-              <span class="serialNum">{{index+1}}</span>
-              <img :src="item.img" alt="">
-              <span class="listName">{{item.name}}</span>
-              <span class="listTime">{{item.time}}</span>
-            </div>
+            <block  v-if="headPic.length==0">
+              <div class="helpZero">
+                <img class="noneImg" src="/static/img/none.png" alt="">
+                <p>还没有人助力</p>
+              </div>
+            </block>
+            <block v-else>
+              <div v-for="(item,index) in headPic" :key="index" class="ladderList">
+                <span class="serialNum">{{index+1}}</span>
+                <img :src="item.img" alt="">
+                <span class="listName">{{item.name}}</span>
+                <span class="listTime">{{item.time}}</span>
+              </div>
+            </block>
           </div>
-          <div class="assistantNoLimit"  v-if="ifAssistanceLimit == 1">
+          <div class="assistantNoLimit" v-if="ifAssistanceLimit == 1">
             <div class="rankTopNav">
-              <span class="rankNavsel" data-listindex="1" @click="rankingList"  :class="{selNav:rankingListNum== 1}">邀请排行榜</span>
-              <span class="rankNavsel" data-listindex="2" @click="rankingList"  :class="{selNav:rankingListNum==2}">好友助力榜</span>
+              <span class="rankNavsel" data-listindex="1" @click="rankingList" :class="{selNav:rankingListNum== 1}">邀请排行榜</span>
+              <span class="rankNavsel" data-listindex="2" @click="rankingList"
+                    :class="{selNav:rankingListNum==2}">好友助力榜</span>
             </div>
             <div class="rankHelpList">
               <div v-if="rankingListNum == 1" class="rankListShow">
-                <div class="rankNumber">您当前位于排行榜第<span style="color:#F15522;">20</span> 名</div>
+                <div class="rankNumber">您当前位于排行榜第<span style="color:#F15522;">{{currentPeopleRanking.rankNum}}</span> 名
+                </div>
                 <div class="rankIdentification">
                   <span>排名</span>
                   <span>昵称</span>
                   <span>助力人数</span>
                 </div>
-                <div v-for="(item,index) in headPic" :key="index" class="ladderList">
-                  <span class="serialNum">{{index+1}}</span>
-                  <img :src="item.img" alt="">
-                  <span class="listName">{{item.name}}</span>
-                  <span class="listTime">{{item.time}}</span>
+                <div v-for="(item,index) in rankingListArr" :key="index" class="ladderList">
+                  <span class="serialNum">{{item.rankNum}}</span>
+                  <img :src="item.avatarUrl" alt="">
+                  <span class="listName">{{item.nickName}}</span>
+                  <span class="listTime" style="text-align:center;">{{item.helpNum}}</span>
                 </div>
                 <div class="rankBottomIn">排行榜数据每小时更新一次</div>
               </div>
               <div v-if="rankingListNum == 2">
-                <div v-for="(item,index) in headPic" :key="index" class="ladderList">
-                  <span class="serialNum">{{index+1}}</span>
-                  <img :src="item.img" alt="">
-                  <span class="listName">{{item.name}}</span>
-                  <span class="listTime">{{item.time}}</span>
-                </div>
+                <block  v-if="headPic.length==0">
+                  <div class="helpZero">
+                    <img class="noneImg" src="/static/img/none.png" alt="">
+                    <p>还没有人助力</p>
+                  </div>
+                </block>
+                <block v-else>
+                  <div v-for="(item,index) in headPic" :key="index" class="ladderList">
+                    <span class="serialNum">{{index+1}}</span>
+                    <img :src="item.img" alt="">
+                    <span class="listName">{{item.name}}</span>
+                    <span class="listTime">{{item.time}}</span>
+                  </div>
+                </block>
               </div>
             </div>
           </div>
@@ -142,105 +299,6 @@
         </div>
       </div>
     </div>
-    <div class="recordLadder" :class="{rewardCondition:rulesOfActivity===true}"
-         v-if="activityTypes===1&&checked!=true&&myHelpId!=''" :style="{top:topsLoc+'px'}">
-      <!--<p style="position: fixed;z-index: 1000;width:calc(100% - 40rpx);text-align: center;" @click="modelSetClose1">-->
-      <!--<img src="/static/img/modelArrow.png" alt="" style="width: 40rpx;height: 32rpx;">-->
-      <!--</p>-->
-      <div class="invitation">
-        <div class="helpZero" v-if="headPic.length==0">
-          <img class="noneImg" src="/static/img/none.png" alt="">
-          <p>还没有人助力</p>
-
-        </div>
-        <!--阶梯助力-->
-        <div class="ladderHelpPeo" v-else>
-          <div class="title">
-            好友助力领奖励
-          </div>
-          <div class="hongbaoImg">
-            <div v-for="(item,index) in infos.initiatorReward" :key="index"
-                 :style="{left:(((item.partakeNum- infos.initiatorReward[0].partakeNum+infos.initiatorReward[0].partakeNum/3)/maxPartNum)*tempWidth-25/ratios)+'px',top:'-4px'}">
-              <img src="/static/images/hongbao.png" alt="">
-              <p>
-                <span>{{item.rewardContent}}</span>
-              </p>
-
-            </div>
-          </div>
-          <div class="progressBar">
-            <div class="proList" style="">
-              <progress activeColor="#DE3120" border-radius="5" backgroundColor="#E6E6E6"
-                        :percent="percents" stroke-width="10"></progress>
-            </div>
-
-            <block v-for="(item,index) in infos.initiatorReward" :key="index">
-              <div v-if="index==0" :style="{left:((item.partakeNum/3/maxPartNum)*tempWidth-8/ratios)+'px',top:'0px'}">
-                <p class="quan"></p>
-                <p class="wen">
-                  <span style="">{{item.partakeNum}}</span>位助力
-                </p>
-              </div>
-              <div v-else
-                   :style="{left:(((item.partakeNum- infos.initiatorReward[0].partakeNum+infos.initiatorReward[0].partakeNum/3)/maxPartNum)*tempWidth-8/ratios)+'px',top:'0px'}">
-                <p class="quan"></p>
-                <p class="wen">
-                  <span style="">{{item.partakeNum}}</span>位助力
-                </p>
-              </div>
-            </block>
-          </div>
-        </div>
-
-        <div class="menues">
-          <div class="menus" @click="existDoHelps" :class="{rewardCondition:manIsFull=='manIsFull'}"
-               hover-class="hoverNone"
-               hover-stay-time="800">
-            {{btnText.bxt_full}}
-          </div>
-          <button class="menus" @getuserinfo="bindGetUserInfo" :class="{rewardCondition:giveHelp=='giveHelp'}"
-                  open-type="getUserInfo" hover-class="hoverNone" hover-stay-time="800"> {{btnText.bxt_help}}
-          </button>
-          <div class="menus" @click="existDoHelps" :class="{rewardCondition:alreadyHelp=='alreadyHelp'}"
-               hover-class="hoverNone" hover-stay-time="800">
-            {{btnText.bxt_alhelp}}
-          </div>
-          <!--阶梯助力-->
-          <div class="listHelp">
-            <block v-if="ifRewardUnique == 0">
-              <div class="receive" @click="confirmReward" :class="{rewardCondition:receiveReward=='receiveReward'}"
-                   hover-class="hoverNone" hover-stay-time="800" v-if="headPic.length>=partakeNum&&userExitEnd!=1"
-                   :style="{marginRight:'20px'}">
-                <span>结束，我要领奖</span>
-              </div>
-              <div class="receive" @click="confirmRewards" :class="{rewardCondition:receiveReward=='receiveReward'}"
-                   hover-class="hoverNone" hover-stay-time="800" v-if="userExitEnd==1" :style="{marginRight:'0px'}">
-                <span>我要领奖</span>
-              </div>
-              <div class="menusH" v-if="headPic.length<maxPartNum&&userExitEnd!=1" @click="continueHelp"
-                   :class="{rewardCondition:continueToInvite=='continueToInvite'}"
-                   hover-class="hoverNone" hover-stay-time="800">
-                <span v-if="headPic.length==0">{{btnText.bxt_continue}}</span>
-                <span v-else>继续邀请好友助力</span>
-              </div>
-            </block>
-           <block  v-if="ifRewardUnique == 1">
-             <div class="receive" @click="receiveAllReward" :class="{rewardCondition:receiveReward=='receiveReward'}"
-                  hover-class="hoverNone" hover-stay-time="800"  :style="{marginRight:'20px'}">
-               <span>查看我的奖品</span>
-             </div>
-             <div class="menusH" @click="continueHelp"
-                  :class="{rewardCondition:continueToInvite=='continueToInvite'}"
-                  hover-class="hoverNone" hover-stay-time="800">
-               <span v-if="headPic.length==0">{{btnText.bxt_continue}}</span>
-               <span v-else>继续邀请好友助力</span>
-             </div>
-           </block>
-          </div>
-
-        </div>
-      </div>
-    </div>
     <div class="menu">
       <button class="menuss" open-type="getUserInfo" @getuserinfo="getUserInfoInvite"
               :class="{rewardCondition:getInfoInvite=='getInfoInvite'}" hover-class="hoverNone" hover-stay-time="800">
@@ -277,6 +335,7 @@
       </div>
     </div>
     <div class="mask" :class="{menuStyle:checked == true}">
+      <!--<div class="mask menuStyle">-->
       <p style="position: fixed;z-index: 1000;width:calc(100% - 40rpx);text-align: center;" @click="modelSetClose">
         <img src="/static/img/modelArrow.png" alt="" style="width: 40rpx;height: 32rpx;">
       </p>
@@ -325,24 +384,24 @@
             <p class="modelContent">
               {{contentHead}}
               <block v-if="infos.assistanceReward">
-                {{infos.assistanceReward[0].remark}}
+                {{infos.assistanceReward[0].rewardContent}}
               </block>
             </p>
             <div class="assisReward">
               <img src="/static/images/assist.png" alt="" mode="widthFix">
               <div class="assisCon">
-                <p class="assisName">
+                <p class="assisName" :class="{lhName:!infos.assistanceReward[0].remark}">
+                  <!--<p class="assisName">-->
                   <block v-if="infos.assistanceReward">
-                    {{infos.assistanceReward[0].remark}}
+                    {{infos.assistanceReward[0].rewardContent}}
                   </block>
                 </p>
-                <p class="assisDes">
-                  <block v-if="infos.assistanceReward">
-                    {{infos.assistanceReward[0].remark}}
-                  </block>
+                <p class="assisDes" v-if="infos.assistanceReward[0].remark">
+                  <!--<p class="assisDes">-->
+                  {{infos.assistanceReward[0].remark}}
                 </p>
               </div>
-              <div class="assisBtn"  @click="privateMall">
+              <div class="assisBtn" @click="privateMall">
                 领奖
               </div>
             </div>
@@ -350,7 +409,14 @@
               {{contentFoot}}
             </p>
           </block>
-          <div class="btn modelMyHelp" @click="existDoHelps">{{contentBtn}}</div>
+          <div class="btn modelMyHelp" @click="existDoHelps">
+            <block v-if="checkMyProgressShow==false">
+              {{contentBtn}}
+            </block>
+            <block v-if="checkMyProgressShow==true">
+              查看我的进度
+            </block>
+           </div>
         </div>
       </div>
     </div>
@@ -425,9 +491,14 @@
         tempWidth: 0,
         userExitEnd: "",
         ratios: 0,
-        rankingListNum:1,  //排行榜选择
+        rankingListNum: 1,  //排行榜选择
         lotteryDraw: 0, //设置抽奖
-        lotteryDrawTarget: 0 //抽奖设置助力人数
+        lotteryDrawTarget: 0, //抽奖设置助力人数
+        assisTotalNum: 0,    //总参与人数
+        rankingListArr: [],  //排行榜数组
+        currentPeopleRanking: 0,  //当前人排名
+        assistangShows:true,
+        checkMyProgressShow:false
       }
     },
     onLoad(option) {
@@ -461,7 +532,7 @@
             that.$store.state.board.ifRewardUnique = res.data.rewardUnique;  //只领取最高奖励   全部奖励
             that.$store.state.board.ifAssistanceLimit = res.data.assistanceLimit; //助力是否有上限
             that.lotteryDraw = res.data.lotteryDraw; //设置抽奖
-            that.lotteryDrawTarget = res.data.lotteryDrawTarget; //设置抽奖
+            that.lotteryDrawTarget = res.data.lotteryDrawTarget; //设置抽奖上限人数
             if (res.data.actRewardType == 0) {
               that.$store.state.board.invitationRewardType = res.data.initiatorReward[0].rewardType; //邀请奖励类型
             }
@@ -512,6 +583,8 @@
                                 that.$store.state.board.myExistDoHelp = true;
                                 that.exithelpId = true;
                                 that.rulesOfActivity = true;
+                                that.assistangShows= false;
+                                that.checkMyProgress();
                               } else {
                                 if (res.data.code == '102') {
                                   that.$store.state.board.existDoHelp = true;
@@ -519,10 +592,16 @@
                                   that.exithelpId = true;
                                   that.rulesOfActivity = true;
                                   that.$store.state.board.myHelpId = otherHelpId;
+                                  if (that.lotteryDraw == 1) {
+                                    that.getTheRankings(sessionID, actId);
+                                  }
                                 } else {
                                   that.wantActivity(that, sessionID, otherHelpId, actId);
                                 }
                               }
+                              // if (that.lotteryDraw == 1) {
+                              //   that.getTheRankings(sessionID, actId);
+                              // }
                             }
                           })
                         })
@@ -555,6 +634,9 @@
                             that.$store.state.board.existDoHelp = true;
                             that.$store.state.board.myExistDoHelp = false
                           }
+                          if (that.lotteryDraw == 1) {
+                            that.getTheRankings(sessionID, actId);
+                          }
                         }
                       })
                     })
@@ -568,6 +650,7 @@
                     that.exithelpId = false;
                     that.$store.state.board.existDoHelp = true;
                     that.$store.state.board.myExistDoHelp = false;
+                    that.assistangShows = false;
                   }
                 }
               }
@@ -610,7 +693,8 @@
 
     },
     methods: {
-      rankingList(e){
+      rankingList(e) {
+        console.log(44444);
         this.rankingListNum = e.currentTarget.dataset.listindex;
       },
       helpInfoss() {
@@ -642,6 +726,11 @@
                     that.$store.state.board.myExistDoHelp = true;
                     that.exithelpId = true;
                     that.rulesOfActivity = true;
+                    that.assistangShows= false;
+                    // if (that.lotteryDraw == 1) {
+                    //   that.getTheRankings(sessionID, actId);
+                    // }
+                    that.checkMyProgress();
                   } else {
                     if (res.data.code == '102') {
                       that.$store.state.board.existDoHelp = true;
@@ -694,6 +783,28 @@
           }
         })
       },
+      checkMyProgress() {
+        var actId = this.$store.state.board.actId;
+        var sessionID = this.$store.state.board.sessionID;
+        var that = this;
+        wx.request({
+          url: that.$store.state.board.urlHttp + "/wechatapi/help/getHelpId",
+          method: "POST",
+          data: {sessionID: sessionID, actId: actId},
+          header: {'content-type': 'application/x-www-form-urlencoded'},
+          success: function (res) {
+            if (res.data.success) {
+              that.checkMyProgressShow = true;
+            } else {
+              wx.showToast({
+                title: res.data.msg,
+                icon: 'none',
+                duration: 2000
+              })
+            }
+          }
+        })
+      },
       myToHelp() {
         var that = this;
         utils.login(that, function (sessionID, actId) {
@@ -718,6 +829,9 @@
                 }
               }
             })
+            if (that.lotteryDraw == 1) {
+              that.getTheRankings(sessionID, actId);
+            }
           }
         });
       },
@@ -729,6 +843,7 @@
             data: {helpId: otherHelpId, sessionID: sessionID},
             header: {'content-type': 'application/x-www-form-urlencoded'},
             success: function (res) {
+              that.assistangShows= false;
               if (res.data.success) {
                 if (that.activityTypes === 1) {
                   wx.showToast({
@@ -737,6 +852,7 @@
                     duration: 2000
                   })
                 }
+                that.checkMyProgress();
                 var sysUrl = that.$store.state.board.urlHttp + '/wechatapi/nologin/help/findHelpDetailUserList';
                 //邀请列表
                 wx.request({
@@ -836,6 +952,33 @@
                             duration: 2000
                           })
                         }
+                      }
+                    })
+                  }else if (that.$store.state.board.assistanceRewardType == 5) {
+                    wx.request({
+                      url: that.$store.state.board.urlHttp + "/wechatapi/help/getRewardActCommandByOther",
+                      method: "POST",
+                      data: {sessionID: sessionID, actId: actId},
+                      header: {'content-type': 'application/x-www-form-urlencoded'},
+                      success: function (res) {
+                        if (res.data.success) {
+                          // contentTitle:'', //领取奖励标题
+                          //   contentHead:'', //领取奖励头部
+                          //   contentMid:'', //领取奖励中部
+                          //   contentFoot:'', //领取奖励脚部
+                          //   contentBtn:'', //领取奖励按钮
+                          that.assistanceModel(res.data);
+                        } else {
+                          wx.showToast({
+                            title: res.data.msg,
+                            icon: 'none',
+                            duration: 2000
+                          })
+                        }
+                        that.$store.state.board.existDoHelp = false;
+                        that.$store.state.board.myExistDoHelp = true;
+                        //助力 埋点
+                        that.getRewardActCommandOpenWindowByOther();
                       }
                     })
                   }
@@ -946,7 +1089,7 @@
       },
       closeMash() {
         this.$store.state.board.checkedRule = false;
-        this.$store.state.board.checked = false;
+        // this.$store.state.board.checked = false;
         this.$store.state.board.checkedRules = false;
       },
       existDoHelps() {   //我也要领奖励
@@ -964,6 +1107,7 @@
           success: function (res) {
             that.$store.state.board.headPic = [];
             if (res.data.success) {
+              that.assistangShows = true;
               that.$store.state.board.myHelpId = res.data.helpId;
               that.headPicArr(that, res.data.data);
               that.$store.state.board.myExistDoHelp = false;
@@ -971,6 +1115,9 @@
               that.exithelpId = true;
               that.rulesOfActivity = true;
               that.$store.state.board.checked = false;
+              if (that.lotteryDraw == 1) {
+                that.getTheRankings(sessionID, actId);
+              }
             }
             else {
               that.exithelpId = false;
@@ -980,6 +1127,7 @@
               that.rulesOfModel = true;
               that.modelSetP = true;
               that.rulesOfActivity = '';
+              that.assistangShows = false;
             }
           }
         })
@@ -990,9 +1138,10 @@
       },
       headPicArr(that, headPic) {
         for (var i = 0; i < headPic.length; i++) {
+          var nickName = that.cutOutSubString(headPic[i].nickName,20,true);
           that.$store.state.board.headPic.push({
             img: headPic[i].avatarUrl,
-            name: headPic[i].nickName.length > 10 ? headPic[i].nickName.slice(0, 6) + '...' : headPic[i].nickName,
+            name: nickName,
             time: utils.formatTime(headPic[i].helpAt)
           })
         }
@@ -1102,7 +1251,7 @@
           url: "/pages/rewardPage/main"
         })
       },
-      receiveAllReward(){    //阶梯助力 领取所有奖励
+      receiveAllReward() {    //阶梯助力 领取所有奖励
         wx.navigateTo({
           url: "/pages/multilevelReward/main"
         })
@@ -1120,8 +1269,128 @@
             }
           }
         })
-      }
+      },
+      getTheRankings(sessionID, actId) {
+        var that = this;
+        wx.request({
+          url: that.$store.state.board.urlHttp + "/wechatapi/help/totalRankAndCount",
+          method: "POST",
+          data: {actId: actId, sessionID: sessionID},
+          header: {'content-type': 'application/x-www-form-urlencoded'},
+          success: function (res) {
+            // assisTotalNum:0,    //总参与人数
+            //   rankingListArr:[]  //排行榜数组
+            if (res.data.success) {
+              that.rankingListArr = res.data.wechatActRankVOList;
+              for(var i=0;i<that.rankingListArr.length;i++){
+                that.rankingListArr[i].nickName = that.cutOutSubString(that.rankingListArr[i].nickName,22,true)
+              }
+              that.currentPeopleRanking = res.data.currWechatActRankVO;
+              that.assisTotalNum = res.data.partakeNum;
+              that.drawProgressbg();
+              console.log(that.lotteryProgress)
+              that.drawCircle(that.lotteryProgress/50);
+            } else {
+              wx.showToast({
+                title: "获取排行榜失败",
+                icon: 'none',
+                duration: 2000
+              })
+            }
+          }
+        })
+      },
+      //(串,长度,增加...)
+      cutOutSubString(str, len, hasDot) {
+        var newLength = 0;
+        var newStr = "";
+        var chineseRegex = /[^\x00-\xff]/g;
+        var singleChar = "";
+        var strLength = str.replace(chineseRegex, "**").length;
+        for (var i = 0; i < strLength; i++) {
+          singleChar = str.charAt(i).toString();
+          if (singleChar.match(chineseRegex) != null) {
+            newLength += 2;
+          }
+          else {
+            newLength++;
+          }
+          if (newLength > len) {
+            break;
+          }
+          newStr += singleChar;
+        }
 
+        if (hasDot && strLength > len) {
+          newStr += "...";
+        }
+        return newStr;
+      },
+      privateMall(){
+        var that = this;
+        var actId = that.$store.state.board.actId;
+        var sessionID = that.$store.state.board.sessionID;
+        wx.request({
+          url: that.$store.state.board.urlHttp + "/wechatapi/help/getRewardActCommandByOther",
+          method: "POST",
+          data: {sessionID: sessionID, actId: actId},
+          header: {'content-type': 'application/x-www-form-urlencoded'},
+          success: function (res) {
+            if (res.data.success) {
+              console.log(res.data.command)
+              wx.navigateToMiniProgram({
+                appId: 'wx2548fa30af482bdf',
+                path: 'pages/index/index?token='+res.data.command,
+                extraData: {
+                  foo: 'bar'
+                },
+                envVersion: 'release',
+                success(res) {
+                  // 打开成功
+                }
+              })
+            } else {
+              wx.showToast({
+                title: res.data.msg,
+                icon: 'none',
+                duration: 2000
+              })
+            }
+          }
+        })
+
+      },
+      drawProgressbg () {
+        var ratio = this.$store.state.board.windowWidth/320;
+        // 使用 wx.createContext 获取绘图上下文 context
+        var ctx = wx.createCanvasContext('canvasProgressbg');
+        ctx.setLineWidth(5*ratio);// 设置圆环的宽度
+        ctx.setStrokeStyle('#cccccc'); // 设置圆环的颜色
+        ctx.setLineCap('round') // 设置圆环端点的形状
+        ctx.beginPath();//开始一个新的路径
+        ctx.arc(39*ratio, 39*ratio, 34*ratio, 0, 2 * Math.PI, false);
+        //设置一个原点(100,100)，半径为90的圆的路径到当前路径
+        ctx.stroke();//对当前路径进行描边
+        ctx.draw();
+      },
+      drawCircle (step) {
+        console.log(step)
+        var ratio = this.$store.state.board.windowWidth/320;
+        var context = wx.createCanvasContext('canvasProgress');
+        // 设置渐变
+        var gradient = context.createLinearGradient(80*ratio, 40*ratio, 40*ratio, 80*ratio);
+        gradient.addColorStop("0", "#F15522");
+        gradient.addColorStop("0.5", "#F15522");
+        gradient.addColorStop("1.0", "#F15522");
+        context.setLineWidth(5*ratio);
+        context.setStrokeStyle(gradient);
+        context.setLineCap('round');
+        context.beginPath();
+        // 参数step 为绘制的圆环周长，从0到2为一周 。 -Math.PI / 2 将起始角设在12点钟位置 ，结束角 通过改变 step 的值确定
+        context.arc(39*ratio, 39*ratio, 34*ratio, -Math.PI / 2, step * Math.PI - Math.PI / 2, false);
+        context.stroke();
+        context.draw()
+      }
     },
     created() {
     },
@@ -1133,7 +1402,7 @@
         return this.$store.state.board.infos;
       },
       invitationRewardType() { //邀请奖励类型
-        return this.$store.state.board.invitationRewardType  ;
+        return this.$store.state.board.invitationRewardType;
       },
       assistanceRewardType() {  //助力奖励类型
         return this.$store.state.board.assistanceRewardType;
@@ -1238,13 +1507,13 @@
           if (this.headPic.length <= this.infos.initiatorReward[0].partakeNum) {
             return this.headPic.length / 3 / this.maxPartNum * 100
           } else {
-            if(this.headPic.length>this.infos.initiatorReward[this.infos.initiatorReward.length-1].partakeNum){
-              if(((this.infos.initiatorReward[0].partakeNum / 3 + (this.headPic.length - this.infos.initiatorReward[0].partakeNum)) / this.maxPartNum) < 1){
+            if (this.headPic.length > this.infos.initiatorReward[this.infos.initiatorReward.length - 1].partakeNum) {
+              if (((this.infos.initiatorReward[0].partakeNum / 3 + (this.headPic.length - this.infos.initiatorReward[0].partakeNum)) / this.maxPartNum) < 1) {
                 return (this.infos.initiatorReward[0].partakeNum / 3 + (this.headPic.length - this.infos.initiatorReward[0].partakeNum)) / this.maxPartNum * 100;
-              }else{
+              } else {
                 return 100;
               }
-            }else{
+            } else {
               return (this.infos.initiatorReward[0].partakeNum / 3 + (this.headPic.length - this.infos.initiatorReward[0].partakeNum)) / this.maxPartNum * 100;
             }
           }
@@ -1259,17 +1528,18 @@
           }
         }
       },
-      lotteryProgress(){
-        if(this.headPic.length<this.lotteryDrawTarget){
-          return (this.headPic.length / this.lotteryDrawTarget).toFixed(2) * 100;
-        }else{
+      lotteryProgress() {
+        if (this.assisTotalNum < this.lotteryDrawTarget) {
+          // return 22
+          return (this.assisTotalNum / this.lotteryDrawTarget).toFixed(3) * 100;
+        } else {
           return 100;
         }
       },
-      ifRewardUnique(){    //只领取最高奖励   全部奖励
+      ifRewardUnique() {    //只领取最高奖励   全部奖励
         return this.$store.state.board.ifRewardUnique;
       },
-      ifAssistanceLimit(){   //助力是否有上限
+      ifAssistanceLimit() {   //助力是否有上限
         return this.$store.state.board.ifAssistanceLimit;
       }
     },
@@ -1359,6 +1629,7 @@
           background-color: rgba(0, 0, 0, 0.44);
           color: #fff;
           border-radius: 13px;
+          z-index: 999999;
         }
         .activeRule.rulesCondition {
           display: block;
@@ -1401,7 +1672,7 @@
           }
 
         }
-        .luckDraw{
+        .luckDraw {
           border-radius: 8px;
           background-color: rgba(255, 255, 255, 1);
           color: rgba(16, 16, 16, 1);
@@ -1411,23 +1682,115 @@
           font-family: Arial;
           border: 1px solid rgba(255, 255, 255, 0);
           margin-top: 10px;
-          .luckDrawText{
+          .luckDrawText {
             height: 28px;
             color: rgba(240, 85, 34, 1);
             font-size: 20px;
             text-align: center;
             padding-top: 10px;
           }
-          .luckDrawPro{
+          .luckDrawPro {
             margin-top: 20px;
             margin-bottom: 10px;
             padding: 0px 10px;
             box-sizing: border-box;
-            progress{
+            progress {
               width: 100%;
             }
+            img{
+              width: calc(100% - 130px);
+              vertical-align:middle;
+              max-width: 200px;
+            }
+            .progressTotal{
+              display: inline-block;
+              vertical-align: middle;
+              margin-right: 30px;
+              text-align: center;
+              .progress_box{
+                position: relative;
+                width:90px;
+                height: 90px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                /* background-color: #eee; */
+              }
+              .progress_bg{
+                position: absolute;
+                width:90px;
+                height: 90px;
+              }
+              .progress_canvas{
+                width:90px;
+                height: 90px;
+              }
+              .progress_text{
+                position: absolute;
+                display: flex;
+                align-items: center;
+                justify-content: center
+              }
+              .progress_info{
+                font-size: 36rpx;
+                padding-left: 16rpx;
+                letter-spacing: 2rpx
+              }
+              .progress_dot{
+                width:16rpx;
+                height: 16rpx;
+                border-radius: 50%;
+                background-color: #fb9126;
+              }
+              .progressLine{
+                position: relative;
+                width:90px;
+                height: 90px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                .showProL{
+                  width: 48px;
+                  height: 70px;
+                  background-color: #fff;
+                  position: absolute;
+                  bottom: 5px;
+                  left: calc(50% - 24px);
+                  border-bottom-left-radius: 10px;
+                  border-bottom-right-radius: 10px;
+                  border-top-right-radius: 3px;
+                  border-top-left-radius: 3px;
+                  box-sizing: border-box;
+                  border: 1px solid #eee;
+                  border-top: 0px;
+                }
+                .showProSe{
+                  width: 48px;
+                  /*background-color: #F15522;*/
+                  position: absolute;
+                  bottom: 5px;
+                  left: calc(50% - 24px);
+                  border-bottom-left-radius: 10px;
+                  border-bottom-right-radius: 10px;
+                  border-top-right-radius: 3px;
+                  border-top-left-radius: 3px;
+                  box-sizing: border-box;
+                  border: 1px solid #ccc;
+                  border-top: 0px;
+                  background: -webkit-linear-gradient(#FFC732, #FF8048); /* Safari 5.1 - 6.0 */
+                  background: -o-linear-gradient(#FFC732, #FF8048); /* Opera 11.1 - 12.0 */
+                  background: -moz-linear-gradient(#FFC732, #FF8048); /* Firefox 3.6 - 15 */
+                  background: linear-gradient(#FFC732, #FF8048); /* 标准的语法 */
+                }
+                .showProText{
+                  /*background-color: #F15522;*/
+                  position: absolute;
+                }
+              }
+
+            }
           }
-          .luckDrawDes{
+          .luckDrawDes {
             color: rgba(87, 87, 87, 1);
             font-size: 10px;
             text-align: center;
@@ -1435,7 +1798,7 @@
           }
         }
         .ladderHelp {
-          border-radius: 15px;
+          border-radius: 8px;
           margin-bottom: 20px;
           margin-top: 20px;
           /*padding: 10px;*/
@@ -1491,12 +1854,33 @@
               }
             }
             margin-bottom: 10px;
+            .helpZero {
+              padding-top: 35px;
+              img {
+                display: block;
+                margin: 0 auto;
+              }
+              .noneImg {
+                width: 182px;
+                height: 121px;
+              }
+              .noneTextImg {
+                margin-top: 8px;
+                width: 134px;
+                height: 12px;
+              }
+              p {
+                margin-top: 5px;
+                font-size: 14px;
+                color: #A5A5A5;
+              }
+            }
           }
-          .assistantNoLimit{
+          .assistantNoLimit {
             margin-bottom: 10px;
-            .rankTopNav{
+            .rankTopNav {
               background-color: #FFC000;
-              .rankNavsel{
+              .rankNavsel {
                 display: inline-block;
                 width: 50%;
                 text-align: center;
@@ -1508,44 +1892,46 @@
                 background-color: rgba(255, 217, 60, 1);
                 color: rgba(255, 255, 255, 1);
               }
-              .selNav{
+              .selNav {
                 color: #010101;
                 background-color: rgba(255, 255, 255, 1);
               }
             }
-            .rankHelpList{
+            .rankHelpList {
               padding-bottom: 10px;
-              div{
-                .rankNumber{
+              div {
+                .rankNumber {
                   margin: 10px 0px;
                   text-align: center;
                   color: rgba(107, 107, 107, 1);
                   font-size: 14px;
                 }
-                .rankIdentification{
+                .rankIdentification {
                   height: 30px;
                   line-height: 30px;
                   background-color: rgba(244, 244, 244, 1);
                   color: rgba(16, 16, 16, 1);
                   font-size: 14px;
                   text-align: center;
+                  padding: 0px 10px;
                   font-family: Arial;
-                  span{
+                  span {
                     display: inline-block;
                     height: 30px;
                     line-height: 30px;
                     text-align: left;
                   }
-                  span:nth-child(1){
+                  span:nth-child(1) {
                     width: 25%;
                     box-sizing: border-box;
-                    padding-left: 15px;
+                    padding-left: 5px;
                   }
-                  span:nth-child(2){
+                  span:nth-child(2) {
                     width: calc(75% - 80px);
                   }
-                  span:nth-child(3){
+                  span:nth-child(3) {
                     width: 80px;
+                    text-align: center;
                   }
                 }
                 .ladderList {
@@ -1593,13 +1979,34 @@
                     border: 1px solid #F05522;
                   }
                 }
-                .rankBottomIn{
+                .rankBottomIn {
                   text-align: center;
                   color: rgba(0, 0, 0, 0.3);
                   font-size: 10px;
                 }
+                .helpZero {
+                  padding-top: 35px;
+                  img {
+                    display: block;
+                    margin: 0 auto;
+                  }
+                  .noneImg {
+                    width: 182px;
+                    height: 121px;
+                  }
+                  .noneTextImg {
+                    margin-top: 8px;
+                    width: 134px;
+                    height: 12px;
+                  }
+                  p {
+                    margin-top: 5px;
+                    font-size: 14px;
+                    color: #A5A5A5;
+                  }
+                }
               }
-              .rankListShow{
+              .rankListShow {
                 .ladderList {
                   .listName {
                     width: calc(75% - 80px);
@@ -1613,7 +2020,258 @@
           }
         }
       }
-
+      .recordLadder {
+        position: relative;
+        /*bottom: 58px;*/
+        /*left: 12px;*/
+        width: 100%;
+        background-color: #FFF;
+        height: 310px;
+        margin: 0 auto;
+        margin-top: -130px;
+        border-radius: 8px;
+        box-shadow: 0px 0px 15px rgba(0, 0, 0, .3);
+        display: none;
+        .recordTitle {
+          color: #9397A4;
+          font-size: 14px;
+          text-align: center;
+          margin-bottom: 15px;
+          margin-top: 10px;
+          padding: 0 10px;
+          .verLine {
+            display: inline-block;
+            position: relative;
+            top: 5px;
+            width: 1px;
+            height: 19px;
+            margin: 0 20px;
+            border-left: 1px solid #CED0D5;
+          }
+        }
+        .modelTitle {
+          text-align: center;
+          font-size: 18px;
+          color: #F05522;
+          margin-top: 20px;
+        }
+        .invitation {
+          text-align: center;
+          padding: 0 10px;
+          margin-top: 10px;
+          .helpZero {
+            padding-top: 35px;
+            img {
+              display: block;
+              margin: 0 auto;
+            }
+            .noneImg {
+              width: 182px;
+              height: 121px;
+            }
+            .noneTextImg {
+              margin-top: 8px;
+              width: 134px;
+              height: 12px;
+            }
+            p {
+              margin-top: 5px;
+              font-size: 14px;
+              color: #A5A5A5;
+            }
+          }
+          .helpPeo {
+            text-align: center;
+            color: #F05522;
+            font-size: 14px;
+            .helpNum {
+              font-size: 28px;
+            }
+            scroll-view {
+              height: 80px;
+              .helpUserImg {
+                margin-top: 15px;
+                img {
+                  width: 55px;
+                  height: 55px;
+                  border-radius: 50%;
+                  display: inline-block;
+                  margin: 0 4px;
+                  border: 1px solid #F05522;
+                }
+              }
+            }
+            .helpLackNum {
+              font-size: 12px;
+              font-weight: lighter;
+              color: #4A4A4A;
+              margin-top: 15px;
+            }
+          }
+          .ladderHelpPeo {
+            .title {
+              color: #F05522;
+              font-size: 20px;
+              padding-top: 10px;
+            }
+            .titleAssNum {
+              color: rgba(108, 107, 107, 1);
+              font-size: 16px;
+              text-align: center;
+              margin-top: 10px;
+            }
+            .hongbaoImg {
+              position: relative;
+              width: 100%;
+              height: 80px;
+              margin-top: 20px;
+              margin-bottom: 10px;
+              div {
+                display: inline-block;
+                width: 60px;
+                /*height: 65px;*/
+                position: absolute;
+                img {
+                  width: 100%;
+                  /*height: 100%;*/
+                }
+                p {
+                  position: relative;
+                  top: -55px;
+                  text-align: top;
+                  display: inline-block;
+                  width: calc(100% - 20px);
+                  margin: auto;
+                  font-size: 9px;
+                  color: #fff;
+                  height: 25px;
+                  overflow: hidden;
+                  span {
+                    display: inline-block;
+                    width: 100%;
+                    word-wrap: break-word
+                  }
+                }
+              }
+            }
+            .progressBar {
+              width: calc(100% - 20px);
+              margin-left: 10px;
+              height: 25px;
+              text-align: left;
+              position: relative;
+              .proList {
+                width: 100%;
+                overflow: hidden;
+                height: 10px;
+                border-radius: 5px;
+                margin-top: 5px;
+                progress {
+                  width: 100%;
+                }
+              }
+              div {
+                position: absolute;
+                p.quan {
+                  width: 18px;
+                  height: 18px;
+                  border-radius: 9px;
+                  border: 3px solid #F05522;
+                  background-color: #fff;
+                  box-sizing: border-box;
+                }
+                p.wen {
+                  font-size: 12px;
+                  margin-left: -13px;
+                  width: 55px;
+                  span {
+                    color: #F05522;
+                  }
+                }
+              }
+            }
+          }
+          .menues {
+            width: 100%;
+            /*position: fixed;*/
+            /*bottom: 0px;*/
+            text-align: center;
+            z-index: 1000;
+            margin-top: 40px;
+            .menus {
+              margin: 0 auto;
+              width: 195px;
+              height: 40px;
+              display: none;
+              background: #fff;
+              border: 1px solid #F05522;
+              font-size: 14px;
+              color: #F05522;
+              text-align: center;
+              line-height: 40px;
+              border-radius: 20px;
+            }
+            /*.menuss {*/
+            /*margin: 0 auto;*/
+            /*width: 270px;*/
+            /*height: 40px;*/
+            /*display: none;*/
+            /*background: #EF6D00;*/
+            /*font-size: 13px;*/
+            /*color: rgba(255, 255, 255, 1);*/
+            /*text-align: center;*/
+            /*line-height: 40px;*/
+            /*border-radius: 24px;*/
+            /*border: none;*/
+            /*}*/
+            div.menus.rewardCondition, button.menus.rewardCondition {
+              display: inline-block;
+            }
+            /*button.menuss.rewardCondition {*/
+            /*display: block;*/
+            /*}*/
+            .hoverNone {
+              pointer-events: none;
+            }
+            .listHelp {
+              font-size: 14px;
+              .menusH {
+                width: 135px;
+                background: #F05522;
+                color: #fff;
+                display: none;
+                display: inline-block;
+                border: 1px solid transparent;
+                text-align: center;
+                line-height: 40px;
+                border-radius: 20px;
+              }
+              .receive {
+                width: 135px;
+                height: 40px;
+                display: inline-block;
+                line-height: 40px;
+                background-color: #fff;
+                border: 1px solid #F05522;
+                color: #F05522;
+                border-radius: 20px;
+                margin-right: 20px;
+              }
+              div.menusH.rewardCondition {
+                display: inline-block;
+              }
+            }
+          }
+        }
+        .noHelp {
+          text-align: center;
+          color: #575757;
+          font-size: 14px;
+        }
+      }
+      div.recordLadder.rewardCondition {
+        display: block;
+      }
     }
     .record {
       position: fixed;
@@ -1783,250 +2441,7 @@
     div.record.rewardCondition {
       display: block;
     }
-    .recordLadder {
-      position: absolute;
-      /*bottom: 58px;*/
-      left: 12px;
-      width: calc(100% - 24px);
-      background-color: #FFFBEE;
-      height: 310px;
-      margin: 0 auto;
-      border-radius: 8px;
-      box-shadow: 0px 0px 15px rgba(0, 0, 0, .3);
-      display: none;
-      .recordTitle {
-        color: #9397A4;
-        font-size: 14px;
-        text-align: center;
-        margin-bottom: 15px;
-        margin-top: 10px;
-        padding: 0 10px;
-        .verLine {
-          display: inline-block;
-          position: relative;
-          top: 5px;
-          width: 1px;
-          height: 19px;
-          margin: 0 20px;
-          border-left: 1px solid #CED0D5;
-        }
-      }
-      .modelTitle {
-        text-align: center;
-        font-size: 18px;
-        color: #F05522;
-        margin-top: 20px;
-      }
-      .invitation {
-        text-align: center;
-        padding: 0 10px;
-        margin-top: 30px;
-        .helpZero {
-          margin-top: 45px;
-          img {
-            display: block;
-            margin: 0 auto;
-          }
-          .noneImg {
-            width: 182px;
-            height: 121px;
-          }
-          .noneTextImg {
-            margin-top: 8px;
-            width: 134px;
-            height: 12px;
-          }
-          p {
-            margin-top: 5px;
-            font-size: 14px;
-            color: #A5A5A5;
-          }
-        }
-        .helpPeo {
-          text-align: center;
-          color: #F05522;
-          font-size: 14px;
-          .helpNum {
-            font-size: 28px;
-          }
-          scroll-view {
-            height: 80px;
-            .helpUserImg {
-              margin-top: 15px;
-              img {
-                width: 55px;
-                height: 55px;
-                border-radius: 50%;
-                display: inline-block;
-                margin: 0 4px;
-                border: 1px solid #F05522;
-              }
-            }
-          }
-          .helpLackNum {
-            font-size: 12px;
-            font-weight: lighter;
-            color: #4A4A4A;
-            margin-top: 15px;
-          }
-        }
-        .ladderHelpPeo {
-          .title {
-            color: #F05522;
-            font-size: 20px;
-          }
-          .hongbaoImg {
-            position: relative;
-            width: 100%;
-            height: 80px;
-            margin-top: 20px;
-            margin-bottom: 30px;
-            div {
-              display: inline-block;
-              width: 78px;
-              height: 92.4px;
-              position: absolute;
-              img {
-                width: 100%;
-                height: 100%;
-              }
-              p {
-                position: relative;
-                top: -75px;
-                text-align: top;
-                display: inline-block;
-                width: calc(100% - 20px);
-                margin: auto;
-                font-size: 9px;
-                color: #fff;
-                height: 25px;
-                overflow: hidden;
-                span {
-                  display: inline-block;
-                  width: 100%;
-                  word-wrap: break-word
-                }
-              }
-            }
-          }
-          .progressBar {
-            width: calc(100% - 20px);
-            margin-left: 10px;
-            height: 25px;
-            text-align: left;
-            position: relative;
-            .proList {
-              width: 100%;
-              overflow: hidden;
-              height: 10px;
-              border-radius: 5px;
-              margin-top: 5px;
-              progress {
-                width: 100%;
-              }
-            }
-            div {
-              position: absolute;
-              p.quan {
-                width: 18px;
-                height: 18px;
-                border-radius: 9px;
-                border: 3px solid #F05522;
-                background-color: #fff;
-                box-sizing: border-box;
-              }
-              p.wen {
-                font-size: 12px;
-                margin-left: -13px;
-                width: 55px;
-                span {
-                  color: #F05522;
-                }
-              }
-            }
-          }
-        }
-        .menues {
-          width: 100%;
-          /*position: fixed;*/
-          /*bottom: 0px;*/
-          text-align: center;
-          z-index: 1000;
-          margin-top: 40px;
-          .menus {
-            margin: 0 auto;
-            width: 195px;
-            height: 40px;
-            display: none;
-            background: #fff;
-            border: 1px solid #F05522;
-            font-size: 14px;
-            color: #F05522;
-            text-align: center;
-            line-height: 40px;
-            border-radius: 20px;
-          }
-          /*.menuss {*/
-          /*margin: 0 auto;*/
-          /*width: 270px;*/
-          /*height: 40px;*/
-          /*display: none;*/
-          /*background: #EF6D00;*/
-          /*font-size: 13px;*/
-          /*color: rgba(255, 255, 255, 1);*/
-          /*text-align: center;*/
-          /*line-height: 40px;*/
-          /*border-radius: 24px;*/
-          /*border: none;*/
-          /*}*/
-          div.menus.rewardCondition, button.menus.rewardCondition {
-            display: inline-block;
-          }
-          /*button.menuss.rewardCondition {*/
-          /*display: block;*/
-          /*}*/
-          .hoverNone {
-            pointer-events: none;
-          }
-          .listHelp {
-            font-size: 14px;
-            .menusH {
-              width: 135px;
-              background: #F05522;
-              color: #fff;
-              display: none;
-              display: inline-block;
-              border: 1px solid transparent;
-              text-align: center;
-              line-height: 40px;
-              border-radius: 20px;
-            }
-            .receive {
-              width: 135px;
-              height: 40px;
-              display: inline-block;
-              line-height: 40px;
-              background-color: #fff;
-              border: 1px solid #F05522;
-              color: #F05522;
-              border-radius: 20px;
-              margin-right: 20px;
-            }
-            div.menusH.rewardCondition {
-              display: inline-block;
-            }
-          }
-        }
-      }
-      .noHelp {
-        text-align: center;
-        color: #575757;
-        font-size: 14px;
-      }
-    }
-    div.recordLadder.rewardCondition {
-      display: block;
-    }
+
     .modelSetP {
       position: fixed;
       z-index: 1000;
@@ -2158,33 +2573,41 @@
             margin-bottom: 10px;
             margin-top: 10px;
           }
-          .assisReward{
+          .assisReward {
             position: relative;
-            margin-bottom: 20px;
-            img{
+            margin: 20px 0px;
+            padding: 0px !important;
+            img {
               width: 100%;
             }
-            .assisCon{
+            .assisCon {
               height: 45px;
               position: absolute;
               left: 20px;
-              top:calc(50% - 22.5px);
-              .assisName{
-                height: 25px;
+              top: calc(50% - 22.5px);
+              padding: 0px !important;
+              .assisName {
+                /*height: 25px;*/
                 color: rgba(255, 255, 255, 1);
                 font-size: 18px;
                 text-align: left;
               }
-              .assisDes{
-                height: 14px;
+              .assisDes {
+                /*height: 14px;*/
+                display: table-cell;
+                vertical-align: middle;
                 color: rgba(255, 255, 255, 1);
                 font-size: 10px;
                 text-align: left;
               }
+              .lhName {
+                line-height: 40px;
+              }
             }
-            .assisBtn{
+            .assisBtn {
               width: 80px;
               height: 30px;
+              padding: 0px !important;
               line-height: 30px;
               border-radius: 15px;
               color: rgba(72, 156, 255, 1);
@@ -2193,7 +2616,7 @@
               font-family: Arial;
               position: absolute;
               right: 25px;
-              top:calc(50% - 15px);
+              top: calc(50% - 15px);
               background-color: #fff;
             }
           }

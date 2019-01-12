@@ -222,7 +222,10 @@
     created() {
     },
     mounted() {
-
+      var navTitle = "奖励确认";
+      wx.setNavigationBarTitle({
+        title: navTitle
+      })
     },
     components: {}
   }

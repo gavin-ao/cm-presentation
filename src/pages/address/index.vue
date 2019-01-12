@@ -2,34 +2,34 @@
   <div class="instructor-toueist">
     <div class="multilevelReward">
       <div class="addressCompletion">
-        <div class="eachMessage">
-          <span class="titleInfos">填写您的收货信息，便于收取实物奖品</span>
-        </div>
+        <!--<div class="eachMessage">-->
+          <!--<span class="titleInfos">填写您的收货信息，便于收取实物奖品</span>-->
+        <!--</div>-->
         <div class="eachMessage">
           <span class="addressDes">收货人</span>
-          <div class="addressInfos"><input type="text" v-model="userName"></div>
+          <div class="addressInfos"><input type="text" v-model="userName" placeholder="名字"  placeholder-style="color: #cecece;font-size: 24rpx;"></div>
         </div>
         <div class="eachMessage">
           <span class="addressDes">手机号码</span>
-          <div class="addressInfos"><input type="number" v-model="telNumber"></div>
+          <div class="addressInfos"><input type="number" v-model="telNumber" placeholder="11位手机号" placeholder-style="color: #cecece;font-size: 24rpx;"></div>
         </div>
-        <div class="eachMessage">
-          <picker
-            mode="region"
-            @change="bindRegionChange"
-            :value="region"
-            :custom-item="customItem"
-          >
-            <div class="picker">
-              <span class="addressDes">地区信息</span>
-              <div class="addressInfos" style="height: 60rpx;line-height: 58rpx;"><span>{{region[0]}} {{region[1]}} {{region[2]}}</span>
-              </div>
-            </div>
-          </picker>
-        </div>
+        <!--<div class="eachMessage">-->
+          <!--<picker-->
+            <!--mode="region"-->
+            <!--@change="bindRegionChange"-->
+            <!--:value="region"-->
+            <!--:custom-item="customItem"-->
+          <!--&gt;-->
+            <!--<div class="picker">-->
+              <!--<span class="addressDes">地区信息</span>-->
+              <!--<div class="addressInfos" style="height: 60rpx;line-height: 58rpx;"><span>{{region[0]}} {{region[1]}} {{region[2]}}</span>-->
+              <!--</div>-->
+            <!--</div>-->
+          <!--</picker>-->
+        <!--</div>-->
         <div class="eachMessage">
           <span class="addressDes" style="vertical-align: top;">详细地址</span>
-          <div class="addressInfos"><textarea auto-height="true" maxlength="-1" v-model="detailadress"></textarea></div>
+          <div class="addressInfos"><textarea auto-height="true" maxlength="-1" v-model="detailadress"  placeholder="详细信息" placeholder-style="color: #cecece;font-size: 24rpx;"></textarea></div>
         </div>
         <!--<div class="eachMessage" style="margin-bottom: 0px">-->
           <!--<span class="submitBtns">提交</span>-->
@@ -60,34 +60,35 @@
         padding: 15px;
         box-sizing: border-box;
         border-radius: 8px;
-        background-color: rgba(255, 251, 238, 1);
+        /*background-color: rgba(255, 251, 238, 1);*/
         color: rgba(16, 16, 16, 1);
         font-size: 14px;
         text-align: center;
         box-shadow: 0px -1px 0px 0px rgba(255, 255, 255, 0);
         font-family: Arial;
         .eachMessage {
-          margin-bottom: 15px;
-          /*border-bottom: 1px solid #ccc;*/
+          border-bottom: 1px solid #ccc;
+          padding: 5px 0px;
+          box-sizing: border-box;
           .titleInfos {
-            color: rgba(107, 107, 107, 1);
-            font-size: 18px;
+            font-size: 14px;
             font-family: PingFangSC-regular;
+            color: rgba(71, 71, 71, 1);
           }
           .addressDes {
             display: inline-block;
             vertical-align: middle;
             width: 75px;
-            color: rgba(158, 158, 158, 1);
-            font-size: 16px;
+            color: rgba(71, 71, 71, 1);
+            font-size: 14px;
             text-align: left;
             font-family: PingFangSC-regular;
           }
           .addressInfos {
             display: inline-block;
             width: calc(100% - 75px);
-            font-size: 16px;
-            border: 1px solid rgba(187, 187, 187, 1);
+            font-size: 14px;
+            /*border: 1px solid rgba(187, 187, 187, 1);*/
             background-color: #fff;
             box-sizing: border-box;
             text-align: left;
@@ -177,6 +178,12 @@
       wx.setNavigationBarTitle({
         title: navTitle
       })
+      if(option.address){
+        var infoss = JSON.parse(option.address);
+        this.userName= infoss.addressee;
+        this.telNumber= infoss.phoneNumber;
+        this.detailadress= infoss.addr;
+      }
     },
     onShow() {
       var that = this;
@@ -195,7 +202,6 @@
       bindRegionChange(e) {
         console.log('picker发送选择改变，携带值为', e.target.value);
         this.region = e.target.value;
-
       },
       wxaddress() {
         var _this = this;
@@ -204,12 +210,43 @@
             _this.userName = res.userName;
             _this.telNumber = res.telNumber;
             _this.region =[res.provinceName, res.cityName, res.countyName];
-            _this.detailadress = res.detailInfo;
+            _this.detailadress =res.provinceName+" "+res.cityName+" "+res.countyName+" "+ res.detailInfo;
           }
         });
       },
       submitAddress(){
-
+        var that = this;
+        if(this.userName&&this.telNumber&&this.detailadress){
+          wx.request({
+            url: that.$store.state.board.urlHttp + "/wechatapi/help/updateAddr",
+            method: "POST",
+            data: { sessionID: that.$store.state.board.sessionID,addr:that.detailadress,addressee:that.userName,phoneNumber:that.telNumber},
+            header: {'content-type': 'application/x-www-form-urlencoded'},
+            success: function (res) {
+              if (res.data.success) {
+                // 在C页面内 navigateBack，将返回A页面
+                wx.navigateBack({
+                  delta: 1
+                })
+                // wx.redirectTo({
+                //   url: '/pages/multilevelReward/main'
+                // })
+              } else {
+                wx.showToast({
+                  title: res.data.msg,
+                  icon: 'none',
+                  duration: 2000
+                })
+              }
+            }
+          })
+        }else{
+          wx.showToast({
+            title: "请把信息填写完整。",
+            icon: 'none',
+            duration: 2000
+          })
+        }
       }
     },
     created() {

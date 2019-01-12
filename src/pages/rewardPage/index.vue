@@ -13,7 +13,7 @@
       <p class="lines"></p>
       <div class="rewardText">
         <div v-if="datas.rewardType == 2" class="taobaoPassword" @longtap="copyTBL">
-        {{contentMid}}
+          {{contentMid}}
         </div>
         <div v-if="datas.rewardType == 1" class="perYard">
           <img :src="rewardImg" alt="">
@@ -36,7 +36,7 @@
     background-color: #EF1436;
     box-sizing: border-box;
     padding: 15px;
-    .confirmTotal{
+    .confirmTotal {
       background-color: #FFFBEE;
       width: 100%;
       height: 100%;
@@ -44,41 +44,41 @@
       border-radius: 12px;
       padding: 20px;
       box-sizing: border-box;
-      .title{
+      .title {
         width: 200px;
         height: 95px;
         line-height: 95px;
         font-size: 24px;
         color: #F6120A;
-        word-wrap:break-word;
+        word-wrap: break-word;
         margin: auto;
         margin-top: 74px;
         position: relative;
-        img{
+        img {
           width: 100%;
           height: 100%;
           position: absolute;
-          top:0px;
+          top: 0px;
           left: 0px;
         }
-        .img1{
+        .img1 {
           transform: rotate(15deg);
         }
-        .img2{
+        .img2 {
           transform: rotate(165deg);
         }
-        span{
+        span {
           display: inline-block;
           position: relative;
         }
       }
-      .contentText{
+      .contentText {
         margin: auto;
         margin-top: 35px;
         color: #B6724E;
         font-size: 20px;
       }
-      .lines{
+      .lines {
         width: 100%;
         padding: 0px 40px;
         box-sizing: border-box;
@@ -87,47 +87,47 @@
         margin: auto;
         margin-top: 12px;
       }
-      .rewardText{
+      .rewardText {
         margin: auto;
         width: 100%;
         text-align: center;
         margin-top: 35px;
-        .taobaoPassword{
+        .taobaoPassword {
           width: 185px;
           color: #5F5F5F;
           font-size: 14px;
-          word-wrap:break-word;
+          word-wrap: break-word;
           margin: auto;
           border: 1px solid #ccc;
           padding: 10px;
         }
-        .perYard{
+        .perYard {
           margin: auto;
           width: 120px;
           height: 120px;
-          img{
+          img {
             width: 100%;
             height: 100%;
           }
-          span{
+          span {
             font-size: 10px;
             color: #5F5F5F;
           }
         }
       }
     }
-    .footer{
+    .footer {
       width: 100%;
       height: 134px;
       position: fixed;
       bottom: 0px;
       left: 0px;
       text-align: center;
-      img.beijing{
+      img.beijing {
         width: 100%;
         height: 100%;
       }
-      img.biaoshi{
+      img.biaoshi {
         width: 80px;
         height: 80px;
         position: relative;
@@ -143,9 +143,9 @@
   export default {
     data() {
       return {
-        datas:{},
-        contentMid:'',
-        rewardImg:'',
+        datas: {},
+        contentMid: '',
+        rewardImg: '',
 
       }
     },
@@ -153,26 +153,30 @@
       var that = this;
       var myHelpId = that.$store.state.board.myHelpId;
       var sessionID = that.$store.state.board.sessionID;
-      if(option&&option.datas){
+      if (option && option.datas) {
         this.datas = JSON.parse(option.datas);
-        that.rewardText(sessionID,myHelpId);
-      }else{
+        if (option.type == 0) {
+          var actId = that.$store.state.board.actId;
+          that.assisRewardText(sessionID, actId);
+        } else {
+          that.rewardText(sessionID, myHelpId);
+        }
+      } else {
         wx.request({
           url: that.$store.state.board.urlHttp + "/wechatapi/help/haveRewardActCommand",
           method: "POST",
-          data: {helpId:myHelpId,sessionID:sessionID},
+          data: {helpId: myHelpId, sessionID: sessionID},
           header: {'content-type': 'application/x-www-form-urlencoded'},
           success: function (res) {
             console.log(res);
             if (res.data.success) {
               console.log(that.infos)
-              for(var i=0;i<that.infos.initiatorReward.length;i++){
-                if(that.infos.initiatorReward[i].initiatorRewardId == res.data.initiatorRewardId){
+              for (var i = 0; i < that.infos.initiatorReward.length; i++) {
+                if (that.infos.initiatorReward[i].initiatorRewardId == res.data.initiatorRewardId) {
                   that.datas = that.infos.initiatorReward[i];
                 }
               }
-              that.rewardText(sessionID,myHelpId);
-
+              that.rewardText(sessionID, myHelpId);
             } else {
               wx.showToast({
                 title: res.data.msg,
@@ -185,20 +189,17 @@
         })
       }
     },
-    onShow(){
+    onShow() {
       var that = this;
 
     },
     computed: {
-      infos(){
+      infos() {
         return this.$store.state.board.infos;
-      },
-      invitationSessionFrom() {  //邀请 客服消息传递参数
-        return '{"actId":"' + this.$store.state.board.actId + '","type":1}';
       }
     },
     methods: {
-      rewardText(sessionID,myHelpId){
+      rewardText(sessionID, myHelpId) {
         var that = this;
         if (that.datas.rewardType == 1) {
           wx.request({
@@ -247,6 +248,55 @@
           })
         }
       },
+      assisRewardText(sessionID, actId) {
+        var that = this
+        if (that.datas.rewardType == 1) {
+          wx.request({
+            url: that.$store.state.board.urlHttp + "/wechatapi/help/getRewardActCommandQrcodeByOther",
+            method: "POST",
+            data: {sessionID: sessionID, actId: actId},
+            header: {'content-type': 'application/x-www-form-urlencoded'},
+            success: function (res) {
+              if (res.data.success) {
+                if (res.data.rewardActContent) {
+                  that.contentMid = res.data.rewardActContent.contentMid;
+                }
+                that.rewardImg = that.$store.state.board.urlHttp + res.data.filePath;
+              } else {
+                wx.showToast({
+                  title: res.data.msg,
+                  icon: 'none',
+                  duration: 2000
+                })
+              }
+              //助力 埋点
+              that.getRewardActCommandOpenWindowByOther();
+            }
+          })
+        } else if (that.datas.rewardType == 2) {
+          wx.request({
+            url: that.$store.state.board.urlHttp + "/wechatapi/help/getRewardActCommandByOther",
+            method: "POST",
+            data: {sessionID: sessionID, actId: actId},
+            header: {'content-type': 'application/x-www-form-urlencoded'},
+            success: function (res) {
+              if (res.data.success) {
+                if (res.data.rewardActContent) {
+                  that.contentMid = res.data.rewardActContent.contentMid;
+                }
+              } else {
+                wx.showToast({
+                  title: res.data.msg,
+                  icon: 'none',
+                  duration: 2000
+                })
+              }
+              //助力 埋点
+              that.getRewardActCommandOpenWindowByOther();
+            }
+          })
+        }
+      },
       getRewardActCommandOpenWindow() {   //邀请 埋点
         var that = this;
         var sessionID = that.$store.state.board.sessionID;
@@ -258,6 +308,28 @@
           header: {'content-type': 'application/x-www-form-urlencoded'},
           success: function (res) {
             console.log(res)
+            if (res.data.success) {
+
+            } else {
+              wx.showToast({
+                title: res.data.msg,
+                icon: 'none',
+                duration: 2000
+              })
+            }
+          }
+        })
+      },
+      getRewardActCommandOpenWindowByOther() {  //助力 埋点
+        var that = this;
+        var sessionID = that.$store.state.board.sessionID;
+        var actId = that.$store.state.board.actId;
+        wx.request({
+          url: that.$store.state.board.urlHttp + "/wechatapi/help/getRewardActCommandOpenWindowByOther",
+          method: "POST",
+          data: {sessionID: sessionID, actId: actId},
+          header: {'content-type': 'application/x-www-form-urlencoded'},
+          success: function (res) {
             if (res.data.success) {
 
             } else {
@@ -298,7 +370,10 @@
     created() {
     },
     mounted() {
-
+      var navTitle = "领取奖励";
+      wx.setNavigationBarTitle({
+        title: navTitle
+      })
     },
     components: {}
   }
