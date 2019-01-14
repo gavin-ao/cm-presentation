@@ -694,7 +694,6 @@
     },
     methods: {
       rankingList(e) {
-        console.log(44444);
         this.rankingListNum = e.currentTarget.dataset.listindex;
       },
       helpInfoss() {
@@ -1287,9 +1286,6 @@
               }
               that.currentPeopleRanking = res.data.currWechatActRankVO;
               that.assisTotalNum = res.data.partakeNum;
-              that.drawProgressbg();
-              console.log(that.lotteryProgress)
-              that.drawCircle(that.lotteryProgress/50);
             } else {
               wx.showToast({
                 title: "获取排行榜失败",
@@ -1337,7 +1333,6 @@
           header: {'content-type': 'application/x-www-form-urlencoded'},
           success: function (res) {
             if (res.data.success) {
-              console.log(res.data.command)
               wx.navigateToMiniProgram({
                 appId: 'wx2548fa30af482bdf',
                 path: 'pages/index/index?token='+res.data.command,
@@ -1360,37 +1355,6 @@
         })
 
       },
-      drawProgressbg () {
-        var ratio = this.$store.state.board.windowWidth/320;
-        // 使用 wx.createContext 获取绘图上下文 context
-        var ctx = wx.createCanvasContext('canvasProgressbg');
-        ctx.setLineWidth(5*ratio);// 设置圆环的宽度
-        ctx.setStrokeStyle('#cccccc'); // 设置圆环的颜色
-        ctx.setLineCap('round') // 设置圆环端点的形状
-        ctx.beginPath();//开始一个新的路径
-        ctx.arc(39*ratio, 39*ratio, 34*ratio, 0, 2 * Math.PI, false);
-        //设置一个原点(100,100)，半径为90的圆的路径到当前路径
-        ctx.stroke();//对当前路径进行描边
-        ctx.draw();
-      },
-      drawCircle (step) {
-        console.log(step)
-        var ratio = this.$store.state.board.windowWidth/320;
-        var context = wx.createCanvasContext('canvasProgress');
-        // 设置渐变
-        var gradient = context.createLinearGradient(80*ratio, 40*ratio, 40*ratio, 80*ratio);
-        gradient.addColorStop("0", "#F15522");
-        gradient.addColorStop("0.5", "#F15522");
-        gradient.addColorStop("1.0", "#F15522");
-        context.setLineWidth(5*ratio);
-        context.setStrokeStyle(gradient);
-        context.setLineCap('round');
-        context.beginPath();
-        // 参数step 为绘制的圆环周长，从0到2为一周 。 -Math.PI / 2 将起始角设在12点钟位置 ，结束角 通过改变 step 的值确定
-        context.arc(39*ratio, 39*ratio, 34*ratio, -Math.PI / 2, step * Math.PI - Math.PI / 2, false);
-        context.stroke();
-        context.draw()
-      }
     },
     created() {
     },

@@ -219,7 +219,7 @@
       }
     },
     onLoad(option) {
-      console.log(option);
+      // console.log(option);
       var that = this;
       Object.assign(that.$data, that.$options.data());
       var initList = that.infos.initiatorReward;
@@ -374,7 +374,7 @@
         var that = this;
         var myHelpId = that.$store.state.board.myHelpId;
         var sessionID = that.$store.state.board.sessionID;
-        console.log(e.target.dataset.initiator);
+        // console.log(e.target.dataset.initiator);
         var initiator = e.target.dataset.initiator;
         if (initiator) {
           wx.request({
@@ -426,7 +426,7 @@
           data: {helpId: myHelpId, sessionID: sessionID},
           header: {'content-type': 'application/x-www-form-urlencoded'},
           success: function (res) {
-            console.log(res);
+            // console.log(res);
             if (res.data.success) {
               for (var i = 0; i < that.infos.initiatorReward.length; i++) {
                 if (that.infos.initiatorReward[i].initiatorRewardId == res.data.initiatorRewardId) {

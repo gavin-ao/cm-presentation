@@ -168,7 +168,6 @@
       }
     },
     onLoad(option) {
-      console.log(option);
       var that = this;
       Object.assign(that.$data, that.$options.data());
       var navTitle = "添加地址";
@@ -200,7 +199,6 @@
     },
     methods: {
       bindRegionChange(e) {
-        console.log('picker发送选择改变，携带值为', e.target.value);
         this.region = e.target.value;
       },
       wxaddress() {

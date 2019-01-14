@@ -1,5 +1,4 @@
 function login(that, func) {
-  console.log(new Date().getTime())
   var otherHelpId = that.$store.state.board.otherHelpId;
   var actId = that.$store.state.board.actId;
   var sessionID = that.$store.state.board.sessionID;
@@ -17,13 +16,11 @@ function login(that, func) {
         wx.getUserInfo({
           lang: "zh_CN",
           success: function (res) {
-            console.log(new Date().getTime())
             var key = {};
             key.encryptedData = res.encryptedData
             key.iv = res.iv
             that.$store.state.board.nickName = res.userInfo.nickName;
             that.$store.state.board.avatarUrl = res.userInfo.avatarUrl;
-            console.log(res.userInfo.avatarUrl)
             if(res.userInfo.avatarUrl){
               wx.getImageInfo({
                 src: res.userInfo.avatarUrl,
@@ -47,10 +44,7 @@ function login(that, func) {
               header: {'content-type': 'application/x-www-form-urlencoded'},
               success: function (res) {
                 if (res.data.success) {
-                  console.log(new Date().getTime())
-                  that.$store.state.board.sessionID = res.data.sessionID
-                  // var currentPages = wx.getStorageSync('currentPages')
-                  // that.$store.state.board.headPic=[]
+                  that.$store.state.board.sessionID = res.data.sessionID;
                   var otherHelpId = that.$store.state.board.otherHelpId;
                   var actId = that.$store.state.board.actId;
                   var sessionID = that.$store.state.board.sessionID;

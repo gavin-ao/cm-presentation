@@ -168,9 +168,7 @@
           data: {helpId: myHelpId, sessionID: sessionID},
           header: {'content-type': 'application/x-www-form-urlencoded'},
           success: function (res) {
-            console.log(res);
             if (res.data.success) {
-              console.log(that.infos)
               for (var i = 0; i < that.infos.initiatorReward.length; i++) {
                 if (that.infos.initiatorReward[i].initiatorRewardId == res.data.initiatorRewardId) {
                   that.datas = that.infos.initiatorReward[i];
@@ -307,7 +305,6 @@
           data: {helpId: myHelpId, sessionID: sessionID},
           header: {'content-type': 'application/x-www-form-urlencoded'},
           success: function (res) {
-            console.log(res)
             if (res.data.success) {
 
             } else {
