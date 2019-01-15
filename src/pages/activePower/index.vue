@@ -314,9 +314,9 @@
             </p>
           </scroll-view>
           <p class="helpLackNum" v-if="headPic.length<partakeNum">还差（{{partakeNum - headPic.length}}）位</p>
-          <p v-else-if="invitationRewardType == 3">
-            <span style="display: inline-block;font-size: 18px;font-weight: lighter;color: red;margin-top: 10px;">在会话中回复“{{infos.actReply}}”即可领取</span>
-          </p>
+          <!--<p v-else-if="invitationRewardType == 3">-->
+            <!--<span style="display: inline-block;font-size: 18px;font-weight: lighter;color: red;margin-top: 10px;">在会话中回复“{{infos.actReply}}”即可领取</span>-->
+          <!--</p>-->
         </div>
 
         <div class="menu">

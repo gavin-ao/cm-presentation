@@ -82,18 +82,17 @@
         wx.getImageInfo({
           src: that.drawPoster,
           success: (res) => {
-
-
              ctx.draw(true);
              // var heights = that.ctxHeight - 70;
              var heights = that.ctxHeight;
-
             var h = that.getWindowWidth*(res.height/res.width);
+            console.log(res)
             that.ctxHeight = h;
             ctx.fillRect(0, 0, this.getWindowWidth, h);
             ctx.drawImage(res.path, 0,0, that.getWindowWidth, h);
             ctx.draw(true);
             if (that.drawAvatarUrl) {
+              console.log(that.drawAvatarUrl)
               ctx.save();
               ctx.beginPath();
               ctx.arc(35,30, 20, 0, Math.PI * 2, false);

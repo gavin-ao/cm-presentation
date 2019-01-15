@@ -1,14 +1,32 @@
 function login(that, func) {
-  var otherHelpId = that.$store.state.board.otherHelpId;
-  var actId = that.$store.state.board.actId;
-  var sessionID = that.$store.state.board.sessionID;
-  if(sessionID){
-    if (otherHelpId) {
-      func(sessionID, actId, otherHelpId)
-    } else {
-      func(sessionID, actId);
-    }
-  }else{
+  // var otherHelpId = that.$store.state.board.otherHelpId;
+  // var actId = that.$store.state.board.actId;
+  // var sessionID = that.$store.state.board.sessionID;
+  // if(sessionID){
+  //   wx.getUserInfo({
+  //     lang: "zh_CN",
+  //     success: function (res) {
+  //       var key = {};
+  //       key.encryptedData = res.encryptedData;
+  //       key.iv = res.iv;
+  //       that.$store.state.board.nickName = res.userInfo.nickName;
+  //       that.$store.state.board.avatarUrl = res.userInfo.avatarUrl;
+  //       if (res.userInfo.avatarUrl) {
+  //         wx.getImageInfo({
+  //           src: res.userInfo.avatarUrl,
+  //           success: (res) => {
+  //             that.$store.state.board.drawAvatarUrl = res.path;
+  //           }
+  //         })
+  //       }
+  //       if (otherHelpId) {
+  //         func(sessionID, actId, otherHelpId)
+  //       } else {
+  //         func(sessionID, actId);
+  //       }
+  //     }
+  //   })
+  // }else{
     wx.login({
       success: function (res) {
         var code = res.code;
@@ -60,7 +78,7 @@ function login(that, func) {
         })
       }
     })
-  }
+  // }
 
 }
 function formatTime(dates) {
