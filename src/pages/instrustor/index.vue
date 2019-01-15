@@ -130,6 +130,7 @@
 
       },
       insertMp(storeId) {
+        console.log(storeId);
         if (storeId) {
           this.$store.state.board.storeId = storeId;
           wx.setStorageSync("storeId", storeId);

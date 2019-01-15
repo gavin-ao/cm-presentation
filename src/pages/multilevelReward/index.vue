@@ -2,64 +2,77 @@
   <div class="instructor-toueist">
     <div class="multilevelReward">
       <div class="totalReward">
-        <div class="assisReward" v-if="assisInfos.length">
-          <img src="/static/images/assist.png" alt="" mode="widthFix">
-          <div class="assisCon">
-            <p class="assisName">{{assisInfos[0].rewardContent}}</p>
-            <block v-if="assisInfos[0].remark">
-              <p class="assisDes">{{assisInfos[0].remark}}</p>
-            </block>
+        <block v-if="rewardList.length==0&&assisInfos.length==0">
+          <div class="noRewardInfos">
+            您还没有获得奖品
           </div>
-          <block v-if="assisInfos[0].rewardType==1||assisInfos[0].rewardType==2">
-            <div class="assisBtn" @click="assisReceiveAreward">
-              领奖
+        </block>
+        <block v-else>
+          <div class="assisReward" v-if="assisInfos.length">
+            <img src="/static/images/assist.png" alt="" mode="widthFix">
+            <div class="assisCon">
+              <p class="assisName">{{assisInfos[0].rewardContent}}</p>
+              <block v-if="assisInfos[0].remark">
+                <p class="assisDes">{{assisInfos[0].remark}}</p>
+              </block>
             </div>
-          </block>
-          <block v-if="assisInfos[0].rewardType==3">
-            <button class="assisBtn" open-type="contact" hover-class="hoverNone" hover-stay-time="800"
-                    @click="assistanceRewardAct" type="default" :session-from="assistanceSessionFrom">
-              领奖
-            </button>
-          </block>
-          <block v-if="assisInfos[0].rewardType==5">
-            <div class="assisBtn" @click="privateMall">
-              领奖
-            </div>
-          </block>
-        </div>
-        <div class="invitReward">
-          <div v-for="(item,index) in rewardList" :key="index" class="invitSingle">
-            <img src="/static/images/invit.png" alt="" mode="widthFix">
-            <div class="invitCon">
-              <p class="invitName">{{item.rewardContent}}</p>
-              <p class="invitDes">全场通用</p>
-            </div>
-            <block v-if="item.rewardType==1||item.rewardType==2">
-              <div class="invitBtn" @click="receiveAreward">
+            <block v-if="assisInfos[0].rewardType==1||assisInfos[0].rewardType==2">
+              <div class="assisBtn" @click="assisReceiveAreward">
                 领奖
               </div>
             </block>
-            <block v-if="item.rewardType==3">
-              <button class="invitBtn" open-type="contact" hover-class="hoverNone" hover-stay-time="800"
-                      @click="getRewardAct" type="default" :session-from="invitationSessionFrom">
+            <block v-if="assisInfos[0].rewardType==3">
+              <button class="assisBtn" open-type="contact" hover-class="hoverNone" hover-stay-time="800"
+                      @click="assistanceRewardAct" type="default" :session-from="assistanceSessionFrom">
                 领奖
               </button>
             </block>
-            <block v-if="item.rewardType==5">
-              <div class="invitBtn" :data-initiator="item.initiatorRewardId" @click="receiveInitiatorReward">
+            <block v-if="assisInfos[0].rewardType==5">
+              <div class="assisBtn" @click="privateMall">
                 领奖
               </div>
             </block>
           </div>
-        </div>
+          <div class="invitReward">
+            <div v-for="(item,index) in rewardList" :key="index" class="invitSingle">
+              <img src="/static/images/invit.png" alt="" mode="widthFix">
+              <div class="invitCon">
+                <p class="invitName">{{item.rewardContent}}</p>
+                <p class="invitDes">全场通用</p>
+              </div>
+              <block v-if="item.rewardType==1||item.rewardType==2">
+                <div class="invitBtn" @click="receiveAreward">
+                  领奖
+                </div>
+              </block>
+              <block v-if="item.rewardType==3">
+                <button class="invitBtn" open-type="contact" hover-class="hoverNone" hover-stay-time="800"
+                        @click="getRewardAct" type="default" :session-from="invitationSessionFrom">
+                  领奖
+                </button>
+              </block>
+              <block v-if="item.rewardType==5">
+                <div class="invitBtn" :data-initiator="item.initiatorRewardId" @click="receiveInitiatorReward">
+                  领奖
+                </div>
+              </block>
+            </div>
+          </div>
+        </block>
       </div>
       <div class="addrBottom">
-        <div class="addAddress" @click="addAddress" v-if="addressInfos==false">
-          <span>添加地址</span>
+        <p class="addressTi">收货地址</p>
+        <div class="addressShow" @click="addAddress" v-if="addressInfos==false" style="padding-top: 40rpx;">
+          <p class="infosPl">实物奖品将于活动结束后以快递形式为您寄送，如果您中奖，为便于我们为您寄送实物奖品，请完善收货地址</p>
+          <p class="modifyBtn">填写地址</p>
         </div>
         <div class="addressShow" v-if="addressInfos==true">
-          <span>{{addressInfo.addressee}}  {{addressInfo.phoneNumber}}  {{addressInfo.addr}}</span> <span
-          class="modifyBtn" @click="addAddress">修改</span>
+          <p>
+            <span style="color:#474747;">{{addressInfo.addressee}}</span>
+            <span>{{addressInfo.phoneNumber}}</span>
+            <span> {{addressInfo.addr}}</span>
+          </p>
+          <p class="modifyBtn" @click="addAddress">修改</p>
         </div>
       </div>
 
@@ -70,14 +83,25 @@
 <style lang="scss">
   .instructor-toueist {
     width: 100%;
-    /*height: 100%;*/
+    height: 100%;
     box-sizing: border-box;
     font-size: 14px;
-    padding: 20px;
-    padding-bottom: 40px;
+    /*padding: 20px;*/
+    /*padding-bottom: 40px;*/
+    background-color: #F1F1F1;
     font-family: PingFangSC-regular;
     .multilevelReward {
+      box-sizing: border-box;
+      padding: 20px;
+      background-color: #FFF;
+      margin-bottom:120px;
       .totalReward {
+        .noRewardInfos {
+          padding-top: 50px;
+          color: #ddd;
+          font-size: 20px;
+          text-align: center;
+        }
         .assisReward {
           position: relative;
           margin-bottom: 20px;
@@ -120,7 +144,10 @@
         .invitReward {
           .invitSingle {
             position: relative;
-            margin-bottom: 20px;
+            margin-top: 20px;
+            .invitSingle:nth-child(1){
+              margin-top: 0px;
+            }
             img {
               width: 100%;
             }
@@ -159,14 +186,22 @@
           }
         }
       }
-      .addrBottom{
+      .addrBottom {
         position: fixed;
         bottom: 0px;
         left: 0px;
-        background-color: #fff;
-        padding: 10px 20px;
-        box-sizing:border-box;
+        /*background-color: #fff;*/
+        /*padding: 10px 20px;*/
+        /*box-sizing: border-box;*/
         width: 100%;
+      }
+      .addressTi {
+        height: 20px;
+        color: rgba(159, 159, 159, 1);
+        font-size: 14px;
+        text-align: left;
+        padding-left: 20px;
+        background-color: #F1F1F1;
       }
       .addAddress {
         margin: auto;
@@ -183,25 +218,38 @@
       }
       .addressShow {
         text-align: left;
-
-        span:nth-child(1) {
+        background-color: #fff;
+        padding: 10px 20px;
+        box-sizing: border-box;
+        height: 100px;
+        p:nth-child(1) {
           display: inline-block;
           width: calc(100% - 60px);
           vertical-align: middle;
+          span{
+            display: inline-block;
+            width: 100%;
+            color: rgba(159, 159, 159, 1);
+            font-size: 12px;
+            text-align: left;
+          }
+        }
+        .infosPl{
+          color: rgba(159, 159, 159, 1);
+          font-size: 12px;
+          text-align: left;
         }
         .modifyBtn {
           display: inline-block;
-          width: 45px;
-          margin-left: 15px;
+          width: 50px;
+          margin-left: 10px;
           height: 30px;
           line-height: 28px;
           box-sizing: border-box;
           border-radius: 4px;
           color: rgba(241, 85, 34, 1);
-          font-size: 14px;
-          text-align: center;
+          font-size: 12px;
           font-family: Microsoft Yahei;
-          border: 1px solid rgba(241, 85, 34, 1);
         }
       }
     }
@@ -441,7 +489,7 @@
           }
         })
       },
-      assisReceiveAreward(){
+      assisReceiveAreward() {
         wx.navigateTo({
           url: '/pages/rewardPage/main?type=0&datas=' + JSON.stringify(this.assisInfos[0])
         });
@@ -472,7 +520,7 @@
     created() {
     },
     mounted() {
-      var navTitle = "奖励列表";
+      var navTitle = "我的奖品";
       wx.setNavigationBarTitle({
         title: navTitle
       })

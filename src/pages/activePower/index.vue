@@ -11,7 +11,7 @@
     </div>
     <!--<div class="containes" :style="{height:posterH+'px'}">-->
     <div class="containes">
-      <movable-area style="">
+      <movable-area>
         <!--<movable-view direction="vertical" class="activeRule" :class="{rulesCondition:rulesInfos===true}"-->
                       <!--@click="activeRules" v-if="activityTypes===0">活动规则-->
         <!--</movable-view>-->
@@ -43,7 +43,7 @@
             <div class="hongbaoImg">
               <block v-if="infos.initiatorReward[0].rewardType==5">
                 <div v-for="(item,index) in infos.initiatorReward" :key="index"
-                     :style="{left:(((item.partakeNum- infos.initiatorReward[0].partakeNum+infos.initiatorReward[0].partakeNum/3)/maxPartNum)*tempWidth-17/ratios)+'px',top:'-4px'}">
+                     :style="{left:(((item.partakeNum- infos.initiatorReward[0].partakeNum+infos.initiatorReward[0].partakeNum/2)/maxPartNum)*tempWidth-17.5/ratios)+'px',top:'-4px'}">
                   <!--<img src="/static/reward/10.png" alt="" v-if="index == 0">-->
                   <img src="/static/reward/10.png" alt="" v-if="index == 0" mode="widthFix">
                   <img src="/static/reward/20.png" alt=""  v-if="index == 1" mode="widthFix">
@@ -53,7 +53,7 @@
               </block>
               <block v-else>
                 <div v-for="(item,index) in infos.initiatorReward" :key="index"
-                     :style="{left:(((item.partakeNum- infos.initiatorReward[0].partakeNum+infos.initiatorReward[0].partakeNum/3)/maxPartNum)*tempWidth-17/ratios)+'px',top:'-4px'}">
+                     :style="{left:(((item.partakeNum- infos.initiatorReward[0].partakeNum+infos.initiatorReward[0].partakeNum/2)/maxPartNum)*tempWidth-17.5/ratios)+'px',top:'-4px'}">
                   <img src="/static/images/hongbao.png" alt=""  mode="widthFix">
                   <p>
                   <span>{{item.rewardContent}}</span>
@@ -70,14 +70,14 @@
               </div>
 
               <block v-for="(item,index) in infos.initiatorReward" :key="index">
-                <div v-if="index==0" :style="{left:((item.partakeNum/3/maxPartNum)*tempWidth-8/ratios)+'px',top:'0px'}">
+                <div v-if="index==0" :style="{left:((item.partakeNum/2/maxPartNum)*tempWidth-8/ratios)+'px',top:'0px'}">
                   <p class="quan"></p>
                   <p class="wen">
                     <span style="">{{item.partakeNum}}</span>位助力
                   </p>
                 </div>
                 <div v-else
-                     :style="{left:(((item.partakeNum- infos.initiatorReward[0].partakeNum+infos.initiatorReward[0].partakeNum/3)/maxPartNum)*tempWidth-8/ratios)+'px',top:'0px'}">
+                     :style="{left:(((item.partakeNum- infos.initiatorReward[0].partakeNum+infos.initiatorReward[0].partakeNum/2)/maxPartNum)*tempWidth-8/ratios)+'px',top:'0px'}">
                   <p class="quan"></p>
                   <p class="wen">
                     <span style="">{{item.partakeNum}}</span>位助力
@@ -137,7 +137,7 @@
         </div>
       </div>
       <!--//阶梯助力   助力列表-->
-      <div v-if="activityTypes===1&&assistangShows==true" style="position: relative;z-index: 1000;">
+      <div v-if="(activityTypes===1)&&(assistangShows==true)" style="position: relative;z-index: 1000;">
         <!--<div class="ruText">-->
           <!--<div class="ruTitle">活动说明</div>-->
           <!--<block v-for="(item,index) in ruleArr" :key="index">-->
@@ -154,9 +154,11 @@
           <div class="luckDrawPro">
             <div class="progressTotal">
               <div class="progressLine">
-                <div class="showProL"></div>
-                <div class="showProSe" :style="{height:lotteryProgress/100*70*2+'rpx'}"></div>
-                <div class="showProText" :style="{bottom:(lotteryProgress/100*70*2+10)+'rpx'}">
+                <div class="showProL"> </div>
+                <div class="showProSe" :style="{height:lotteryProgress/100*70*2+'rpx'}">
+
+                </div>
+                <div class="showProText" :style="{bottom:(lotteryProgress/100*70*2+18)+'rpx'}">
                   {{lotteryProgress}}%
                 </div>
               </div>
@@ -326,8 +328,8 @@
           <scroll-view scroll-y>
             <block v-for="(item,index) in ruleArr" :key="index">
               <p style="font-size: 13px; line-height: 17px; color: #4A4A4A; margin-top: 5px; font-weight: lighter;">
-                <span style="display: inline-block;width: 7%; float: left">{{(index+1)}}、</span>
-                <span style="display: inline-block;width: 92%;">{{item}}</span>
+                <!--<span style="display: inline-block;width: 7%; float: left">{{(index+1)}}、</span>-->
+                <span style="display: inline-block;width: 100%;">{{item}}</span>
               </p>
             </block>
           </scroll-view>
@@ -497,7 +499,7 @@
         assisTotalNum: 0,    //总参与人数
         rankingListArr: [],  //排行榜数组
         currentPeopleRanking: 0,  //当前人排名
-        assistangShows:true,
+        assistangShows:false,
         checkMyProgressShow:false
       }
     },
@@ -514,6 +516,7 @@
         data: {storeId: that.$store.state.board.storeId},
         header: {'content-type': 'application/x-www-form-urlencoded'},
         success: function (res) {
+          console.log(res);
           if (res.data.success) {
             that.rulesInfos = true;
             that.$store.state.board.infos = res.data;
@@ -595,6 +598,7 @@
                                   if (that.lotteryDraw == 1) {
                                     that.getTheRankings(sessionID, actId);
                                   }
+                                  that.assistangShows= true;
                                 } else {
                                   that.wantActivity(that, sessionID, otherHelpId, actId);
                                 }
@@ -618,6 +622,7 @@
                         header: {'content-type': 'application/x-www-form-urlencoded'},
                         success: function (res) {
                           that.$store.state.board.headPic = [];
+                          that.assistangShows= true;
                           if (res.data.success) {
                             that.$store.state.board.myHelpId = res.data.helpId;
                             if (res.data.data) {
@@ -737,6 +742,7 @@
                       that.exithelpId = true;
                       that.rulesOfActivity = true;
                       that.$store.state.board.myHelpId = otherHelpId;
+                      that.assistangShows= true;
                     } else {
                       that.wantActivity(that, sessionID, otherHelpId, actId);
                     }
@@ -794,12 +800,6 @@
           success: function (res) {
             if (res.data.success) {
               that.checkMyProgressShow = true;
-            } else {
-              wx.showToast({
-                title: res.data.msg,
-                icon: 'none',
-                duration: 2000
-              })
             }
           }
         })
@@ -842,15 +842,16 @@
             data: {helpId: otherHelpId, sessionID: sessionID},
             header: {'content-type': 'application/x-www-form-urlencoded'},
             success: function (res) {
+              console.log(res)
               that.assistangShows= false;
               if (res.data.success) {
-                if (that.activityTypes === 1) {
-                  wx.showToast({
-                    title: res.data.msg,
-                    icon: 'none',
-                    duration: 2000
-                  })
-                }
+                // if (that.activityTypes === 1) {
+                //   wx.showToast({
+                //     title: res.data.msg,
+                //     icon: 'none',
+                //     duration: 2000
+                //   })
+                // }
                 that.checkMyProgress();
                 var sysUrl = that.$store.state.board.urlHttp + '/wechatapi/nologin/help/findHelpDetailUserList';
                 //邀请列表
@@ -860,6 +861,7 @@
                   data: {helpId: otherHelpId},
                   header: {'content-type': 'application/x-www-form-urlencoded'},
                   success: function (res) {
+                    console.log(res)
                     that.$store.state.board.headPic = [];
                     if (res.data.success) {
                       that.headPicArr(that, res.data.data)
@@ -918,6 +920,8 @@
                           //   contentBtn:'', //领取奖励按钮
                           that.assistanceModel(res.data);
                         } else {
+                          that.contentBtn = "我也要参加活动";
+                          that.$store.state.board.checked = true;
                           wx.showToast({
                             title: res.data.msg,
                             icon: 'none',
@@ -968,6 +972,8 @@
                           //   contentBtn:'', //领取奖励按钮
                           that.assistanceModel(res.data);
                         } else {
+                          that.contentBtn = "我也要参加活动";
+                          that.$store.state.board.checked = true;
                           wx.showToast({
                             title: res.data.msg,
                             icon: 'none',
@@ -996,8 +1002,178 @@
             }
           })
         } else {
-          that.$store.state.board.existDoHelp = true;
-          that.$store.state.board.myExistDoHelp = true;
+          if(that.ifAssistanceLimit==1){
+            wx.request({
+              url: that.$store.state.board.urlHttp + "/wechatapi/help/clickHelpUrl",
+              method: "POST",
+              data: {helpId: otherHelpId, sessionID: sessionID},
+              header: {'content-type': 'application/x-www-form-urlencoded'},
+              success: function (res) {
+                console.log(res)
+                that.assistangShows= false;
+                if (res.data.success) {
+                  if (that.activityTypes === 1) {
+                    wx.showToast({
+                      title: res.data.msg,
+                      icon: 'none',
+                      duration: 2000
+                    })
+                  }
+                  that.checkMyProgress();
+                  var sysUrl = that.$store.state.board.urlHttp + '/wechatapi/nologin/help/findHelpDetailUserList';
+                  //邀请列表
+                  wx.request({
+                    url: sysUrl,
+                    method: "POST",
+                    data: {helpId: otherHelpId},
+                    header: {'content-type': 'application/x-www-form-urlencoded'},
+                    success: function (res) {
+                      console.log(res)
+                      that.$store.state.board.headPic = [];
+                      if (res.data.success) {
+                        that.headPicArr(that, res.data.data)
+                      } else {
+                        wx.showToast({
+                          title: res.data.msg,
+                          icon: 'none',
+                          duration: 2000
+                        })
+                      }
+                    }
+                  })
+                  if (that.$store.state.board.assistanceRewardType == 0) {
+                    that.$store.state.board.existDoHelp = false;
+                    that.$store.state.board.myExistDoHelp = true;
+                    if (that.activityTypes === 1) {
+                      that.exithelpId = false;
+                    }
+                  } else {
+                    if (that.$store.state.board.assistanceRewardType == 1) {
+                      wx.request({
+                        url: that.$store.state.board.urlHttp + "/wechatapi/help/getRewardActCommandQrcodeByOther",
+                        // url: "http://192.168.50.52:8099/wechatapi/help/getRewardActCommandQrcodeByOther",
+                        method: "POST",
+                        data: {sessionID: sessionID, actId: actId},
+                        header: {'content-type': 'application/x-www-form-urlencoded'},
+                        success: function (res) {
+                          that.$store.state.board.checked = false;
+                          if (res.data.success) {
+                            that.assistanceModel(res.data);
+                          } else {
+                            that.contentBtn = "我也要参加活动";
+                            that.$store.state.board.checked = true;
+                            wx.showToast({
+                              title: res.data.msg,
+                              icon: 'none',
+                              duration: 2000
+                            })
+                          }
+                          that.$store.state.board.existDoHelp = false;
+                          that.$store.state.board.myExistDoHelp = true;
+                          //助力 埋点
+                          that.getRewardActCommandOpenWindowByOther();
+                        }
+                      })
+                    } else if (that.$store.state.board.assistanceRewardType == 2) {
+                      wx.request({
+                        url: that.$store.state.board.urlHttp + "/wechatapi/help/getRewardActCommandByOther",
+                        method: "POST",
+                        data: {sessionID: sessionID, actId: actId},
+                        header: {'content-type': 'application/x-www-form-urlencoded'},
+                        success: function (res) {
+                          if (res.data.success) {
+                            // contentTitle:'', //领取奖励标题
+                            //   contentHead:'', //领取奖励头部
+                            //   contentMid:'', //领取奖励中部
+                            //   contentFoot:'', //领取奖励脚部
+                            //   contentBtn:'', //领取奖励按钮
+                            that.assistanceModel(res.data);
+                          } else {
+                            that.contentBtn = "我也要参加活动";
+                            that.$store.state.board.checked = true;
+                            wx.showToast({
+                              title: res.data.msg,
+                              icon: 'none',
+                              duration: 2000
+                            })
+                          }
+                          that.$store.state.board.existDoHelp = false;
+                          that.$store.state.board.myExistDoHelp = true;
+                          //助力 埋点
+                          that.getRewardActCommandOpenWindowByOther();
+                        }
+                      })
+                    } else if (that.$store.state.board.assistanceRewardType == 3) {
+                      wx.request({
+                        url: that.$store.state.board.urlHttp + "/wechatapi/help/existDoHelpByActId",
+                        method: "POST",
+                        data: {actId: actId, sessionID: sessionID, helpId: otherHelpId, type: 1},
+                        header: {'content-type': 'application/x-www-form-urlencoded'},
+                        success: function (res) {
+                          that.$store.state.board.checked = false;
+                          if (res.data.success) {
+                            that.assistanceModel(res.data);
+                            that.$store.state.board.existDoHelp = false;
+                            that.$store.state.board.myExistDoHelp = true;
+                            that.exithelpId = true;
+                            that.rulesOfActivity = true;
+                          } else {
+                            wx.showToast({
+                              title: res.data.msg,
+                              icon: 'none',
+                              duration: 2000
+                            })
+                          }
+                        }
+                      })
+                    }else if (that.$store.state.board.assistanceRewardType == 5) {
+                      wx.request({
+                        url: that.$store.state.board.urlHttp + "/wechatapi/help/getRewardActCommandByOther",
+                        method: "POST",
+                        data: {sessionID: sessionID, actId: actId},
+                        header: {'content-type': 'application/x-www-form-urlencoded'},
+                        success: function (res) {
+                          if (res.data.success) {
+                            // contentTitle:'', //领取奖励标题
+                            //   contentHead:'', //领取奖励头部
+                            //   contentMid:'', //领取奖励中部
+                            //   contentFoot:'', //领取奖励脚部
+                            //   contentBtn:'', //领取奖励按钮
+                            that.assistanceModel(res.data);
+                          } else {
+                            that.contentBtn = "我也要参加活动";
+                            that.$store.state.board.checked = true;
+                            wx.showToast({
+                              title: res.data.msg,
+                              icon: 'none',
+                              duration: 2000
+                            })
+                          }
+                          that.$store.state.board.existDoHelp = false;
+                          that.$store.state.board.myExistDoHelp = true;
+                          //助力 埋点
+                          that.getRewardActCommandOpenWindowByOther();
+                        }
+                      })
+                    }
+
+                  }
+                } else {
+                  wx.showToast({
+                    title: res.data.msg,
+                    icon: 'none',
+                    duration: 2000
+                  })
+                  if (that.activityTypes === 1) {
+                    that.exithelpId = false;
+                  }
+                }
+              }
+            })
+          }else{
+            that.$store.state.board.existDoHelp = true;
+            that.$store.state.board.myExistDoHelp = true;
+          }
         }
         that.exithelpId = true;
         that.rulesOfActivity = true;
@@ -1228,6 +1404,7 @@
           data: {sessionID: sessionID, actId: actId},
           header: {'content-type': 'application/x-www-form-urlencoded'},
           success: function (res) {
+            console.log(res)
             if (res.data.success) {
 
             } else {
@@ -1280,11 +1457,15 @@
             // assisTotalNum:0,    //总参与人数
             //   rankingListArr:[]  //排行榜数组
             if (res.data.success) {
-              that.rankingListArr = res.data.wechatActRankVOList;
-              for(var i=0;i<that.rankingListArr.length;i++){
-                that.rankingListArr[i].nickName = that.cutOutSubString(that.rankingListArr[i].nickName,22,true)
+              if(res.data.wechatActRankVOList){
+                that.rankingListArr = res.data.wechatActRankVOList;
+                for(var i=0;i<that.rankingListArr.length;i++){
+                  that.rankingListArr[i].nickName = that.cutOutSubString(that.rankingListArr[i].nickName,22,true)
+                }
               }
-              that.currentPeopleRanking = res.data.currWechatActRankVO;
+             if(res.data.currWechatActRankVO){
+               that.currentPeopleRanking = res.data.currWechatActRankVO;
+             }
               that.assisTotalNum = res.data.partakeNum;
             } else {
               wx.showToast({
@@ -1345,6 +1526,8 @@
                 }
               })
             } else {
+              that.contentBtn = "我也要参加活动";
+              that.$store.state.board.checked = true;
               wx.showToast({
                 title: res.data.msg,
                 icon: 'none',
@@ -1469,16 +1652,16 @@
       percents() {
         if (this.infos.initiatorReward) {
           if (this.headPic.length <= this.infos.initiatorReward[0].partakeNum) {
-            return this.headPic.length / 3 / this.maxPartNum * 100
+            return this.headPic.length / 2 / this.maxPartNum * 100
           } else {
             if (this.headPic.length > this.infos.initiatorReward[this.infos.initiatorReward.length - 1].partakeNum) {
-              if (((this.infos.initiatorReward[0].partakeNum / 3 + (this.headPic.length - this.infos.initiatorReward[0].partakeNum)) / this.maxPartNum) < 1) {
-                return (this.infos.initiatorReward[0].partakeNum / 3 + (this.headPic.length - this.infos.initiatorReward[0].partakeNum)) / this.maxPartNum * 100;
+              if (((this.infos.initiatorReward[0].partakeNum / 2 + (this.headPic.length - this.infos.initiatorReward[0].partakeNum)) / this.maxPartNum) < 1) {
+                return (this.infos.initiatorReward[0].partakeNum / 2 + (this.headPic.length - this.infos.initiatorReward[0].partakeNum)) / this.maxPartNum * 100;
               } else {
                 return 100;
               }
             } else {
-              return (this.infos.initiatorReward[0].partakeNum / 3 + (this.headPic.length - this.infos.initiatorReward[0].partakeNum)) / this.maxPartNum * 100;
+              return (this.infos.initiatorReward[0].partakeNum / 2 + (this.headPic.length - this.infos.initiatorReward[0].partakeNum)) / this.maxPartNum * 100;
             }
           }
         }
@@ -1486,9 +1669,9 @@
       leftR(data) {
         if (this.infos.initiatorReward) {
           if (this.headPic.length <= this.infos.initiatorReward[0].partakeNum) {
-            return this.headPic.length / 3 / this.maxPartNum
+            return this.headPic.length / 2 / this.maxPartNum
           } else {
-            return (this.infos.initiatorReward[0].partakeNum / 3 + (data - this.infos.initiatorReward[0].partakeNum)) / this.maxPartNum
+            return (this.infos.initiatorReward[0].partakeNum / 2 + (data - this.infos.initiatorReward[0].partakeNum)) / this.maxPartNum
           }
         }
       },
@@ -1581,7 +1764,7 @@
         position: fixed;
         .activeRule {
           position: absolute;
-          top: 44px;
+          top: 10px;
           right: 0px;
           left: auto;
           display: none;
@@ -1669,7 +1852,7 @@
             .progressTotal{
               display: inline-block;
               vertical-align: middle;
-              margin-right: 30px;
+              margin-right: 10px;
               text-align: center;
               .progress_box{
                 position: relative;
@@ -1708,7 +1891,7 @@
               }
               .progressLine{
                 position: relative;
-                width:90px;
+                width:50px;
                 height: 90px;
                 display: flex;
                 align-items: center;
@@ -1718,29 +1901,32 @@
                   height: 70px;
                   background-color: #fff;
                   position: absolute;
-                  bottom: 5px;
+                  bottom: 9px;
                   left: calc(50% - 24px);
                   border-bottom-left-radius: 10px;
                   border-bottom-right-radius: 10px;
-                  border-top-right-radius: 3px;
-                  border-top-left-radius: 3px;
+                  border-top-right-radius: 5px;
+                  border-top-left-radius: 5px;
                   box-sizing: border-box;
                   border: 1px solid #eee;
-                  border-top: 0px;
+                  /*border-top: 0px;*/
+                  background: -webkit-linear-gradient(left, #FFFFFF , #EEEEEE); /* Safari 5.1 - 6.0 */
+                  background: -o-linear-gradient(right, #FFFFFF,  #EEEEEE); /* Opera 11.1 - 12.0 */
+                  background: -moz-linear-gradient(right, #FFFFFF,  #EEEEEE); /* Firefox 3.6 - 15 */
+                  background: linear-gradient(to right,  #FFFFFF ,  #EEEEEE); /* 标准的语法 */
                 }
                 .showProSe{
                   width: 48px;
-                  /*background-color: #F15522;*/
                   position: absolute;
-                  bottom: 5px;
+                  bottom: 9px;
                   left: calc(50% - 24px);
                   border-bottom-left-radius: 10px;
                   border-bottom-right-radius: 10px;
-                  border-top-right-radius: 3px;
-                  border-top-left-radius: 3px;
+                  /*border-top-right-radius: 5px;*/
+                  /*border-top-left-radius: 5px;*/
                   box-sizing: border-box;
-                  border: 1px solid #ccc;
-                  border-top: 0px;
+                  /*border: 1px solid #ddd;*/
+                  /*border-top: 0px;*/
                   background: -webkit-linear-gradient(#FFC732, #FF8048); /* Safari 5.1 - 6.0 */
                   background: -o-linear-gradient(#FFC732, #FF8048); /* Opera 11.1 - 12.0 */
                   background: -moz-linear-gradient(#FFC732, #FF8048); /* Firefox 3.6 - 15 */
@@ -1749,6 +1935,7 @@
                 .showProText{
                   /*background-color: #F15522;*/
                   position: absolute;
+                  color: #FF8048;
                 }
               }
 
@@ -1992,7 +2179,7 @@
         background-color: #FFF;
         height: 310px;
         margin: 0 auto;
-        margin-top: -130px;
+        margin-top: -80px;
         border-radius: 8px;
         box-shadow: 0px 0px 15px rgba(0, 0, 0, .3);
         display: none;

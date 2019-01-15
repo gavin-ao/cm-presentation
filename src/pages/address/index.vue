@@ -67,7 +67,7 @@
         box-shadow: 0px -1px 0px 0px rgba(255, 255, 255, 0);
         font-family: Arial;
         .eachMessage {
-          border-bottom: 1px solid #ccc;
+          border-bottom: 0.5px solid #eee;
           padding: 5px 0px;
           box-sizing: border-box;
           .titleInfos {
@@ -131,15 +131,15 @@
       bottom: 0;
       left: 0;
       right: 0;
-      height: 45px;
-      line-height: 45px;
-      border-top: 1px solid #BBBBBB;
+      height: 55px;
+      line-height: 55px;
+      border-top: 1px solid #F15522;
       div:nth-child(1) {
         width: 50%;
         float: right;
         background-color: rgba(251, 90, 25, 1);
         color: rgba(255, 255, 255, 1);
-        font-size: 16px;
+        font-size: 18px;
         text-align: center;
         font-family: Arial;
       }
@@ -148,7 +148,7 @@
         float: left;
         //background-color: rgba(251, 90, 25, 1);
         color: rgba(251, 90, 25, 1);
-        font-size: 16px;
+        font-size: 18px;
         text-align: center;
         font-family: Arial;
       }
