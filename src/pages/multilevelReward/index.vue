@@ -72,7 +72,7 @@
             <span>{{addressInfo.phoneNumber}}</span>
             <span> {{addressInfo.addr}}</span>
           </p>
-          <p class="modifyBtn" @click="addAddress">修改</p>
+          <p class="modifyBtn" @click="addAddress">修改地址</p>
         </div>
       </div>
 
@@ -96,6 +96,8 @@
       background-color: #FFF;
       margin-bottom:120px;
       .totalReward {
+        border-bottom-right-radius: 5px;
+        border-bottom-left-radius: 5px;
         .noRewardInfos {
           padding-top: 50px;
           color: #ddd;
@@ -196,9 +198,9 @@
         width: 100%;
       }
       .addressTi {
-        height: 20px;
+        height: 24px;
         color: rgba(159, 159, 159, 1);
-        font-size: 14px;
+        font-size: 16px;
         text-align: left;
         padding-left: 20px;
         background-color: #F1F1F1;
@@ -222,10 +224,13 @@
         padding: 10px 20px;
         box-sizing: border-box;
         height: 100px;
+        border-top-right-radius: 5px;
+        border-top-left-radius: 5px;
         p:nth-child(1) {
           display: inline-block;
-          width: calc(100% - 60px);
+          width: calc(100% - 70px);
           vertical-align: middle;
+          height:100%;
           span{
             display: inline-block;
             width: 100%;
@@ -241,14 +246,14 @@
         }
         .modifyBtn {
           display: inline-block;
-          width: 50px;
+          width: 60px;
           margin-left: 10px;
           height: 30px;
           line-height: 28px;
           box-sizing: border-box;
           border-radius: 4px;
           color: rgba(241, 85, 34, 1);
-          font-size: 12px;
+          font-size: 13px;
           font-family: Microsoft Yahei;
         }
       }

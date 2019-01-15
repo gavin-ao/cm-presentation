@@ -277,6 +277,12 @@
             that.$store.state.board.qrcodeUrl = that.$store.state.board.urlHttp + res.data.qrcodeUrl;
             that.qrcodeUrl = that.$store.state.board.urlHttp + res.data.qrcodeUrl;
             that.drawImage();
+          }else{
+            wx.showToast({
+              title: "获取小程序码失败，请重新获取",
+              icon: 'none',
+              duration: 2000
+            })
           }
         }
       })

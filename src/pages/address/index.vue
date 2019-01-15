@@ -7,11 +7,11 @@
         <!--</div>-->
         <div class="eachMessage">
           <span class="addressDes">收货人</span>
-          <div class="addressInfos"><input type="text" v-model="userName" placeholder="名字"  placeholder-style="color: #cecece;font-size: 24rpx;"></div>
+          <div class="addressInfos"><input type="text" v-model="userName" placeholder="名字" maxlength="10" placeholder-style="color: #cecece;font-size: 26rpx;"></div>
         </div>
         <div class="eachMessage">
           <span class="addressDes">手机号码</span>
-          <div class="addressInfos"><input type="number" v-model="telNumber" placeholder="11位手机号" placeholder-style="color: #cecece;font-size: 24rpx;"></div>
+          <div class="addressInfos"><input type="number" v-model="telNumber" placeholder="11位手机号" maxlength="11" placeholder-style="color: #cecece;font-size: 26rpx;"></div>
         </div>
         <!--<div class="eachMessage">-->
           <!--<picker-->
@@ -27,9 +27,9 @@
             <!--</div>-->
           <!--</picker>-->
         <!--</div>-->
-        <div class="eachMessage">
+        <div class="eachMessage" style="border-bottom: 0px;">
           <span class="addressDes" style="vertical-align: top;">详细地址</span>
-          <div class="addressInfos"><textarea auto-height="true" maxlength="-1" v-model="detailadress"  placeholder="详细信息" placeholder-style="color: #cecece;font-size: 24rpx;"></textarea></div>
+          <div class="addressInfos"><textarea auto-height="true" maxlength="150" v-model="detailadress"  placeholder="详细信息" placeholder-style="color: #cecece;font-size: 26rpx;"></textarea></div>
         </div>
         <!--<div class="eachMessage" style="margin-bottom: 0px">-->
           <!--<span class="submitBtns">提交</span>-->
@@ -46,14 +46,17 @@
 <style lang="scss">
   .instructor-toueist {
     width: 100%;
-    /*height: 100%;*/
+    height: 100%;
     box-sizing: border-box;
     font-size: 14px;
-    padding: 20px;
+    /*padding: 20px;*/
+    background-color: #eee;
     padding-bottom: 40px;
     font-family: PingFangSC-regular;
     .multilevelReward {
       /*height: 100%;*/
+      padding: 0px 20px;
+      background-color: #fff;
       .addressCompletion {
         /*margin-top: 20px;*/
         margin-bottom: 20px;
@@ -62,16 +65,16 @@
         border-radius: 8px;
         /*background-color: rgba(255, 251, 238, 1);*/
         color: rgba(16, 16, 16, 1);
-        font-size: 14px;
+        font-size: 15px;
         text-align: center;
         box-shadow: 0px -1px 0px 0px rgba(255, 255, 255, 0);
         font-family: Arial;
         .eachMessage {
-          border-bottom: 0.5px solid #eee;
+          border-bottom: 0.5px solid #dedede;
           padding: 5px 0px;
           box-sizing: border-box;
           .titleInfos {
-            font-size: 14px;
+            font-size: 15px;
             font-family: PingFangSC-regular;
             color: rgba(71, 71, 71, 1);
           }
@@ -80,14 +83,14 @@
             vertical-align: middle;
             width: 75px;
             color: rgba(71, 71, 71, 1);
-            font-size: 14px;
+            font-size: 15px;
             text-align: left;
             font-family: PingFangSC-regular;
           }
           .addressInfos {
             display: inline-block;
             width: calc(100% - 75px);
-            font-size: 14px;
+            font-size: 15px;
             /*border: 1px solid rgba(187, 187, 187, 1);*/
             background-color: #fff;
             box-sizing: border-box;
@@ -104,7 +107,7 @@
               min-height: 100px;
               height: 100px;
               border: none;
-              padding: 5px;
+              /*padding: 0px 5px;*/
               box-sizing: border-box;
             }
             vertical-align: middle;
@@ -134,6 +137,7 @@
       height: 55px;
       line-height: 55px;
       border-top: 1px solid #F15522;
+      background-color: #fff;
       div:nth-child(1) {
         width: 50%;
         float: right;
@@ -185,9 +189,7 @@
       }
     },
     onShow() {
-      var that = this;
-      var sessionID = that.$store.state.board.sessionID;
-      var myHelpId = that.$store.state.board.myHelpId;
+
     },
     computed: {
       infos() {

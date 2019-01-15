@@ -28,7 +28,6 @@
           qrcodeUrl: '',
           otherHelpId: '',
           myHelpId: '',
-          sessionID: '',
           checked: false,
           checkedRule: false,
           checkedRules: false,
@@ -40,6 +39,7 @@
           btnText: {},
           actShareCopywriting: '',
           headPic: [],
+          infos:{},
           ifRewardUnique: '',   //只领取最高奖励   全部奖励
           ifAssistanceLimit: '',  //助力是否有上限
         };

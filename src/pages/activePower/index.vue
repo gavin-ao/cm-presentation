@@ -42,24 +42,55 @@
             </div>
             <div class="hongbaoImg">
               <block v-if="infos.initiatorReward[0].rewardType==5">
-                <div v-for="(item,index) in infos.initiatorReward" :key="index"
-                     :style="{left:(((item.partakeNum- infos.initiatorReward[0].partakeNum+infos.initiatorReward[0].partakeNum/2)/maxPartNum)*tempWidth-17.5/ratios)+'px',top:'-4px'}">
-                  <!--<img src="/static/reward/10.png" alt="" v-if="index == 0">-->
-                  <img src="/static/reward/10.png" alt="" v-if="index == 0" mode="widthFix">
-                  <img src="/static/reward/20.png" alt=""  v-if="index == 1" mode="widthFix">
-                  <!--<img src="/static/reward/20_1.png" alt=""  v-if="index == 1" mode="widthFix">-->
-                  <img src="/static/reward/50.png" alt="" v-if="index == 2" mode="widthFix">
-                </div>
+                <!--<block  v-for="(item,index) in infos.initiatorReward" :key="index">-->
+                  <!--<div :style="{left:(((item.partakeNum- infos.initiatorReward[0].partakeNum+infos.initiatorReward[0].partakeNum/2)/maxPartNum)*tempWidth-17.5/ratios)+'px',top:'-4px'}">-->
+                    <!--&lt;!&ndash;<img src="/static/reward/10.png" alt="" v-if="index == 0">&ndash;&gt;-->
+                    <!--<img src="/static/reward/10.png" alt="" v-if="index == 0" mode="widthFix">-->
+                    <!--<img src="/static/reward/20.png" alt=""  v-if="index == 1" mode="widthFix">-->
+                    <!--&lt;!&ndash;<img src="/static/reward/20_1.png" alt=""  v-if="index == 1" mode="widthFix">&ndash;&gt;-->
+                    <!--<img src="/static/reward/50.png" alt="" v-if="index == 2" mode="widthFix">-->
+                  <!--</div>-->
+                <!--</block>-->
+                <block  v-for="(item,index) in infos.initiatorReward" :key="index">
+                  <div v-if="index==0" :style="{left:'10%', marginLeft: '-60rpx'}">
+                    <img src="/static/reward/10.png" alt="" mode="widthFix">
+                  </div>
+                  <div v-else-if="index < (infos.initiatorReward.length-1)" :style="{left:(index*(80/(index +1)) +10)+'%', marginLeft: '-60rpx'}">
+                    <img src="/static/reward/20.png" alt=""  mode="widthFix">
+                  </div>
+                  <div v-else-if="index == (infos.initiatorReward.length-1)" :style="{left:'90%',marginLeft: '-60rpx'}">
+                    <img src="/static/reward/50.png" alt="" mode="widthFix">
+                  </div>
+                </block>
               </block>
               <block v-else>
-                <div v-for="(item,index) in infos.initiatorReward" :key="index"
-                     :style="{left:(((item.partakeNum- infos.initiatorReward[0].partakeNum+infos.initiatorReward[0].partakeNum/2)/maxPartNum)*tempWidth-17.5/ratios)+'px',top:'-4px'}">
-                  <img src="/static/images/hongbao.png" alt=""  mode="widthFix">
-                  <p>
-                  <span>{{item.rewardContent}}</span>
-                  </p>
-
-                </div>
+                <block v-for="(item,index) in infos.initiatorReward" :key="index">
+                  <!--<div-->
+                    <!--:style="{left:(((item.partakeNum- infos.initiatorReward[0].partakeNum+infos.initiatorReward[0].partakeNum/2)/maxPartNum)*tempWidth-17.5/ratios)+'px'}">-->
+                    <!--<img src="/static/images/hongbao.png" alt=""  mode="widthFix">-->
+                    <!--<p>-->
+                      <!--<span>{{item.rewardContent}}</span>-->
+                    <!--</p>-->
+                  <!--</div>-->
+                  <div v-if="index==0" :style="{left:'10%', marginLeft: '-60rpx'}">
+                    <img src="/static/images/hongbao.png" alt=""  mode="widthFix">
+                    <p>
+                    <span>{{item.rewardContent}}</span>
+                    </p>
+                  </div>
+                  <div v-else-if="index < (infos.initiatorReward.length-1)" :style="{left:(index*(80/(infos.initiatorReward.length-1)) +10)+'%', marginLeft: '-60rpx'}">
+                    <img src="/static/images/hongbao.png" alt=""  mode="widthFix">
+                    <p>
+                      <span>{{item.rewardContent}}</span>
+                    </p>
+                  </div>
+                  <div v-else-if="index == (infos.initiatorReward.length-1)" :style="{left:'90%',marginLeft: '-60rpx'}">
+                    <img src="/static/images/hongbao.png" alt=""  mode="widthFix">
+                    <p>
+                      <span>{{item.rewardContent}}</span>
+                    </p>
+                  </div>
+                </block>
               </block>
 
             </div>
@@ -70,19 +101,37 @@
               </div>
 
               <block v-for="(item,index) in infos.initiatorReward" :key="index">
-                <div v-if="index==0" :style="{left:((item.partakeNum/2/maxPartNum)*tempWidth-8/ratios)+'px',top:'0px'}">
+                <div v-if="index==0" :style="{left:'10%', marginLeft: '-18rpx'}">
                   <p class="quan"></p>
                   <p class="wen">
                     <span style="">{{item.partakeNum}}</span>位助力
                   </p>
                 </div>
-                <div v-else
-                     :style="{left:(((item.partakeNum- infos.initiatorReward[0].partakeNum+infos.initiatorReward[0].partakeNum/2)/maxPartNum)*tempWidth-8/ratios)+'px',top:'0px'}">
+                <div v-else-if="index < (infos.initiatorReward.length-1)" :style="{left:(index*(80/(index +1)) +10)+'%', marginLeft: '-18rpx'}">
                   <p class="quan"></p>
                   <p class="wen">
                     <span style="">{{item.partakeNum}}</span>位助力
                   </p>
                 </div>
+                <div v-else-if="index == (infos.initiatorReward.length-1)" :style="{left:'90%',marginLeft: '-18rpx'}">
+                  <p class="quan"></p>
+                  <p class="wen">
+                  <span style="">{{item.partakeNum}}</span>位助力
+                  </p>
+                </div>
+                <!--<div v-if="index==0" :style="{left:((item.partakeNum/2/maxPartNum)*tempWidth-8/ratios)+'px',top:'0px'}">-->
+                  <!--<p class="quan"></p>-->
+                  <!--<p class="wen">-->
+                    <!--<span style="">{{item.partakeNum}}</span>位助力-->
+                  <!--</p>-->
+                <!--</div>-->
+                <!--<div v-else-->
+                     <!--:style="{left:(((item.partakeNum- infos.initiatorReward[0].partakeNum+infos.initiatorReward[0].partakeNum/2)/maxPartNum)*tempWidth-8/ratios)+'px',top:'0px'}">-->
+                  <!--<p class="quan"></p>-->
+                  <!--<p class="wen">-->
+                    <!--<span style="">{{item.partakeNum}}</span>位助力-->
+                  <!--</p>-->
+                <!--</div>-->
               </block>
             </div>
           </div>
@@ -265,9 +314,9 @@
             </p>
           </scroll-view>
           <p class="helpLackNum" v-if="headPic.length<partakeNum">还差（{{partakeNum - headPic.length}}）位</p>
-          <!--<p v-else-if="invitationRewardType == 3">-->
-          <!--<span style="display: inline-block;font-size: 14px;font-weight: lighter;margin-top: 10px;">数量有限，先到先得哦</span>-->
-          <!--</p>-->
+          <p v-else-if="invitationRewardType == 3">
+            <span style="display: inline-block;font-size: 18px;font-weight: lighter;color: red;margin-top: 10px;">在会话中回复“{{infos.actReply}}”即可领取</span>
+          </p>
         </div>
 
         <div class="menu">
@@ -500,7 +549,8 @@
         rankingListArr: [],  //排行榜数组
         currentPeopleRanking: 0,  //当前人排名
         assistangShows:false,
-        checkMyProgressShow:false
+        checkMyProgressShow:false,
+        percentes:0
       }
     },
     onLoad(option) {
@@ -516,7 +566,6 @@
         data: {storeId: that.$store.state.board.storeId},
         header: {'content-type': 'application/x-www-form-urlencoded'},
         success: function (res) {
-          console.log(res);
           if (res.data.success) {
             that.rulesInfos = true;
             that.$store.state.board.infos = res.data;
@@ -553,6 +602,7 @@
                 }
               })
             }
+            // that.percents();
             // 查看是否授权
             wx.getSetting({
               success: function (res) {
@@ -588,6 +638,11 @@
                                 that.rulesOfActivity = true;
                                 that.assistangShows= false;
                                 that.checkMyProgress();
+                                wx.showToast({
+                                  title: "助力失败,已经助力过了",
+                                  icon: 'none',
+                                  duration: 2000
+                                })
                               } else {
                                 if (res.data.code == '102') {
                                   that.$store.state.board.existDoHelp = true;
@@ -735,6 +790,11 @@
                     //   that.getTheRankings(sessionID, actId);
                     // }
                     that.checkMyProgress();
+                    wx.showToast({
+                      title: "助力失败,已经助力过了",
+                      icon: 'none',
+                      duration: 2000
+                    })
                   } else {
                     if (res.data.code == '102') {
                       that.$store.state.board.existDoHelp = true;
@@ -842,16 +902,13 @@
             data: {helpId: otherHelpId, sessionID: sessionID},
             header: {'content-type': 'application/x-www-form-urlencoded'},
             success: function (res) {
-              console.log(res)
               that.assistangShows= false;
               if (res.data.success) {
-                // if (that.activityTypes === 1) {
-                //   wx.showToast({
-                //     title: res.data.msg,
-                //     icon: 'none',
-                //     duration: 2000
-                //   })
-                // }
+                wx.showToast({
+                  title: "助力成功",
+                  icon: 'none',
+                  duration: 2000
+                })
                 that.checkMyProgress();
                 var sysUrl = that.$store.state.board.urlHttp + '/wechatapi/nologin/help/findHelpDetailUserList';
                 //邀请列表
@@ -861,7 +918,6 @@
                   data: {helpId: otherHelpId},
                   header: {'content-type': 'application/x-www-form-urlencoded'},
                   success: function (res) {
-                    console.log(res)
                     that.$store.state.board.headPic = [];
                     if (res.data.success) {
                       that.headPicArr(that, res.data.data)
@@ -948,6 +1004,11 @@
                           that.$store.state.board.myExistDoHelp = true;
                           that.exithelpId = true;
                           that.rulesOfActivity = true;
+                          wx.showToast({
+                            title: "助力失败,已经助力过了",
+                            icon: 'none',
+                            duration: 2000
+                          })
                         } else {
                           wx.showToast({
                             title: res.data.msg,
@@ -1009,7 +1070,6 @@
               data: {helpId: otherHelpId, sessionID: sessionID},
               header: {'content-type': 'application/x-www-form-urlencoded'},
               success: function (res) {
-                console.log(res)
                 that.assistangShows= false;
                 if (res.data.success) {
                   if (that.activityTypes === 1) {
@@ -1028,7 +1088,6 @@
                     data: {helpId: otherHelpId},
                     header: {'content-type': 'application/x-www-form-urlencoded'},
                     success: function (res) {
-                      console.log(res)
                       that.$store.state.board.headPic = [];
                       if (res.data.success) {
                         that.headPicArr(that, res.data.data)
@@ -1117,6 +1176,11 @@
                             that.$store.state.board.myExistDoHelp = true;
                             that.exithelpId = true;
                             that.rulesOfActivity = true;
+                            wx.showToast({
+                              title: "助力点击失败,已经助力过了",
+                              icon: 'none',
+                              duration: 2000
+                            })
                           } else {
                             wx.showToast({
                               title: res.data.msg,
@@ -1404,7 +1468,7 @@
           data: {sessionID: sessionID, actId: actId},
           header: {'content-type': 'application/x-www-form-urlencoded'},
           success: function (res) {
-            console.log(res)
+
             if (res.data.success) {
 
             } else {
@@ -1537,7 +1601,7 @@
           }
         })
 
-      },
+      }
     },
     created() {
     },
@@ -1649,32 +1713,16 @@
           return temp
         }
       },
-      percents() {
-        if (this.infos.initiatorReward) {
-          if (this.headPic.length <= this.infos.initiatorReward[0].partakeNum) {
-            return this.headPic.length / 2 / this.maxPartNum * 100
-          } else {
-            if (this.headPic.length > this.infos.initiatorReward[this.infos.initiatorReward.length - 1].partakeNum) {
-              if (((this.infos.initiatorReward[0].partakeNum / 2 + (this.headPic.length - this.infos.initiatorReward[0].partakeNum)) / this.maxPartNum) < 1) {
-                return (this.infos.initiatorReward[0].partakeNum / 2 + (this.headPic.length - this.infos.initiatorReward[0].partakeNum)) / this.maxPartNum * 100;
-              } else {
-                return 100;
-              }
-            } else {
-              return (this.infos.initiatorReward[0].partakeNum / 2 + (this.headPic.length - this.infos.initiatorReward[0].partakeNum)) / this.maxPartNum * 100;
-            }
-          }
-        }
-      },
-      leftR(data) {
-        if (this.infos.initiatorReward) {
-          if (this.headPic.length <= this.infos.initiatorReward[0].partakeNum) {
-            return this.headPic.length / 2 / this.maxPartNum
-          } else {
-            return (this.infos.initiatorReward[0].partakeNum / 2 + (data - this.infos.initiatorReward[0].partakeNum)) / this.maxPartNum
-          }
-        }
-      },
+
+      // leftR(data) {
+      //   if (this.infos.initiatorReward) {
+      //     if (this.headPic.length <= this.infos.initiatorReward[0].partakeNum) {
+      //       return this.headPic.length / 2 / this.maxPartNum
+      //     } else {
+      //       return (this.infos.initiatorReward[0].partakeNum / 2 + (data - this.infos.initiatorReward[0].partakeNum)) / this.maxPartNum
+      //     }
+      //   }
+      // },
       lotteryProgress() {
         if (this.assisTotalNum < this.lotteryDrawTarget) {
           // return 22
@@ -1688,6 +1736,26 @@
       },
       ifAssistanceLimit() {   //助力是否有上限
         return this.$store.state.board.ifAssistanceLimit;
+      },
+      percents() {
+        if (this.infos.initiatorReward&&this.infos.initiatorReward.length) {
+          if(this.headPic.length <= this.infos.initiatorReward[0].partakeNum){
+            return this.headPic.length*10/this.infos.initiatorReward[0].partakeNum
+          }else{
+            if(this.headPic.length > this.infos.initiatorReward[this.infos.initiatorReward.length - 1].partakeNum){
+              this.percentes = 100;
+            }else{
+              for(var i=1;i<this.infos.initiatorReward.length;i++){
+                if(this.headPic.length<=this.infos.initiatorReward[i].partakeNum){
+                  var num = this.infos.initiatorReward[i].partakeNum - this.infos.initiatorReward[i-1].partakeNum;
+                  var nowNum = this.headPic.length - this.infos.initiatorReward[i-1].partakeNum;
+                  return 10+ ((i-1)*80/(this.infos.initiatorReward.length-1)) + nowNum*80/(this.infos.initiatorReward.length-1)/num;
+                  break;
+                }
+              }
+            }
+          }
+        }
       }
     },
     // 下拉刷新
@@ -2273,14 +2341,14 @@
             }
             .hongbaoImg {
               position: relative;
-              width: 100%;
+              width: calc(100% - 20px);
               height: 80px;
               margin-top: 20px;
-              margin-bottom: 10px;
+              left: 10px;
               div {
                 display: inline-block;
                 width: 60px;
-                /*height: 65px;*/
+                top: -4px;
                 position: absolute;
                 img {
                   width: 100%;
