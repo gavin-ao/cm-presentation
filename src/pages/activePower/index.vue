@@ -1377,7 +1377,7 @@
       },
       headPicArr(that, headPic) {
         for (var i = 0; i < headPic.length; i++) {
-          var nickName = that.cutOutSubString(headPic[i].nickName,20,true);
+          var nickName = that.cutOutSubString(headPic[i].nickName,16,true);
           that.$store.state.board.headPic.push({
             img: headPic[i].avatarUrl,
             name: nickName,
