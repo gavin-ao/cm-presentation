@@ -1524,7 +1524,7 @@
               if(res.data.wechatActRankVOList){
                 that.rankingListArr = res.data.wechatActRankVOList;
                 for(var i=0;i<that.rankingListArr.length;i++){
-                  that.rankingListArr[i].nickName = that.cutOutSubString(that.rankingListArr[i].nickName,22,true)
+                  that.rankingListArr[i].nickName = that.cutOutSubString(that.rankingListArr[i].nickName,20,true)
                 }
               }
              if(res.data.currWechatActRankVO){
