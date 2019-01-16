@@ -43,7 +43,6 @@
           ifRewardUnique: '',   //只领取最高奖励   全部奖励
           ifAssistanceLimit: '',  //助力是否有上限
         };
-        // console.log(that);
         Object.assign(that.$store.state.board, setGloableData);
         if (option.query.q || option.query.storeId) {
           if (option.query.storeId) {

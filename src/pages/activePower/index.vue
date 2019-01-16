@@ -1726,7 +1726,7 @@
       lotteryProgress() {
         if (this.assisTotalNum < this.lotteryDrawTarget) {
           // return 22
-          return (this.assisTotalNum / this.lotteryDrawTarget).toFixed(3) * 100;
+          return ((this.assisTotalNum / this.lotteryDrawTarget)* 100).toFixed(1);
         } else {
           return 100;
         }
