@@ -183,6 +183,7 @@
     },
     methods: {
       receiveAreward() {
+        this.getRewardAct();
         wx.navigateTo({
           url: '/pages/rewardPage/main?datas=' + JSON.stringify(this.datas)
         });

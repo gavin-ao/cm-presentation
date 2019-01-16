@@ -402,6 +402,7 @@
           header: {'content-type': 'application/x-www-form-urlencoded'},
           success: function (res) {
             if (res.data.success) {
+              that.assistanceRewardAct();
               wx.navigateToMiniProgram({
                 appId: 'wx2548fa30af482bdf',
                 path: 'pages/index/index?token=' + res.data.command,
@@ -437,6 +438,7 @@
             header: {'content-type': 'application/x-www-form-urlencoded'},
             success: function (res) {
               if (res.data.success) {
+                that.getRewardAct();
                 wx.navigateToMiniProgram({
                   appId: 'wx2548fa30af482bdf',
                   path: 'pages/index/index?token=' + res.data.command,
@@ -481,6 +483,7 @@
           success: function (res) {
             // console.log(res);
             if (res.data.success) {
+              that.getRewardAct();
               for (var i = 0; i < that.infos.initiatorReward.length; i++) {
                 if (that.infos.initiatorReward[i].initiatorRewardId == res.data.initiatorRewardId) {
                   wx.navigateTo({
@@ -495,6 +498,7 @@
         })
       },
       assisReceiveAreward() {
+        that.assistanceRewardAct();
         wx.navigateTo({
           url: '/pages/rewardPage/main?type=0&datas=' + JSON.stringify(this.assisInfos[0])
         });
