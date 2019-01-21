@@ -172,13 +172,13 @@
     },
     computed: {
       infos() {
-        return this.$store.state.board.infos
+        return this.$store.state.board.infos;
       },
       headPic() {
         return this.$store.state.board.headPic
       },
       invitationSessionFrom() {  //邀请 客服消息传递参数
-        return '{"actId":"' + this.$store.state.board.actId + '","type":1}';
+        return '{"actId":"' + this.$store.state.board.actId + '","type":1,"initiatorRewardId":"' + this.datas.initiatorRewardId + '"}';
       }
     },
     methods: {

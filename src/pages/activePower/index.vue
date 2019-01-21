@@ -13,7 +13,7 @@
     <div class="containes">
       <movable-area>
         <!--<movable-view direction="vertical" class="activeRule" :class="{rulesCondition:rulesInfos===true}"-->
-                      <!--@click="activeRules" v-if="activityTypes===0">活动规则-->
+        <!--@click="activeRules" v-if="activityTypes===0">活动规则-->
         <!--</movable-view>-->
         <movable-view direction="vertical" class="activeRule" :class="{rulesCondition:rulesInfos===true}"
                       @click="activeRules">活动规则
@@ -21,14 +21,15 @@
       </movable-area>
       <img :src="goLink" alt="" mode="widthFix">
       <!--<div class="recordLadder" :class="{rewardCondition:rulesOfActivity===true}" v-if="activityTypes===1&&checked!=true&&myHelpId!=''" :style="{top:topsLoc+'px'}">-->
-      <div class="recordLadder" :class="{rewardCondition:rulesOfActivity===true}" v-if="activityTypes===1&&checked!=true&&myHelpId!=''">
-       <!--<p style="position: fixed;z-index: 1000;width:calc(100% - 40rpx);text-align: center;" @click="modelSetClose1">-->
+      <div class="recordLadder" :class="{rewardCondition:rulesOfActivity===true}"
+           v-if="activityTypes===1&&checked!=true&&myHelpId!=''">
+        <!--<p style="position: fixed;z-index: 1000;width:calc(100% - 40rpx);text-align: center;" @click="modelSetClose1">-->
         <!--<img src="/static/img/modelArrow.png" alt="" style="width: 40rpx;height: 32rpx;">-->
         <!--</p>-->
         <div class="invitation">
           <!--<div class="helpZero" v-if="headPic.length==0">-->
-            <!--<img class="noneImg" src="/static/img/none.png" alt="">-->
-            <!--<p>还没有人助力</p>-->
+          <!--<img class="noneImg" src="/static/img/none.png" alt="">-->
+          <!--<p>还没有人助力</p>-->
 
           <!--</div>-->
           <!--阶梯助力-->
@@ -43,20 +44,21 @@
             <div class="hongbaoImg">
               <block v-if="infos.initiatorReward[0].rewardType==5">
                 <!--<block  v-for="(item,index) in infos.initiatorReward" :key="index">-->
-                  <!--<div :style="{left:(((item.partakeNum- infos.initiatorReward[0].partakeNum+infos.initiatorReward[0].partakeNum/2)/maxPartNum)*tempWidth-17.5/ratios)+'px',top:'-4px'}">-->
-                    <!--&lt;!&ndash;<img src="/static/reward/10.png" alt="" v-if="index == 0">&ndash;&gt;-->
-                    <!--<img src="/static/reward/10.png" alt="" v-if="index == 0" mode="widthFix">-->
-                    <!--<img src="/static/reward/20.png" alt=""  v-if="index == 1" mode="widthFix">-->
-                    <!--&lt;!&ndash;<img src="/static/reward/20_1.png" alt=""  v-if="index == 1" mode="widthFix">&ndash;&gt;-->
-                    <!--<img src="/static/reward/50.png" alt="" v-if="index == 2" mode="widthFix">-->
-                  <!--</div>-->
+                <!--<div :style="{left:(((item.partakeNum- infos.initiatorReward[0].partakeNum+infos.initiatorReward[0].partakeNum/2)/maxPartNum)*tempWidth-17.5/ratios)+'px',top:'-4px'}">-->
+                <!--&lt;!&ndash;<img src="/static/reward/10.png" alt="" v-if="index == 0">&ndash;&gt;-->
+                <!--<img src="/static/reward/10.png" alt="" v-if="index == 0" mode="widthFix">-->
+                <!--<img src="/static/reward/20.png" alt=""  v-if="index == 1" mode="widthFix">-->
+                <!--&lt;!&ndash;<img src="/static/reward/20_1.png" alt=""  v-if="index == 1" mode="widthFix">&ndash;&gt;-->
+                <!--<img src="/static/reward/50.png" alt="" v-if="index == 2" mode="widthFix">-->
+                <!--</div>-->
                 <!--</block>-->
-                <block  v-for="(item,index) in infos.initiatorReward" :key="index">
+                <block v-for="(item,index) in infos.initiatorReward" :key="index">
                   <div v-if="index==0" :style="{left:'10%', marginLeft: '-60rpx'}">
                     <img src="/static/reward/10.png" alt="" mode="widthFix">
                   </div>
-                  <div v-else-if="index < (infos.initiatorReward.length-1)" :style="{left:(index*(80/(index +1)) +10)+'%', marginLeft: '-60rpx'}">
-                    <img src="/static/reward/20.png" alt=""  mode="widthFix">
+                  <div v-else-if="index < (infos.initiatorReward.length-1)"
+                       :style="{left:(index*(80/(index +1)) +10)+'%', marginLeft: '-60rpx'}">
+                    <img src="/static/reward/20.png" alt="" mode="widthFix">
                   </div>
                   <div v-else-if="index == (infos.initiatorReward.length-1)" :style="{left:'90%',marginLeft: '-60rpx'}">
                     <img src="/static/reward/50.png" alt="" mode="widthFix">
@@ -66,26 +68,27 @@
               <block v-else>
                 <block v-for="(item,index) in infos.initiatorReward" :key="index">
                   <!--<div-->
-                    <!--:style="{left:(((item.partakeNum- infos.initiatorReward[0].partakeNum+infos.initiatorReward[0].partakeNum/2)/maxPartNum)*tempWidth-17.5/ratios)+'px'}">-->
-                    <!--<img src="/static/images/hongbao.png" alt=""  mode="widthFix">-->
-                    <!--<p>-->
-                      <!--<span>{{item.rewardContent}}</span>-->
-                    <!--</p>-->
+                  <!--:style="{left:(((item.partakeNum- infos.initiatorReward[0].partakeNum+infos.initiatorReward[0].partakeNum/2)/maxPartNum)*tempWidth-17.5/ratios)+'px'}">-->
+                  <!--<img src="/static/images/hongbao.png" alt=""  mode="widthFix">-->
+                  <!--<p>-->
+                  <!--<span>{{item.rewardContent}}</span>-->
+                  <!--</p>-->
                   <!--</div>-->
                   <div v-if="index==0" :style="{left:'10%', marginLeft: '-60rpx'}">
-                    <img src="/static/images/hongbao.png" alt=""  mode="widthFix">
+                    <img src="/static/images/hongbao.png" alt="" mode="widthFix">
                     <p>
-                    <span>{{item.rewardContent}}</span>
+                      <span>{{item.rewardContent}}</span>
                     </p>
                   </div>
-                  <div v-else-if="index < (infos.initiatorReward.length-1)" :style="{left:(index*(80/(infos.initiatorReward.length-1)) +10)+'%', marginLeft: '-60rpx'}">
-                    <img src="/static/images/hongbao.png" alt=""  mode="widthFix">
+                  <div v-else-if="index < (infos.initiatorReward.length-1)"
+                       :style="{left:(index*(80/(infos.initiatorReward.length-1)) +10)+'%', marginLeft: '-60rpx'}">
+                    <img src="/static/images/hongbao.png" alt="" mode="widthFix">
                     <p>
                       <span>{{item.rewardContent}}</span>
                     </p>
                   </div>
                   <div v-else-if="index == (infos.initiatorReward.length-1)" :style="{left:'90%',marginLeft: '-60rpx'}">
-                    <img src="/static/images/hongbao.png" alt=""  mode="widthFix">
+                    <img src="/static/images/hongbao.png" alt="" mode="widthFix">
                     <p>
                       <span>{{item.rewardContent}}</span>
                     </p>
@@ -107,7 +110,8 @@
                     <span style="">{{item.partakeNum}}</span>位助力
                   </p>
                 </div>
-                <div v-else-if="index < (infos.initiatorReward.length-1)" :style="{left:(index*(80/(index +1)) +10)+'%', marginLeft: '-18rpx'}">
+                <div v-else-if="index < (infos.initiatorReward.length-1)"
+                     :style="{left:(index*(80/(index +1)) +10)+'%', marginLeft: '-18rpx'}">
                   <p class="quan"></p>
                   <p class="wen">
                     <span style="">{{item.partakeNum}}</span>位助力
@@ -116,21 +120,21 @@
                 <div v-else-if="index == (infos.initiatorReward.length-1)" :style="{left:'90%',marginLeft: '-18rpx'}">
                   <p class="quan"></p>
                   <p class="wen">
-                  <span style="">{{item.partakeNum}}</span>位助力
+                    <span style="">{{item.partakeNum}}</span>位助力
                   </p>
                 </div>
                 <!--<div v-if="index==0" :style="{left:((item.partakeNum/2/maxPartNum)*tempWidth-8/ratios)+'px',top:'0px'}">-->
-                  <!--<p class="quan"></p>-->
-                  <!--<p class="wen">-->
-                    <!--<span style="">{{item.partakeNum}}</span>位助力-->
-                  <!--</p>-->
+                <!--<p class="quan"></p>-->
+                <!--<p class="wen">-->
+                <!--<span style="">{{item.partakeNum}}</span>位助力-->
+                <!--</p>-->
                 <!--</div>-->
                 <!--<div v-else-->
-                     <!--:style="{left:(((item.partakeNum- infos.initiatorReward[0].partakeNum+infos.initiatorReward[0].partakeNum/2)/maxPartNum)*tempWidth-8/ratios)+'px',top:'0px'}">-->
-                  <!--<p class="quan"></p>-->
-                  <!--<p class="wen">-->
-                    <!--<span style="">{{item.partakeNum}}</span>位助力-->
-                  <!--</p>-->
+                <!--:style="{left:(((item.partakeNum- infos.initiatorReward[0].partakeNum+infos.initiatorReward[0].partakeNum/2)/maxPartNum)*tempWidth-8/ratios)+'px',top:'0px'}">-->
+                <!--<p class="quan"></p>-->
+                <!--<p class="wen">-->
+                <!--<span style="">{{item.partakeNum}}</span>位助力-->
+                <!--</p>-->
                 <!--</div>-->
               </block>
             </div>
@@ -188,13 +192,13 @@
       <!--//阶梯助力   助力列表-->
       <div v-if="(activityTypes===1)&&(assistangShows==true)" style="position: relative;z-index: 1000;">
         <!--<div class="ruText">-->
-          <!--<div class="ruTitle">活动说明</div>-->
-          <!--<block v-for="(item,index) in ruleArr" :key="index">-->
-            <!--<p>-->
-              <!--<span class="first" style="">{{(index+1)}}、</span>-->
-              <!--<span class="two" style="">{{item}}</span>-->
-            <!--</p>-->
-          <!--</block>-->
+        <!--<div class="ruTitle">活动说明</div>-->
+        <!--<block v-for="(item,index) in ruleArr" :key="index">-->
+        <!--<p>-->
+        <!--<span class="first" style="">{{(index+1)}}、</span>-->
+        <!--<span class="two" style="">{{item}}</span>-->
+        <!--</p>-->
+        <!--</block>-->
         <!--</div>-->
         <div class="luckDraw" v-if="lotteryDraw == 1">
           <div class="luckDrawText">
@@ -203,7 +207,7 @@
           <div class="luckDrawPro">
             <div class="progressTotal">
               <div class="progressLine">
-                <div class="showProL"> </div>
+                <div class="showProL"></div>
                 <div class="showProSe" :style="{height:lotteryProgress/100*70*2+'rpx'}">
 
                 </div>
@@ -212,18 +216,18 @@
                 </div>
               </div>
               <!--<div class='progress_box'>-->
-                <!--<canvas class="progress_bg"   canvas-id="canvasProgressbg">  </canvas>-->
-                <!--<canvas class="progress_canvas"   canvas-id="canvasProgress">  </canvas>-->
-                <!--<div class="progress_text">-->
-                  <!--&lt;!&ndash; <view class="progress_dot"></view>  &ndash;&gt;-->
-                  <!--<text class='progress_info'> {{lotteryProgress}}%</text>-->
-                <!--</div>-->
+              <!--<canvas class="progress_bg"   canvas-id="canvasProgressbg">  </canvas>-->
+              <!--<canvas class="progress_canvas"   canvas-id="canvasProgress">  </canvas>-->
+              <!--<div class="progress_text">-->
+              <!--&lt;!&ndash; <view class="progress_dot"></view>  &ndash;&gt;-->
+              <!--<text class='progress_info'> {{lotteryProgress}}%</text>-->
+              <!--</div>-->
               <!--</div>-->
             </div>
-            <img src="/static/reward/S60.png" alt=""  mode="widthFix">
+            <img src="/static/reward/S60.png" alt="" mode="widthFix">
 
             <!--<progress activeColor="#F15522" border-radius="5" backgroundColor="#E6E6E6"-->
-                      <!--:percent="lotteryProgress" stroke-width="10"></progress>-->
+            <!--:percent="lotteryProgress" stroke-width="10"></progress>-->
             <!--<span style="color: red;display: inline-block;margin-top: 5px;">{{lotteryProgress}}%</span>-->
           </div>
           <div class="luckDrawDes">
@@ -234,7 +238,7 @@
         <div class="ladderHelp">
           <div class="assistantLimit" v-if="ifAssistanceLimit == 0">
             <div class="titles">好友助力榜</div>
-            <block  v-if="headPic.length==0">
+            <block v-if="headPic.length==0">
               <div class="helpZero">
                 <img class="noneImg" src="/static/img/none.png" alt="">
                 <p>还没有人助力</p>
@@ -273,7 +277,7 @@
                 <div class="rankBottomIn">排行榜数据每小时更新一次</div>
               </div>
               <div v-if="rankingListNum == 2">
-                <block  v-if="headPic.length==0">
+                <block v-if="headPic.length==0">
                   <div class="helpZero">
                     <img class="noneImg" src="/static/img/none.png" alt="">
                     <p>还没有人助力</p>
@@ -314,9 +318,10 @@
             </p>
           </scroll-view>
           <p class="helpLackNum" v-if="headPic.length<partakeNum">还差（{{partakeNum - headPic.length}}）位</p>
-          <!--<p v-else-if="invitationRewardType == 3">-->
+          <p v-else-if="invitationRewardType == 3&&exitNoMyself==true">
             <!--<span style="display: inline-block;font-size: 18px;font-weight: lighter;color: red;margin-top: 10px;">在会话中回复“{{infos.actReply}}”即可领取</span>-->
-          <!--</p>-->
+            <span style="display: inline-block;font-size: 32rpx;font-weight: lighter;color: red;margin-top: 10rpx;">在会话中回复“领奖”即可领取</span>
+          </p>
         </div>
 
         <div class="menu">
@@ -426,6 +431,9 @@
             <p class="copy">
               {{contentFoot}}
             </p>
+            <p style="text-align:center;">
+              <span style="display: inline-block;font-size: 18px;font-weight: lighter;color: red;margin-top: 10px;">在会话中回复“领奖”即可领取</span>
+            </p>
             <button class="btn modelMyHelp" open-type="contact"
                     hover-class="hoverNone" hover-stay-time="800" @click="assistanceRewardAct" type="default"
                     :session-from=assistanceSessionFrom>{{btnText.bxt_reward}}
@@ -467,7 +475,7 @@
             <block v-if="checkMyProgressShow==true">
               查看我的进度
             </block>
-           </div>
+          </div>
         </div>
       </div>
     </div>
@@ -518,6 +526,7 @@
     },
     data() {
       return {
+        exitNoMyself:false,
         actRule: '',  //活动规则
         exchangeRule: '', //兑换流程
         arrImage: [],
@@ -548,9 +557,9 @@
         assisTotalNum: 0,    //总参与人数
         rankingListArr: [],  //排行榜数组
         currentPeopleRanking: 0,  //当前人排名
-        assistangShows:false,
-        checkMyProgressShow:false,
-        percentes:0
+        assistangShows: false,
+        checkMyProgressShow: false,
+        percentes: 0
       }
     },
     onLoad(option) {
@@ -636,7 +645,7 @@
                                 that.$store.state.board.myExistDoHelp = true;
                                 that.exithelpId = true;
                                 that.rulesOfActivity = true;
-                                that.assistangShows= false;
+                                that.assistangShows = false;
                                 that.checkMyProgress();
                                 wx.showToast({
                                   title: "助力失败,已经助力过了",
@@ -650,10 +659,11 @@
                                   that.exithelpId = true;
                                   that.rulesOfActivity = true;
                                   that.$store.state.board.myHelpId = otherHelpId;
+                                  that.exitNoMyself = true;
                                   if (that.lotteryDraw == 1) {
                                     that.getTheRankings(sessionID, actId);
                                   }
-                                  that.assistangShows= true;
+                                  that.assistangShows = true;
                                 } else {
                                   that.wantActivity(that, sessionID, otherHelpId, actId);
                                 }
@@ -677,7 +687,8 @@
                         header: {'content-type': 'application/x-www-form-urlencoded'},
                         success: function (res) {
                           that.$store.state.board.headPic = [];
-                          that.assistangShows= true;
+                          that.assistangShows = true;
+                          that.exitNoMyself = true;
                           if (res.data.success) {
                             that.$store.state.board.myHelpId = res.data.helpId;
                             if (res.data.data) {
@@ -785,7 +796,7 @@
                     that.$store.state.board.myExistDoHelp = true;
                     that.exithelpId = true;
                     that.rulesOfActivity = true;
-                    that.assistangShows= false;
+                    that.assistangShows = false;
                     // if (that.lotteryDraw == 1) {
                     //   that.getTheRankings(sessionID, actId);
                     // }
@@ -802,7 +813,8 @@
                       that.exithelpId = true;
                       that.rulesOfActivity = true;
                       that.$store.state.board.myHelpId = otherHelpId;
-                      that.assistangShows= true;
+                      that.assistangShows = true;
+                      that.exitNoMyself = true;
                     } else {
                       that.wantActivity(that, sessionID, otherHelpId, actId);
                     }
@@ -902,7 +914,7 @@
             data: {helpId: otherHelpId, sessionID: sessionID},
             header: {'content-type': 'application/x-www-form-urlencoded'},
             success: function (res) {
-              that.assistangShows= false;
+              that.assistangShows = false;
               if (res.data.success) {
                 wx.showToast({
                   title: "助力成功",
@@ -991,34 +1003,14 @@
                       }
                     })
                   } else if (that.$store.state.board.assistanceRewardType == 3) {
-                    wx.request({
-                      url: that.$store.state.board.urlHttp + "/wechatapi/help/existDoHelpByActId",
-                      method: "POST",
-                      data: {actId: actId, sessionID: sessionID, helpId: otherHelpId, type: 1},
-                      header: {'content-type': 'application/x-www-form-urlencoded'},
-                      success: function (res) {
-                        that.$store.state.board.checked = false;
-                        if (res.data.success) {
-                          that.assistanceModel(res.data);
-                          that.$store.state.board.existDoHelp = false;
-                          that.$store.state.board.myExistDoHelp = true;
-                          that.exithelpId = true;
-                          that.rulesOfActivity = true;
-                          wx.showToast({
-                            title: "助力失败,已经助力过了",
-                            icon: 'none',
-                            duration: 2000
-                          })
-                        } else {
-                          wx.showToast({
-                            title: res.data.msg,
-                            icon: 'none',
-                            duration: 2000
-                          })
-                        }
-                      }
-                    })
-                  }else if (that.$store.state.board.assistanceRewardType == 5) {
+                    that.contentFoot = "数量有限，先到先得哦";
+                    that.contentBtn = "我也要参加活动";
+                    that.$store.state.board.checked = true;
+                    that.$store.state.board.existDoHelp = false;
+                    that.$store.state.board.myExistDoHelp = true;
+                    that.exithelpId = true;
+                    that.rulesOfActivity = true;
+                  } else if (that.$store.state.board.assistanceRewardType == 5) {
                     wx.request({
                       url: that.$store.state.board.urlHttp + "/wechatapi/help/getRewardActCommandByOther",
                       method: "POST",
@@ -1063,14 +1055,14 @@
             }
           })
         } else {
-          if(that.ifAssistanceLimit==1){
+          if (that.ifAssistanceLimit == 1) {
             wx.request({
               url: that.$store.state.board.urlHttp + "/wechatapi/help/clickHelpUrl",
               method: "POST",
               data: {helpId: otherHelpId, sessionID: sessionID},
               header: {'content-type': 'application/x-www-form-urlencoded'},
               success: function (res) {
-                that.assistangShows= false;
+                that.assistangShows = false;
                 if (res.data.success) {
                   if (that.activityTypes === 1) {
                     wx.showToast({
@@ -1190,7 +1182,7 @@
                           }
                         }
                       })
-                    }else if (that.$store.state.board.assistanceRewardType == 5) {
+                    } else if (that.$store.state.board.assistanceRewardType == 5) {
                       wx.request({
                         url: that.$store.state.board.urlHttp + "/wechatapi/help/getRewardActCommandByOther",
                         method: "POST",
@@ -1234,7 +1226,7 @@
                 }
               }
             })
-          }else{
+          } else {
             that.$store.state.board.existDoHelp = true;
             that.$store.state.board.myExistDoHelp = true;
           }
@@ -1377,7 +1369,7 @@
       },
       headPicArr(that, headPic) {
         for (var i = 0; i < headPic.length; i++) {
-          var nickName = that.cutOutSubString(headPic[i].nickName,16,true);
+          var nickName = that.cutOutSubString(headPic[i].nickName, 16, true);
           that.$store.state.board.headPic.push({
             img: headPic[i].avatarUrl,
             name: nickName,
@@ -1521,15 +1513,15 @@
             // assisTotalNum:0,    //总参与人数
             //   rankingListArr:[]  //排行榜数组
             if (res.data.success) {
-              if(res.data.wechatActRankVOList){
+              if (res.data.wechatActRankVOList) {
                 that.rankingListArr = res.data.wechatActRankVOList;
-                for(var i=0;i<that.rankingListArr.length;i++){
-                  that.rankingListArr[i].nickName = that.cutOutSubString(that.rankingListArr[i].nickName,20,true)
+                for (var i = 0; i < that.rankingListArr.length; i++) {
+                  that.rankingListArr[i].nickName = that.cutOutSubString(that.rankingListArr[i].nickName, 20, true)
                 }
               }
-             if(res.data.currWechatActRankVO){
-               that.currentPeopleRanking = res.data.currWechatActRankVO;
-             }
+              if (res.data.currWechatActRankVO) {
+                that.currentPeopleRanking = res.data.currWechatActRankVO;
+              }
               that.assisTotalNum = res.data.partakeNum;
             } else {
               wx.showToast({
@@ -1567,7 +1559,7 @@
         }
         return newStr;
       },
-      privateMall(){
+      privateMall() {
         var that = this;
         var actId = that.$store.state.board.actId;
         var sessionID = that.$store.state.board.sessionID;
@@ -1580,7 +1572,7 @@
             if (res.data.success) {
               wx.navigateToMiniProgram({
                 appId: 'wx2548fa30af482bdf',
-                path: 'pages/index/index?token='+res.data.command,
+                path: 'pages/index/index?token=' + res.data.command,
                 extraData: {
                   foo: 'bar'
                 },
@@ -1620,10 +1612,16 @@
         // return 3;
       },
       invitationSessionFrom() {  //邀请 客服消息传递参数
-        return '{"actId":"' + this.$store.state.board.actId + '","type":1}';
+        if(this.$store.state.board.infos.initiatorReward&&this.$store.state.board.infos.initiatorReward.length){
+          var initiatorrewardid = this.$store.state.board.infos.initiatorReward[0].initiatorRewardId;
+          return '{"actId":"' + this.$store.state.board.actId + '","type":1,"initiatorRewardId":"' + initiatorrewardid + '"}';
+        }
       },
       assistanceSessionFrom() {  //助力 客服消息传递参数
-        return '{"actId":"' + this.$store.state.board.actId + '","type":2}';
+        if(this.$store.state.board.infos.assistanceReward&&this.$store.state.board.infos.assistanceReward.length){
+          var initiatorrewardid = this.$store.state.board.infos.assistanceReward[0].initiatorRewardId;
+          return '{"actId":"' + this.$store.state.board.actId + '","type":2,"initiatorRewardId":"' + initiatorrewardid + '"}';
+        }
       },
       headPic() {  //助力人头像
         return this.$store.state.board.headPic
@@ -1726,7 +1724,7 @@
       lotteryProgress() {
         if (this.assisTotalNum < this.lotteryDrawTarget) {
           // return 22
-          return ((this.assisTotalNum / this.lotteryDrawTarget)* 100).toFixed(1);
+          return ((this.assisTotalNum / this.lotteryDrawTarget) * 100).toFixed(1);
         } else {
           return 100;
         }
@@ -1738,18 +1736,18 @@
         return this.$store.state.board.ifAssistanceLimit;
       },
       percents() {
-        if (this.infos.initiatorReward&&this.infos.initiatorReward.length) {
-          if(this.headPic.length <= this.infos.initiatorReward[0].partakeNum){
-            return this.headPic.length*10/this.infos.initiatorReward[0].partakeNum
-          }else{
-            if(this.headPic.length > this.infos.initiatorReward[this.infos.initiatorReward.length - 1].partakeNum){
+        if (this.infos.initiatorReward && this.infos.initiatorReward.length) {
+          if (this.headPic.length <= this.infos.initiatorReward[0].partakeNum) {
+            return this.headPic.length * 10 / this.infos.initiatorReward[0].partakeNum
+          } else {
+            if (this.headPic.length > this.infos.initiatorReward[this.infos.initiatorReward.length - 1].partakeNum) {
               this.percentes = 100;
-            }else{
-              for(var i=1;i<this.infos.initiatorReward.length;i++){
-                if(this.headPic.length<=this.infos.initiatorReward[i].partakeNum){
-                  var num = this.infos.initiatorReward[i].partakeNum - this.infos.initiatorReward[i-1].partakeNum;
-                  var nowNum = this.headPic.length - this.infos.initiatorReward[i-1].partakeNum;
-                  return 10+ ((i-1)*80/(this.infos.initiatorReward.length-1)) + nowNum*80/(this.infos.initiatorReward.length-1)/num;
+            } else {
+              for (var i = 1; i < this.infos.initiatorReward.length; i++) {
+                if (this.headPic.length <= this.infos.initiatorReward[i].partakeNum) {
+                  var num = this.infos.initiatorReward[i].partakeNum - this.infos.initiatorReward[i - 1].partakeNum;
+                  var nowNum = this.headPic.length - this.infos.initiatorReward[i - 1].partakeNum;
+                  return 10 + ((i - 1) * 80 / (this.infos.initiatorReward.length - 1)) + nowNum * 80 / (this.infos.initiatorReward.length - 1) / num;
                   break;
                 }
               }
@@ -1912,59 +1910,59 @@
             progress {
               width: 100%;
             }
-            img{
+            img {
               width: calc(100% - 130px);
-              vertical-align:middle;
+              vertical-align: middle;
               max-width: 200px;
             }
-            .progressTotal{
+            .progressTotal {
               display: inline-block;
               vertical-align: middle;
               margin-right: 10px;
               text-align: center;
-              .progress_box{
+              .progress_box {
                 position: relative;
-                width:90px;
+                width: 90px;
                 height: 90px;
                 display: flex;
                 align-items: center;
                 justify-content: center;
                 /* background-color: #eee; */
               }
-              .progress_bg{
+              .progress_bg {
                 position: absolute;
-                width:90px;
+                width: 90px;
                 height: 90px;
               }
-              .progress_canvas{
-                width:90px;
+              .progress_canvas {
+                width: 90px;
                 height: 90px;
               }
-              .progress_text{
+              .progress_text {
                 position: absolute;
                 display: flex;
                 align-items: center;
                 justify-content: center
               }
-              .progress_info{
-                font-size: 36rpx;
-                padding-left: 16rpx;
-                letter-spacing: 2rpx
+              .progress_info {
+                font-size: 36 rpx;
+                padding-left: 16 rpx;
+                letter-spacing: 2 rpx
               }
-              .progress_dot{
-                width:16rpx;
-                height: 16rpx;
+              .progress_dot {
+                width: 16 rpx;
+                height: 16 rpx;
                 border-radius: 50%;
                 background-color: #fb9126;
               }
-              .progressLine{
+              .progressLine {
                 position: relative;
-                width:50px;
+                width: 50px;
                 height: 90px;
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                .showProL{
+                .showProL {
                   width: 48px;
                   height: 70px;
                   background-color: #fff;
@@ -1978,12 +1976,12 @@
                   box-sizing: border-box;
                   border: 1px solid #eee;
                   /*border-top: 0px;*/
-                  background: -webkit-linear-gradient(left, #FFFFFF , #EEEEEE); /* Safari 5.1 - 6.0 */
-                  background: -o-linear-gradient(right, #FFFFFF,  #EEEEEE); /* Opera 11.1 - 12.0 */
-                  background: -moz-linear-gradient(right, #FFFFFF,  #EEEEEE); /* Firefox 3.6 - 15 */
-                  background: linear-gradient(to right,  #FFFFFF ,  #EEEEEE); /* 标准的语法 */
+                  background: -webkit-linear-gradient(left, #FFFFFF, #EEEEEE); /* Safari 5.1 - 6.0 */
+                  background: -o-linear-gradient(right, #FFFFFF, #EEEEEE); /* Opera 11.1 - 12.0 */
+                  background: -moz-linear-gradient(right, #FFFFFF, #EEEEEE); /* Firefox 3.6 - 15 */
+                  background: linear-gradient(to right, #FFFFFF, #EEEEEE); /* 标准的语法 */
                 }
-                .showProSe{
+                .showProSe {
                   width: 48px;
                   position: absolute;
                   bottom: 9px;
@@ -2000,7 +1998,7 @@
                   background: -moz-linear-gradient(#FFC732, #FF8048); /* Firefox 3.6 - 15 */
                   background: linear-gradient(#FFC732, #FF8048); /* 标准的语法 */
                 }
-                .showProText{
+                .showProText {
                   /*background-color: #F15522;*/
                   position: absolute;
                   color: #FF8048;

@@ -12,8 +12,11 @@
             <img src="/static/images/assist.png" alt="" mode="widthFix">
             <div class="assisCon">
               <p class="assisName">{{assisInfos[0].rewardContent}}</p>
-              <block v-if="assisInfos[0].remark">
+              <block v-if="assisInfos[0].remark&&assisInfos[0].rewardType==5">
                 <p class="assisDes">{{assisInfos[0].remark}}</p>
+              </block>
+              <block v-else>
+                <p class="assisDes">全场通用</p>
               </block>
             </div>
             <block v-if="assisInfos[0].rewardType==1||assisInfos[0].rewardType==2">
@@ -23,7 +26,7 @@
             </block>
             <block v-if="assisInfos[0].rewardType==3">
               <button class="assisBtn" open-type="contact" hover-class="hoverNone" hover-stay-time="800"
-                      @click="assistanceRewardAct" type="default" :session-from="assistanceSessionFrom">
+                      @click="assistanceRewardAct" type="default" :session-from='assistanceSessionFrom'>
                 领奖
               </button>
             </block>
@@ -38,7 +41,12 @@
               <img src="/static/images/invit.png" alt="" mode="widthFix">
               <div class="invitCon">
                 <p class="invitName">{{item.rewardContent}}</p>
-                <p class="invitDes">全场通用</p>
+                <block v-if="item.remark&&item.rewardType==5">
+                  <p class="invitDes">{{item.remark}}</p>
+                </block>
+                <block v-else>
+                  <p class="invitDes">全场通用</p>
+                </block>
               </div>
               <block v-if="item.rewardType==1||item.rewardType==2">
                 <div class="invitBtn" @click="receiveAreward">
@@ -47,15 +55,33 @@
               </block>
               <block v-if="item.rewardType==3">
                 <button class="invitBtn" open-type="contact" hover-class="hoverNone" hover-stay-time="800"
-                        @click="getRewardAct" type="default" :session-from="invitationSessionFrom">
+                        @click="getRewardAct" type="default" :session-from='invitationSessionFrom0' v-if="index==0">
+                  领奖
+                </button>
+
+                <button class="invitBtn" open-type="contact" hover-class="hoverNone" hover-stay-time="800"
+                        @click="getRewardAct" type="default" :session-from='invitationSessionFrom1'
+                        v-else-if="index==1">
+                  领奖
+                </button>
+
+                <button class="invitBtn" open-type="contact" hover-class="hoverNone" hover-stay-time="800"
+                        @click="getRewardAct" type="default" :session-from='invitationSessionFrom2'
+                        v-else-if="index==2">
+                  领奖
+                </button>
+
+                <button class="invitBtn" open-type="contact" hover-class="hoverNone" hover-stay-time="800"
+                        @click="getRewardAct" type="default" :session-from='invitationSessionFrom3'
+                        v-else-if="index==3">
                   领奖
                 </button>
               </block>
-              <block v-if="item.rewardType==5">
-                <div class="invitBtn" :data-initiator="item.initiatorRewardId" @click="receiveInitiatorReward">
-                  领奖
-                </div>
-              </block>
+                <block v-if="item.rewardType==5">
+                  <div class="invitBtn" :data-initiator="item.initiatorRewardId" @click="receiveInitiatorReward">
+                    领奖
+                  </div>
+                </block>
             </div>
           </div>
         </block>
@@ -94,7 +120,7 @@
       box-sizing: border-box;
       padding: 20px;
       background-color: #FFF;
-      margin-bottom:120px;
+      margin-bottom: 120px;
       .totalReward {
         border-bottom-right-radius: 5px;
         border-bottom-left-radius: 5px;
@@ -147,7 +173,7 @@
           .invitSingle {
             position: relative;
             margin-top: 20px;
-            .invitSingle:nth-child(1){
+            .invitSingle:nth-child(1) {
               margin-top: 0px;
             }
             img {
@@ -230,8 +256,8 @@
           display: inline-block;
           width: calc(100% - 70px);
           vertical-align: middle;
-          height:100%;
-          span{
+          height: 100%;
+          span {
             display: inline-block;
             width: 100%;
             color: rgba(159, 159, 159, 1);
@@ -239,7 +265,7 @@
             text-align: left;
           }
         }
-        .infosPl{
+        .infosPl {
           color: rgba(159, 159, 159, 1);
           font-size: 12px;
           text-align: left;
@@ -334,6 +360,9 @@
       })
     },
     computed: {
+      actId() {
+        return this.$store.state.board.actId;
+      },
       infos() {
         return this.$store.state.board.infos;
       },
@@ -347,11 +376,30 @@
           return true;
         }
       },
-      invitationSessionFrom() {  //邀请 客服消息传递参数
-        return '{"actId":"' + this.$store.state.board.actId + '","type":1}';
+      invitationSessionFrom0() {  //邀请 客服消息传递参数
+        if (this.rewardList[0] && this.rewardList[0].initiatorRewardId) {
+          return '{"actId":"' + this.$store.state.board.actId + '","type":1,"initiatorRewardId":"' + this.rewardList[0].initiatorRewardId + '"}';
+        }
+      },
+      invitationSessionFrom1() {  //邀请 客服消息传递参数
+        if (this.rewardList[1] && this.rewardList[1].initiatorRewardId) {
+          return '{"actId":"' + this.$store.state.board.actId + '","type":1,"initiatorRewardId":"' + this.rewardList[1].initiatorRewardId + '"}';
+        }
+      },
+      invitationSessionFrom2() {  //邀请 客服消息传递参数
+        if (this.rewardList[2] && this.rewardList[2].initiatorRewardId) {
+          return '{"actId":"' + this.$store.state.board.actId + '","type":1,"initiatorRewardId":"' + this.rewardList[2].initiatorRewardId + '"}';
+        }
+      },
+      invitationSessionFrom3() {  //邀请 客服消息传递参数
+        if (this.rewardList[3] && this.rewardList[3].initiatorRewardId) {
+          return '{"actId":"' + this.$store.state.board.actId + '","type":1,"initiatorRewardId":"' + this.rewardList[3].initiatorRewardId + '"}';
+        }
       },
       assistanceSessionFrom() {  //助力 客服消息传递参数
-        return '{"actId":"' + this.$store.state.board.actId + '","type":2}';
+        if (this.assisInfos[0] && this.assisInfos[0].initiatorRewardId) {
+          return '{"actId":"' + this.$store.state.board.actId + '","type":2,"initiatorRewardId":"' + this.assisInfos[0].initiatorRewardId + '"}';
+        }
       },
     },
     methods: {
@@ -364,9 +412,10 @@
           url: url
         })
       },
-      assistanceRewardAct() {
+      assistanceRewardAct(e) {
         var that = this;
         //助力 埋点
+        console.log(that.assistanceSessionFrom(3333));
         that.getRewardActCommandOpenWindowByOther();
       },
       getRewardActCommandOpenWindowByOther() {  //助力 埋点
@@ -471,7 +520,7 @@
         //   }
         // })
       },
-      receiveAreward() {
+       receiveAreward() {
         var that = this;
         var sessionID = that.$store.state.board.sessionID;
         var myHelpId = that.$store.state.board.myHelpId;
