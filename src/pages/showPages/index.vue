@@ -65,8 +65,8 @@
       return {
         title: that.$store.state.board.actShareTitle,
         path: path,
-        success: function () {
-
+        success: function (res) {
+          cosnoel.log(res)
         }
       }
 
