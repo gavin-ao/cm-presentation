@@ -187,7 +187,7 @@
               longitude: res.longitude
             },
             success: (addressRes) => {
-              // console.log(addressRes);
+              console.log(addressRes);
               this.$store.state.board.address = addressRes.result.address_component.province + '' + addressRes.result.address_component.district;
               this.$store.state.board.location = addressRes.result.address_component.province;
             }
