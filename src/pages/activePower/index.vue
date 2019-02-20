@@ -409,7 +409,7 @@
               <img :src="rewardImg" alt="" mode="aspectFit">
             </p>
             <p class="copy">
-              {{contentFoot}}
+              请您截图保存
             </p>
           </block>
           <block v-else-if="assistanceRewardType==2">
@@ -496,7 +496,7 @@
               <img :src="rewardImg" alt="" mode="aspectFit">
             </p>
             <p class="copy">
-              {{contentFoot}}
+              请您截图保存
             </p>
           </block>
           <block v-else-if="invitationRewardType==2">
